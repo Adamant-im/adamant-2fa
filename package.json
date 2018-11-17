@@ -1,0 +1,33 @@
+{
+  "name": "adamant-2fa",
+  "version": "1.0.0",
+  "main": "server/server.js",
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "start": "node .",
+    "posttest": "npm run lint"
+  },
+  "dependencies": {
+    "compression": "^1.0.3",
+    "cors": "^2.5.2",
+    "helmet": "^3.10.0",
+    "loopback-boot": "^2.6.5",
+    "serve-favicon": "^2.0.1",
+    "strong-error-handler": "^3.0.0",
+    "loopback-component-explorer": "^6.2.0",
+    "loopback": "^3.22.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.1",
+    "eslint-config-loopback": "^8.0.0"
+  },
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "license": "UNLICENSED",
+  "description": "adamant-2fa"
+}

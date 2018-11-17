@@ -2,5 +2,16 @@
   "db": {
     "name": "db",
     "connector": "memory"
+  },
+  "postgresql10": {
+    "debug": true,
+    "host": "/var/run/postgresql/",
+    "port": 5432,
+    "url": "",
+    "database": "adamant-2fa",
+    "password": "ScZx3Pw5",
+    "name": "postgresql10",
+    "user": "adamant-2fa",
+    "connector": "postgresql"
   }
 }

@@ -19,6 +19,7 @@
     "loopback-component-explorer": "^6.2.0",
     "loopback-connector-postgresql": "^3.4.0",
     "serve-favicon": "^2.0.1",
+    "speakeasy": "^2.0.0",
     "strong-error-handler": "^3.0.0"
   },
   "devDependencies": {

@@ -14,25 +14,25 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "postgresql10"
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "postgresql10",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "postgresql10",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "postgresql10",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "postgresql10",
     "public": false
   }
 }

@@ -1,0 +1,32 @@
+{
+  "name": "Account",
+  "base": "User",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "adamantAddress": {
+      "type": "string"
+    },
+    "seCounter": {
+      "type": "number"
+    },
+    "seSecretAscii": {
+      "type": "string"
+    },
+    "seSecretHex": {
+      "type": "string"
+    },
+    "seSecretBase32": {
+      "type": "string"
+    },
+    "seSecretUrl": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

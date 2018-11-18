@@ -34,5 +34,9 @@
   "Role": {
     "dataSource": "postgresql10",
     "public": false
+  },
+  "Account": {
+    "dataSource": "postgresql10",
+    "public": true
   }
 }

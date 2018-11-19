@@ -11,9 +11,10 @@ module.exports = function(Account) {
         name: 'ADAMANT-' + adamantAddress,
       });
       const seCounter = 1; // @todo Random counter
-      const token = speakeasy.hotp({
-        seCounter,
-        secret: secret.base32,
+      const hotp = speakeasy.hotp({
+        encoding: 'ascii',
+        counter: seCounter,
+        secret: secret.ascii,
       });
       const data = {
         adamantAddress,
@@ -24,12 +25,25 @@ module.exports = function(Account) {
         seSecretUrl: secret.otpauth_url,
       };
       account.updateAttributes(data);
-      next(null, { // @todo Send token to ADAMANT address
+      next(null, { // @todo Send HOTP to ADAMANT address
         adamantAddress,
-        hotp: token,
+        hotp,
         id,
       });
     });
   };
+  Account.verifyHotp = function(hotp, id, next) {
+    Account.findById(id, (err, account) => {
+      if (err) next(err);
+      const verified = speakeasy.hotp.verify({
+        counter: account.seCounter,
+        encoding: 'ascii',
+        secret: account.seSecretAscii,
+        token: hotp,
+      });
+      next(null, verified);
+    });
+  };
   Account.remoteMethod('adamantAddress', methods.adamantAddress);
+  Account.remoteMethod('verifyHotp', methods.verifyHotp);
 };

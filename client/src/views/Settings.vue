@@ -56,8 +56,9 @@ export default {
     verifyHotp () {
       this.axios.get(this.apiUrl + 'verifyHotp', {
         params: {
-          ...this.account,
-          access_token: this.session.id
+          access_token: this.session.id,
+          id: this.account.id,
+          hotp: this.hotp
         }
       })
         .then(res => {

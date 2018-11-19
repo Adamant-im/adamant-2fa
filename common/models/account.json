@@ -44,6 +44,13 @@
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "adamantAddress"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "verifyHotp"
     }
   ],
   "methods": {
@@ -66,6 +73,27 @@
       "http": {
         "verb": "post",
         "path": "/adamantAddress"
+      }
+    },
+    "verifyHotp": {
+      "accepts": [
+        {
+          "arg": "hotp",
+          "type": "string"
+        },
+        {
+          "arg": "id",
+          "type": "number"
+        }
+      ],
+      "returns": {
+        "arg": "data",
+        "type": "Account",
+        "root": true
+      },
+      "http": {
+        "verb": "get",
+        "path": "/verifyHotp"
       }
     }
   }

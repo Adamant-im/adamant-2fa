@@ -1,6 +1,16 @@
 {
   "name": "Account",
   "base": "User",
+  "hidden": [
+    "seCounter",
+    "seSecretAscii",
+    "seSecretHex",
+    "seSecretBase32",
+    "seSecretUrl",
+    "realm",
+    "email",
+    "emailVerified"
+  ],
   "idInjection": true,
   "options": {
     "validateUpsert": true
@@ -27,6 +37,36 @@
   },
   "validations": [],
   "relations": {},
-  "acls": [],
-  "methods": {}
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "adamantAddress"
+    }
+  ],
+  "methods": {
+    "adamantAddress": {
+      "accepts": [
+        {
+          "arg": "adamantAddress",
+          "type": "string"
+        },
+        {
+          "arg": "id",
+          "type": "number"
+        }
+      ],
+      "returns": {
+        "arg": "data",
+        "type": "Account",
+        "root": true
+      },
+      "http": {
+        "verb": "post",
+        "path": "/adamantAddress"
+      }
+    }
+  }
 }

@@ -38,6 +38,9 @@ export default new Vuex.Store({
     },
     SET_SESSION: (state, session) => {
       state.session = session
+    },
+    UPDATE_ACCOUNT: (state, account) => {
+      Object.assign(state.account, account)
     }
   },
   plugins: [
@@ -54,7 +57,6 @@ export default new Vuex.Store({
     session: {
       created: null,
       id: null,
-      hotp: null,
       timeDelta: null, // Difference between server and client time
       ttl: null,
       userId: null

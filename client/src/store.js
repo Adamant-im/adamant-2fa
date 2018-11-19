@@ -30,7 +30,9 @@ export default new Vuex.Store({
   mutations: {
     CLEAR_SESSION: state => {
       for (let k in state.session) { // Shallow iteration
-        state.session[k] = null
+        if (state.session.hasOwnProperty(k)) {
+          state.session[k] = null
+        }
       }
     },
     SET_ACCOUNT: (state, account) => {

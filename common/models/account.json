@@ -75,6 +75,15 @@
         "path": "/adamantAddress"
       }
     },
+    "create": {
+      "accepts": [
+        {
+          "arg": "username",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
     "verifyHotp": {
       "accepts": [
         {

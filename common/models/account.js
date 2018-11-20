@@ -32,6 +32,8 @@ module.exports = function(Account) {
       });
     });
   };
+  Account.validatesPresenceOf('username', 'password');
+  Account.validatesUniquenessOf('username');
   Account.verifyHotp = function(hotp, id, next) {
     Account.findById(id, (err, account) => {
       if (err) next(err);

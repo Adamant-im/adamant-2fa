@@ -1,10 +1,10 @@
 <template>
   <div>
     <h1>{{this.$route.name === 'login' ? 'Login' : 'Signup'}}</h1>
-    <router-link to="/login" v-if="this.$route.name === 'signup' && session.created">
+    <router-link to="/login" v-if="this.$route.name === 'signup' && session.lastSeen">
       I already have an account. Let me in
     </router-link>
-    <router-link to="/signup" v-else>
+    <router-link to="/signup" v-else-if="this.$route.name === 'login' && !session.lastSeen">
       Do not have an account yet? Signup one
     </router-link>
     <br/>

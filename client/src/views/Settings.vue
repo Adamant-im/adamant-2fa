@@ -32,15 +32,13 @@ export default {
     return {
       ...this.$store.state, // Change by commiting a mutation or dispatching an action only
       hotp: null,
-      note: {
-        hotp: null
-      }
+      note: { hotp: null }
     }
   },
   methods: {
     postAdamantAddress () {
       this.axios.post(this.apiUrl + 'adamantAddress?access_token=' + this.session.id,
-        this.account,
+        this.account
       )
         .then(res => {
           if (res.status === 200) {

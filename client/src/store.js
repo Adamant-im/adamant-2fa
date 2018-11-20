@@ -29,11 +29,14 @@ export default new Vuex.Store({
   },
   mutations: {
     CLEAR_SESSION: state => {
-      for (let k in state.session) { // Shallow iteration
+      // Shallow iteration
+      for (let k in state.session) {
         if (state.session.hasOwnProperty(k)) {
           state.session[k] = null
         }
       }
+      // Keep last seen time between sessions
+      state.session.lastSeen = Date.now()
     },
     SET_ACCOUNT: (state, account) => {
       state.account = account
@@ -47,7 +50,7 @@ export default new Vuex.Store({
   },
   plugins: [
     createPersistedState({
-      storage: window.sessionStorage
+      storage: window.localStorage
     })
   ],
   state: {
@@ -59,6 +62,7 @@ export default new Vuex.Store({
     session: {
       created: null,
       id: null,
+      lastSeen: null,
       timeDelta: null, // Difference between server and client time
       ttl: null,
       userId: null

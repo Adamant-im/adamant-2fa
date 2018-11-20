@@ -1,6 +1,13 @@
 <template>
   <div>
-    <h1>Login</h1>
+    <h1>{{this.$route.name === 'login' ? 'Login' : 'Signup'}}</h1>
+    <router-link to="/login" v-if="this.$route.name === 'signup' && session.created">
+      I already have an account. Let me in
+    </router-link>
+    <router-link to="/signup" v-else>
+      Do not have an account yet? Signup one
+    </router-link>
+    <br/>
     <label>
       Username
       <input autocomplete="on" v-model="account.username"/>
@@ -8,11 +15,12 @@
     <br/>
     <label>
       Password
-      <input autocomplete="on" v-model="account.password"/>
+      <input autocomplete="on" type="password" v-model="account.password"/>
     </label>
     <br/>
-    <button @click="login">Enter</button>
-    <div class="note">{{note.login}}</div>
+    <button @click="login" v-if="this.$route.name === 'login'">Login</button>
+    <button @click="signup" v-else-if="this.$route.name === 'signup'">Signup</button>
+    <div class="note">{{note.auth}}</div>
   </div>
 </template>
 
@@ -21,9 +29,7 @@ export default {
   data () {
     return {
       ...this.$store.state, // Change by commiting a mutation or dispatching an action only
-      note: {
-        login: null
-      }
+      note: { auth: null }
     }
   },
   methods: {
@@ -43,9 +49,26 @@ export default {
           } else console.warn(res)
         })
         .catch(err => {
-          const error = JSON.parse(err.response.request.response).error
-          this.note.login = `${error.statusCode} ${error.message}`
           console.error(err)
+          const error = err.response.data.error
+          this.note.auth = `${error.statusCode} ${error.message}`
+        })
+    },
+    signup () {
+      this.axios.post(this.apiUrl, {
+        password: this.account.password,
+        username: this.account.username
+      })
+        .then(res => {
+          if (res.status === 200) {
+            this.login()
+            console.info(res)
+          } else console.warn(res)
+        })
+        .catch(err => {
+          console.error(err)
+          const error = err.response.data.error
+          this.note.auth = `${error.statusCode} ${error.message}`
         })
     }
   }

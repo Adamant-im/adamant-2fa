@@ -1,16 +1,27 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/login" v-if="sessionTimeLeft < 0 || !sessionTimeLeft">
-        Login
-      </router-link> |
-      <a @click="logout" class="link" v-if="sessionTimeLeft > 0">
-        Logout
-      </a> |
-      <router-link to="/settings" v-if="sessionTimeLeft > 0">
-        Settings
-      </router-link>
-    </div>
+    <ul id="nav">
+      <li v-if="sessionTimeLeft < 0 || !sessionTimeLeft">
+        <router-link to="/login">
+          Login
+        </router-link>
+      </li>
+      <li v-if="sessionTimeLeft > 0">
+        <a @click="logout" class="link">
+          Logout
+        </a>
+      </li>
+      <li v-if="sessionTimeLeft > 0">
+        <router-link to="/settings">
+          Settings
+        </router-link>
+      </li>
+      <li v-if="sessionTimeLeft < 0 || !sessionTimeLeft">
+        <router-link to="/signup">
+          Signup
+        </router-link>
+      </li>
+    </ul>
     <router-view/>
     <span class="note">{{sessionTimeLeft / 1000 / 60}}</span>
   </div>

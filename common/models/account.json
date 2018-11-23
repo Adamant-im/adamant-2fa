@@ -1,15 +1,15 @@
 {
   "name": "Account",
   "base": "User",
+  "excludeBaseProperties": [
+    "email", "emailVerified", "realm", "verificationToken"
+  ],
   "hidden": [
     "seCounter",
     "seSecretAscii",
     "seSecretHex",
     "seSecretBase32",
-    "seSecretUrl",
-    "realm",
-    "email",
-    "emailVerified"
+    "seSecretUrl"
   ],
   "idInjection": true,
   "options": {
@@ -17,7 +17,16 @@
   },
   "properties": {
     "adamantAddress": {
+      "default": null,
+      "required": false,
       "type": "string"
+    },
+    "password": {
+      "required": true,
+      "type": "string"
+    },
+    "se2faEnabled": {
+      "type": "boolean"
     },
     "seCounter": {
       "type": "number"
@@ -33,6 +42,10 @@
     },
     "seSecretUrl": {
       "type": "string"
+    },
+    "username": {
+      "required": true,
+      "type": "string"
     }
   },
   "validations": [],
@@ -41,14 +54,27 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "$authenticated",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
       "permission": "ALLOW",
       "property": "adamantAddress"
     },
     {
-      "accessType": "*",
+      "accessType": "EXECUTE",
       "principalType": "ROLE",
-      "principalId": "$authenticated",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "disable2fa"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
       "permission": "ALLOW",
       "property": "verifyHotp"
     }
@@ -65,24 +91,34 @@
           "type": "number"
         }
       ],
+      "description": "Change account's ADAMANT address and regenerate secret key",
+      "http": {
+        "verb": "post",
+        "path": "/adamantAddress"
+      },
       "returns": {
         "arg": "data",
         "type": "Account",
         "root": true
-      },
-      "http": {
-        "verb": "post",
-        "path": "/adamantAddress"
       }
     },
-    "create": {
+    "disable2fa": {
       "accepts": [
         {
-          "arg": "username",
-          "required": true,
-          "type": "string"
+          "arg": "id",
+          "type": "number"
         }
-      ]
+      ],
+      "description": "Disable 2FA for account",
+      "http": {
+        "verb": "get",
+        "path": "/disable2fa"
+      },
+      "returns": {
+        "arg": "data",
+        "type": "boolean",
+        "root": true
+      }
     },
     "verifyHotp": {
       "accepts": [
@@ -95,14 +131,15 @@
           "type": "number"
         }
       ],
-      "returns": {
-        "arg": "data",
-        "type": "Account",
-        "root": true
-      },
+      "description": "Verify HOTP first time to enable 2FA",
       "http": {
         "verb": "get",
         "path": "/verifyHotp"
+      },
+      "returns": {
+        "arg": "data",
+        "type": "boolean",
+        "root": true
       }
     }
   }

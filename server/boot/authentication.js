@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function enableAuthentication(server) {
-  // Removing Email Requirement
+  // Removing email requirement
   delete server.models.Account.validations.email;
   // Enable authentication
   server.enableAuth({

@@ -66,7 +66,7 @@ export default {
             this.SET_SESSION({
               created: res.data.created,
               id: res.data.id,
-              lastSeen: res.data.lastSeen,
+              lastSeen: Date.now(),
               timeDelta: Date.now() - Date.parse(res.data.created),
               ttl: res.data.ttl
             })
@@ -123,7 +123,6 @@ export default {
       }
     },
     verifyHotp () {
-      console.log(this.session.id, this.account.id, this.hotp)
       this.axios.get(this.apiUrl + 'verifyHotp', {
         params: {
           access_token: this.session.id,
@@ -135,7 +134,6 @@ export default {
           if (typeof res.data === 'boolean') {
             if (res.data) {
               this.$router.push('settings')
-              // this.note.hotp = ''
             } else {
               this.note.hotp = 'Code is not valid, ' + (2 - this.hotpError.count) + ' attempts left'
               if (this.hotpError.value !== this.hotp) {

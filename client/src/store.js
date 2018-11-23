@@ -19,6 +19,9 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    account: state => state.account,
+    apiUrl: state => state.apiUrl,
+    session: state => state.session,
     sessionTimeLeft: state => {
       return (
         Date.parse(state.session.created) +
@@ -35,7 +38,6 @@ export default new Vuex.Store({
           state.session[k] = null
         }
       }
-      // Keep last seen time between sessions
       state.session.lastSeen = Date.now()
     },
     SET_ACCOUNT: (state, account) => {
@@ -57,15 +59,15 @@ export default new Vuex.Store({
     account: {
       adamantAddress: null,
       id: null,
+      se2faEnabled: null,
       username: null
     },
     session: {
-      created: null,
-      id: null,
-      lastSeen: null,
+      created: null, // Created ISO timestamp string
+      id: null, // Access token
+      lastSeen: null, // Indicates that user had been logged at least once
       timeDelta: null, // Difference between server and client time
-      ttl: null,
-      userId: null
+      ttl: null // Time to live, 20 minutes 15 seconds approximately by default
     },
     apiUrl: 'http://localhost:3000/api/Accounts/'
   }

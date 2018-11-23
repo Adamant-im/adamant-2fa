@@ -9,8 +9,8 @@
       <legend>2FA</legend>
       <label>
         ADAMANT address to receive 2FA codes
-        <input @input="validateAdamantAddress" autocomplete="on" maxlength="21" minlength="21"
-          pattern="^U\d+" ref="adamantAddressInput" required v-model="account.adamantAddress"/>
+        <input @input="validateAdamantAddress" autocomplete="on" maxlength="23" minlength="7"
+          pattern="^U\d+$" ref="adamantAddressInput" required v-model="account.adamantAddress"/>
       </label>
       <button @click="postAdamantAddress" ref="adamantAddressButton">Get 2FA code</button>
       <p>
@@ -21,7 +21,7 @@
       <div v-show="show2faHotp">
         <label>
           Enter the 2FA code you received
-          <input @input="validateHotp" maxlength="6" minlength="6" pattern="\d+" v-model="hotp"/>
+          <input @input="validateHotp" maxlength="6" minlength="6" pattern="^\d+$" v-model="hotp"/>
         </label>
         <button @click="verifyHotp" ref="hotpButton">Verify 2FA code</button>
       </div>
@@ -89,6 +89,7 @@ export default {
         )
         this.note.adamantAddress = {
           patternMismatch: 'Address does not match pattern',
+          tooLong: 'Address is too long', // Never appears?
           tooShort: 'Address is too short',
           valueMissing: 'Address is required to send 2FA codes'
         }[reason]
@@ -107,6 +108,7 @@ export default {
         )
         this.note.hotp = {
           patternMismatch: 'Code does not match pattern',
+          tooLong: 'Code is too long', // Never appears?
           tooShort: 'Code is too short'
         }[reason]
         this.$refs.hotpButton.disabled = true

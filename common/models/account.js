@@ -84,12 +84,16 @@ module.exports = function(Account) {
   Account.validatesFormatOf('adamantAddress', {
     allowNull: true,
     message: 'Address does not match pattern',
-    with: /^U\d/,
+    with: /^U\d+$/,
   });
   Account.validatesLengthOf('adamantAddress', {
     allowNull: true,
-    message: {is: 'Address is too short or too long'},
-    is: 21,
+    message: {
+      min: 'Address is too short',
+      max: 'Address is too long',
+    },
+    max: 23,
+    min: 7,
   });
   Account.validatesPresenceOf('username', 'password');
   Account.validatesUniquenessOf('username', {

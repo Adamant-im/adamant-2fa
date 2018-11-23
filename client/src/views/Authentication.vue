@@ -9,7 +9,7 @@
     </router-link>
     <fieldset v-if="session.created && account.se2faEnabled">
       <label class="block">
-        <input @input="validateHotp" maxlength="6" minlength="6" pattern="\d+"
+        <input @input="validateHotp" maxlength="6" minlength="6" pattern="^\d+$"
           placeholder="2FA code" ref="hotpInput" required v-model="hotp"/>
       </label>
       <button @click="verifyHotp" ref="hotpButton">Verify</button>
@@ -113,6 +113,7 @@ export default {
         )
         this.note.hotp = {
           patternMismatch: 'Code does not match pattern',
+          tooLong: 'Code is too long', // Never appears?
           tooShort: 'Code is too short',
           valueMissing: 'Code is required to login'
         }[reason]

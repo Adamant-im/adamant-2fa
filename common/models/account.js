@@ -1,5 +1,6 @@
 'use strict';
 
+const {exec} = require('child_process');
 const speakeasy = require('speakeasy');
 const methods = require('./account.json').methods;
 
@@ -11,12 +12,7 @@ module.exports = function(Account) {
       const secret = speakeasy.generateSecret({
         name: 'ADAMANT-' + adamantAddress,
       });
-      const seCounter = 1; // @todo Random counter
-      const hotp = speakeasy.hotp({
-        encoding: 'ascii',
-        counter: seCounter,
-        secret: secret.ascii,
-      });
+      const seCounter = 1;
       const data = {
         adamantAddress,
         seCounter,
@@ -25,10 +21,9 @@ module.exports = function(Account) {
         seSecretHex: secret.hex,
         seSecretUrl: secret.otpauth_url,
       };
-      account.updateAttributes(data);
-      next(null, {
-        adamantAddress,
-        hotp, // @todo Send HOTP to ADAMANT address instead
+      account.updateAttributes(data, err => {
+        if (err) next(err);
+        admSend(account, {adamantAddress}, next);
       });
     });
   };
@@ -48,28 +43,35 @@ module.exports = function(Account) {
     // Id must be restricted to owner
     Account.findById(id, (err, account) => {
       if (err) next(err);
-      let verified;
-      if (/\d{6}/.test(hotp)) {
+      let verified = false;
+      if (/^\d{6}$/.test(hotp)) {
         verified = speakeasy.hotp.verify({
           counter: account.seCounter,
-          encoding: 'ascii',
+          // encoding: 'ascii',
           secret: account.seSecretAscii,
           token: hotp,
         });
-        account.updateAttributes({
-          se2faEnabled: verified,
-        });
-      } else verified = false;
-      // @todo Send new HOTP to ADAMANT address
-      next(null, verified);
+        if (verified) {
+          account.updateAttributes({
+            se2faEnabled: true,
+            seCounter: account.seCounter + 1,
+          }, err => {
+            if (err) next(err);
+            // Generate new code
+            admSend(account, {verified}, next);
+          });
+        } else next(null, {verified});
+      } else next(null, {verified});
     });
   };
 
   Account.afterRemote('login', function(ctx, output, next) {
     Account.findById(output.userId, (err, account) => {
       if (err) next(err);
-      output.setAttribute('adamantAddress', account.adamantAddress);
-      output.setAttribute('se2faEnabled', account.se2faEnabled);
+      output.setAttributes({
+        adamantAddress: account.adamantAddress,
+        se2faEnabled: account.se2faEnabled,
+      });
       next(null, output);
     });
   });
@@ -89,14 +91,40 @@ module.exports = function(Account) {
   Account.validatesLengthOf('adamantAddress', {
     allowNull: true,
     message: {
-      min: 'Address is too short',
       max: 'Address is too long',
+      min: 'Address is too short',
     },
     max: 23,
     min: 7,
   });
   Account.validatesPresenceOf('username', 'password');
   Account.validatesUniquenessOf('username', {
+    adamantAddress: 'Address already registered',
     message: 'User already exists',
   });
+
+  function admSend(account, payload, next) {
+    const hotp = speakeasy.hotp({
+      // encoding: 'ascii',
+      counter: account.seCounter,
+      secret: account.seSecretAscii,
+    });
+    const command = `
+      adm send message ${account.adamantAddress} "2FA code: ${hotp}"
+    `;
+    exec(command, function(err, stdout, stderr) {
+      if (err) {
+        next(err);
+      } else {
+        console.info(command, stdout, stderr);
+        try {
+          var answer = JSON.parse(stdout);
+        } catch (err) {
+          next(err);
+          answer = {success: false};
+        }
+      };
+      next(null, Object.assign(answer, payload));
+    });
+  }
 };

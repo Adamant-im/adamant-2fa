@@ -121,7 +121,6 @@ module.exports = function(Account) {
           var answer = JSON.parse(stdout);
         } catch (err) {
           next(err);
-          answer = {success: false};
         }
       };
       next(null, Object.assign(answer, payload));

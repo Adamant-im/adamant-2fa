@@ -87,6 +87,23 @@ export default {
           this.note.auth = `${error.statusCode} ${error.message}`
         })
     },
+    logout () {
+      this.axios.post(this.apiUrl + 'logout/?access_token=' + this.session.id)
+        .then(res => {
+          if (res.status === 204) {
+            this.CLEAR_SESSION()
+            this.$router.push('login')
+            console.info(res)
+          } else console.warn(res)
+        })
+        .catch(err => {
+          console.error(err)
+          if (err.status === 401) { // Access token expired
+            this.CLEAR_SESSION()
+            this.$router.push('login')
+          }
+        })
+    },
     signup () {
       this.axios.post(this.apiUrl, {
         password: this.account.password,
@@ -132,8 +149,8 @@ export default {
         }
       })
         .then(res => {
-          if (typeof res.data === 'boolean') {
-            if (res.data) {
+          if (res.status === 200) {
+            if (res.data.verified) {
               this.$router.push('settings')
             } else {
               this.note.hotp = 'Code is not valid, ' + (2 - this.hotpError.count) + ' attempts left'
@@ -143,15 +160,7 @@ export default {
               } else {
                 this.hotpError.count++
                 if (this.hotpError.count > 2) {
-                  this.axios.post(this.apiUrl + 'logout/?access_token=' + this.session.id)
-                    .then(res => {
-                      if (res.status === 204) {
-                        this.CLEAR_SESSION()
-                        this.$router.push('login')
-                        console.info(res)
-                      } else console.warn(res)
-                    })
-                    .catch(err => console.error(err))
+                  this.logout()
                 }
               }
             }

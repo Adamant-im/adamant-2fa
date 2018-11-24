@@ -28,29 +28,20 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+import Authentication from '@/views/Authentication.vue'
 
 export default {
   computed: {
     ...mapGetters([
-      'sessionTimeLeft'
+      'apiUrl', 'session', 'sessionTimeLeft'
     ])
   },
-  data () {
-    return this.$store.state // Change by commiting a mutation or dispatching an action only
-  },
   methods: {
-    logout () {
-      this.axios.post(this.apiUrl + 'logout/?access_token=' + this.session.id)
-        .then(res => {
-          if (res.status === 204) {
-            this.$store.commit('CLEAR_SESSION')
-            this.$router.push('login')
-            console.info(res)
-          } else console.warn(res)
-        })
-        .catch(err => console.error(err))
-    }
+    ...mapMutations([
+      'CLEAR_SESSION'
+    ]),
+    logout: Authentication.methods.logout
   }
 }
 </script>

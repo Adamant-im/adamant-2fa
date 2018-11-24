@@ -41,6 +41,7 @@ export default {
   },
   data () {
     return {
+      admSend: null,
       show2fa: false,
       show2faHotp: false,
       hotp: null,
@@ -119,7 +120,7 @@ export default {
     },
     postAdamantAddress () {
       this.axios.post(
-        this.apiUrl + '/adamantAddress?access_token=' + this.session.id, {
+        this.apiUrl + 'adamantAddress?access_token=' + this.session.id, {
           adamantAddress: this.account.adamantAddress,
           id: this.account.id
         }
@@ -129,11 +130,12 @@ export default {
             this.UPDATE_ACCOUNT({
               adamantAddress: res.data.adamantAddress
             })
-            this.hotp = String(res.data.hotp) // @todo Get HOTP from ADAMANT messenger
             this.show2faHotp = true
-            this.note.hotp = ''
             this.hotpError.count = 0
             this.hotpError.value = this.hotp
+            if (res.data.success) {
+              this.note.hotp = 'Code sent with transaction ID ' + res.data.transactionId
+            } else this.note.hotp = 'Code did not send, try again later'
             console.info(res)
           } else console.warn(res)
         })
@@ -149,8 +151,8 @@ export default {
         }
       })
         .then(res => {
-          if (typeof res.data === 'boolean') {
-            if (res.data) {
+          if (res.status === 200) {
+            if (res.data.verified) {
               this.account.se2faEnabled = true
               this.note.hotp = '2FA successfully enabled'
               this.hotpError.count = 0

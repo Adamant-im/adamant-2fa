@@ -113,16 +113,13 @@ module.exports = function(Account) {
       adm send message ${account.adamantAddress} "2FA code: ${hotp}"
     `;
     exec(command, function(err, stdout, stderr) {
-      if (err) {
-        next(err);
-      } else {
-        console.info(command, stdout, stderr);
-        try {
-          var answer = JSON.parse(stdout);
-        } catch (err) {
-          next(err);
-        }
-      };
+      if (err) next(err);
+      console.info(command, stdout, stderr);
+      try {
+        var answer = JSON.parse(stdout);
+      } catch (err) {
+        answer = {success: false};
+      }
       next(null, Object.assign(answer, payload));
     });
   }

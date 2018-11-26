@@ -22,8 +22,11 @@ module.exports = function(Account) {
         seSecretUrl: secret.otpauth_url,
       };
       account.updateAttributes(data, err => {
-        if (err) next(err);
-        admSend(account, {adamantAddress}, next);
+        if (err) {
+          next(err);
+        } else { // Else clause prevents "Error: Callback was already called."
+          admSend(account, {adamantAddress}, next);
+        }
       });
     });
   };
@@ -32,10 +35,11 @@ module.exports = function(Account) {
     // Id must be restricted to owner
     Account.findById(id, (err, account) => {
       if (err) next(err);
-      account.updateAttributes({
-        se2faEnabled: false,
+      const res = {se2faEnabled: false};
+      account.updateAttributes(res, err => {
+        if (err) next(err);
+        next(null, res);
       });
-      next(null, false);
     });
   };
 
@@ -98,8 +102,10 @@ module.exports = function(Account) {
     min: 7,
   });
   Account.validatesPresenceOf('username', 'password');
-  Account.validatesUniquenessOf('username', {
+  Account.validatesUniquenessOf('adamantAddress', {
     adamantAddress: 'Address already registered',
+  });
+  Account.validatesUniquenessOf('username', {
     message: 'User already exists',
   });
 
@@ -117,8 +123,11 @@ module.exports = function(Account) {
       console.info(command, stdout, stderr);
       try {
         var answer = JSON.parse(stdout);
-      } catch (err) {
-        answer = {success: false};
+      } catch (x) {
+        answer = {
+          message: String(stdout).toLowerCase(),
+          success: false,
+        };
       }
       next(null, Object.assign(answer, payload));
     });

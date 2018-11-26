@@ -72,8 +72,8 @@ export default {
           }
         })
           .then(res => {
-            if (res.data === false) {
-              this.account.se2faEnabled = false
+            if (res.status === 200) {
+              this.account.se2faEnabled = res.data.se2faEnabled
               console.info(res)
             } else console.warn(res)
           })
@@ -130,16 +130,25 @@ export default {
             this.UPDATE_ACCOUNT({
               adamantAddress: res.data.adamantAddress
             })
-            this.show2faHotp = true
             this.hotpError.count = 0
             this.hotpError.value = this.hotp
             if (res.data.success) {
+              this.show2faHotp = true
               this.note.hotp = 'Code sent with transaction ID ' + res.data.transactionId
-            } else this.note.hotp = 'Code did not send, try again later'
+            } else {
+              this.note.hotp = 'Code did not send, ' + res.data.message
+              this.$refs.adamantAddressInput.disabled = false
+            }
             console.info(res)
           } else console.warn(res)
         })
-        .catch(err => console.error(err))
+        .catch(err => {
+          console.error(err)
+          if (err.response.status === 422) { // Address already registered
+            this.note.adamantAddress = err.response.data.error.message
+            this.$refs.adamantAddressInput.disabled = false
+          }
+        })
       this.$refs.adamantAddressInput.disabled = true
     },
     verifyHotp () {

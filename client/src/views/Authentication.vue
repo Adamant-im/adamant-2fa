@@ -83,8 +83,9 @@ export default {
         })
         .catch(err => {
           console.error(err)
-          const error = err.response.data.error
-          this.note.auth = `${error.statusCode} ${error.message}`
+          if (err.response.status === 401) { // Username not exist or password wrong
+            this.note.auth = err.response.data.error.message
+          }
         })
     },
     logout () {
@@ -169,6 +170,13 @@ export default {
         })
         .catch(err => console.error(err))
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => vm.note.auth = '')
+  },
+  beforeRouteLeave (to, from, next) {
+    this.note.auth = ''
+    next()
   }
 }
 </script>

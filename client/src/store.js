@@ -67,7 +67,7 @@ export default new Vuex.Store({
       id: null, // Access token
       lastSeen: null, // Indicates that user had been logged at least once
       timeDelta: null, // Difference between server and client time
-      ttl: null // Time to live, 20 minutes 15 seconds approximately by default
+      ttl: null // Time to live, 20 minutes 16 seconds approximately by default
     },
     apiUrl: 'http://localhost:3000/api/Accounts/'
   }

@@ -42,6 +42,12 @@ export default {
       'CLEAR_SESSION'
     ]),
     logout: Authentication.methods.logout
+  },
+  created () {
+    if (this.sessionTimeLeft < 0) {
+      this.CLEAR_SESSION()
+      this.$router.push('login')
+    }
   }
 }
 </script>

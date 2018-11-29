@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!session.verified">
     <h1>{{this.$route.name === 'login' ? 'Login' : 'Signup'}}</h1>
     <router-link to="/login" v-if="this.$route.name === 'signup' && session.lastSeen">
       I already have an account. Let me in
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'CLEAR_SESSION', 'SET_ACCOUNT', 'SET_SESSION'
+      'CLEAR_SESSION', 'SET_ACCOUNT', 'SET_SESSION', 'UPDATE_SESSION'
     ]),
     login () {
       this.axios.post(this.apiUrl + 'login',
@@ -68,13 +68,16 @@ export default {
               id: res.data.id,
               lastSeen: Date.now(),
               timeDelta: Date.now() - Date.parse(res.data.created),
-              ttl: res.data.ttl
+              ttl: res.data.ttl,
+              verified: res.data.se2faEnabled ? null : true
             })
             this.SET_ACCOUNT({
               adamantAddress: res.data.adamantAddress,
               id: res.data.userId,
-              se2faEnabled: res.data.se2faEnabled
+              se2faEnabled: res.data.se2faEnabled,
+              username: res.data.username
             })
+            this.note.auth = ''
             if (!this.account.se2faEnabled) {
               this.$router.push('settings')
             }
@@ -83,9 +86,7 @@ export default {
         })
         .catch(err => {
           console.error(err)
-          if (err.response.status === 401) { // Username not exist or password wrong
-            this.note.auth = err.response.data.error.message
-          }
+          this.note.auth = String(err.response.status)
         })
     },
     logout () {
@@ -118,8 +119,7 @@ export default {
         })
         .catch(err => {
           console.error(err)
-          const error = err.response.data.error
-          this.note.auth = `${error.statusCode} ${error.message}`
+          this.note.auth = String(err.response.status)
         })
     },
     validateHotp (e) {
@@ -140,8 +140,11 @@ export default {
         this.note.hotp = ''
         this.$refs.hotpButton.disabled = false
       }
+      this.hotpError.count = 0
+      this.hotpError.value = null
     },
     verifyHotp () {
+      this.$refs.hotpInput.disabled = true
       this.axios.get(this.apiUrl + 'verifyHotp', {
         params: {
           access_token: this.session.id,
@@ -151,9 +154,11 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            if (res.data.verified) {
+            this.UPDATE_SESSION({ verified: res.data.verified })
+            if (this.session.verified) {
               this.$router.push('settings')
             } else {
+              this.$refs.hotpInput.disabled = false
               this.note.hotp = 'Code is not valid, ' + (2 - this.hotpError.count) + ' attempts left'
               if (this.hotpError.value !== this.hotp) {
                 this.hotpError.count = 1
@@ -161,6 +166,10 @@ export default {
               } else {
                 this.hotpError.count++
                 if (this.hotpError.count > 2) {
+                  this.hotpError.count = 0
+                  this.hotpError.value = null
+                  this.note.hotp = ''
+                  this.hotp = null
                   this.logout()
                 }
               }
@@ -172,7 +181,7 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next(vm => vm.note.auth = '')
+    next(vm => { vm.note.auth = '' })
   },
   beforeRouteLeave (to, from, next) {
     this.note.auth = ''

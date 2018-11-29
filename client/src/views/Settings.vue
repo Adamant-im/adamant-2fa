@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div v-if="session.verified">
     <h1>Settings</h1>
     <label>
-      <input @change="enable2fa" ref="enable2faCheckbox" type="checkbox"
-        v-model="account.se2faEnabled"/> Enable 2FA
+      <input @change="enable2fa" ref="enable2faCheckbox" type="checkbox" v-model="se2faChecked"/>
+        Enable 2FA
     </label>
     <fieldset v-show="show2fa">
       <legend>2FA</legend>
@@ -12,7 +12,8 @@
         <input @input="validateAdamantAddress" autocomplete="on" maxlength="23" minlength="7"
           pattern="^U\d+$" ref="adamantAddressInput" required v-model="account.adamantAddress"/>
       </label>
-      <button @click="postAdamantAddress" ref="adamantAddressButton">Get 2FA code</button>
+      <button @click="postAdamantAddress" :disabled="!account.adamantAddress"
+        ref="adamantAddressButton">Get 2FA code</button>
       <p>
         Do not have ADAMANT account yet?
         <a href="https://msg.adamant.im/" target="_blank">Create one in a second</a>
@@ -21,7 +22,8 @@
       <div v-show="show2faHotp">
         <label>
           Enter the 2FA code you received
-          <input @input="validateHotp" maxlength="6" minlength="6" pattern="^\d+$" v-model="hotp"/>
+          <input @input="validateHotp" maxlength="6" minlength="6" pattern="^\d+$" ref="hotpInput"
+            v-model="hotp"/>
         </label>
         <button @click="verifyHotp" ref="hotpButton">Verify 2FA code</button>
       </div>
@@ -36,12 +38,12 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   computed: {
     ...mapGetters([
-      'account', 'apiUrl', 'session', 'sessionTimeLeft'
+      'account', 'apiUrl', 'session'
     ])
   },
   data () {
     return {
-      admSend: null,
+      se2faChecked: false,
       show2fa: false,
       show2faHotp: false,
       hotp: null,
@@ -64,7 +66,7 @@ export default {
       if (e.target.checked) {
         this.show2faHotp = false
         this.$refs.adamantAddressInput.disabled = false
-      } else {
+      } else if (this.account.se2faEnabled) {
         this.axios.get(this.apiUrl + 'disable2fa', {
           params: {
             access_token: this.session.id,
@@ -73,7 +75,7 @@ export default {
         })
           .then(res => {
             if (res.status === 200) {
-              this.account.se2faEnabled = res.data.se2faEnabled
+              this.UPDATE_ACCOUNT({ se2faEnabled: res.data.se2faEnabled })
               console.info(res)
             } else console.warn(res)
           })
@@ -117,6 +119,8 @@ export default {
         this.note.hotp = ''
         this.$refs.hotpButton.disabled = false
       }
+      this.hotpError.count = 0
+      this.hotpError.value = null
     },
     postAdamantAddress () {
       this.axios.post(
@@ -127,9 +131,7 @@ export default {
       )
         .then(res => {
           if (res.status === 200) {
-            this.UPDATE_ACCOUNT({
-              adamantAddress: res.data.adamantAddress
-            })
+            this.UPDATE_ACCOUNT({ adamantAddress: res.data.adamantAddress })
             this.hotpError.count = 0
             this.hotpError.value = this.hotp
             if (res.data.success) {
@@ -152,6 +154,7 @@ export default {
       this.$refs.adamantAddressInput.disabled = true
     },
     verifyHotp () {
+      this.$refs.hotpInput.disabled = true
       this.axios.get(this.apiUrl + 'verifyHotp', {
         params: {
           access_token: this.session.id,
@@ -161,12 +164,13 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            if (res.data.verified) {
-              this.account.se2faEnabled = true
+            this.UPDATE_ACCOUNT({ se2faEnabled: res.data.verified })
+            if (this.account.se2faEnabled) {
               this.note.hotp = '2FA successfully enabled'
               this.hotpError.count = 0
               this.show2fa = false
             } else {
+              this.$refs.hotpInput.disabled = false
               this.note.hotp = 'Code is not valid, ' + (2 - this.hotpError.count) + ' attempts left'
               if (this.hotpError.value !== this.hotp) {
                 this.hotpError.count = 1
@@ -177,7 +181,6 @@ export default {
                   this.show2fa = false
                   this.show2faHotp = false
                   this.note.hotp = ''
-                  this.account.se2faEnabled = false
                   this.$refs.adamantAddressInput.disabled = false
                 }
               }
@@ -189,8 +192,8 @@ export default {
     }
   },
   mounted () {
-    if (!this.account.adamantAddress) { // ADAMANT address not had been set yet
-      this.$refs.adamantAddressButton.disabled = true
+    if (this.account.se2faEnabled) {
+      this.se2faChecked = true
     }
   }
 }

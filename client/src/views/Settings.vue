@@ -1,34 +1,33 @@
 <template>
   <div v-if="session.verified">
-    <h1>Settings</h1>
+    <h1 v-t="'settings'"></h1>
     <label>
       <input @change="enable2fa" ref="enable2faCheckbox" type="checkbox" v-model="se2faChecked"/>
-        Enable 2FA
+        {{ $t('enable2fa') }}
     </label>
     <fieldset v-show="show2fa">
-      <legend>2FA</legend>
+      <legend v-t="'2fa'"></legend>
       <label>
-        ADAMANT address to receive 2FA codes
+        {{ $t('enterAdamantAddress') }}
         <input @input="validateAdamantAddress" autocomplete="on" maxlength="23" minlength="7"
           pattern="^U\d+$" ref="adamantAddressInput" required v-model="account.adamantAddress"/>
       </label>
       <button @click="postAdamantAddress" :disabled="!account.adamantAddress"
-        ref="adamantAddressButton">Get 2FA code</button>
-      <p>
-        Do not have ADAMANT account yet?
-        <a href="https://msg.adamant.im/" target="_blank">Create one in a second</a>
-      </p>
-      <div class="note">{{note.adamantAddress}}</div>
+        ref="adamantAddressButton" v-t="'get2faCode'"></button>
+      <i18n for="inner" path="redirectAdamant.outer" tag="p">
+        <a href="https://msg.adamant.im/" target="_blank" v-t="'redirectAdamant.inner'"></a>
+      </i18n>
+      <div class="note" v-t="note.adamantAddress"></div>
       <div v-show="show2faHotp">
         <label>
-          Enter the 2FA code you received
+          {{ $t('enter2faCode') }}
           <input @input="validateHotp" maxlength="6" minlength="6" pattern="^\d+$" ref="hotpInput"
             v-model="hotp"/>
         </label>
-        <button @click="verifyHotp" ref="hotpButton">Verify 2FA code</button>
+        <button @click="verifyHotp" ref="hotpButton" v-t="'verify'"></button>
       </div>
     </fieldset>
-    <div class="note">{{note.hotp}}</div>
+    <div class="note" v-t="note.hotp"></div>
   </div>
 </template>
 
@@ -52,8 +51,8 @@ export default {
         value: null
       },
       note: {
-        adamantAddress: null,
-        hotp: null
+        adamantAddress: 'empty',
+        hotp: 'empty'
       }
     }
   },
@@ -90,15 +89,10 @@ export default {
         const reason = Object.keys(Object.getPrototypeOf(state)).find(
           key => state[key]
         )
-        this.note.adamantAddress = {
-          patternMismatch: 'Address does not match pattern',
-          tooLong: 'Address is too long', // Never appears?
-          tooShort: 'Address is too short',
-          valueMissing: 'Address is required to send 2FA codes'
-        }[reason]
+        this.note.adamantAddress = reason + '.adamantAddress'
         this.$refs.adamantAddressButton.disabled = true
       } else {
-        this.note.adamantAddress = ''
+        this.note.adamantAddress = 'empty'
         this.$refs.adamantAddressButton.disabled = false
       }
     },
@@ -109,14 +103,10 @@ export default {
         const reason = Object.keys(Object.getPrototypeOf(state)).find(
           key => state[key]
         )
-        this.note.hotp = {
-          patternMismatch: 'Code does not match pattern',
-          tooLong: 'Code is too long', // Never appears?
-          tooShort: 'Code is too short'
-        }[reason]
+        this.note.hotp = reason + '.hotpEnable'
         this.$refs.hotpButton.disabled = true
       } else {
-        this.note.hotp = ''
+        this.note.hotp = 'empty'
         this.$refs.hotpButton.disabled = false
       }
       this.hotpError.count = 0
@@ -136,9 +126,15 @@ export default {
             this.hotpError.value = this.hotp
             if (res.data.success) {
               this.show2faHotp = true
-              this.note.hotp = 'Code sent with transaction ID ' + res.data.transactionId
+              this.note.hotp = {
+                path: '2faSent',
+                args: { id: res.data.transactionId }
+              }
             } else {
-              this.note.hotp = 'Code did not send, ' + res.data.message
+              this.note.hotp = {
+                path: '2faSendFail',
+                args: { reason: res.data.message }
+              }
               this.$refs.adamantAddressInput.disabled = false
             }
             console.info(res)
@@ -146,10 +142,7 @@ export default {
         })
         .catch(err => {
           console.error(err)
-          if (err.response.status === 422) { // Address already registered
-            this.note.adamantAddress = err.response.data.error.message
-            this.$refs.adamantAddressInput.disabled = false
-          }
+          this.note.adamantAddress = err.response.status + '.postAdamantAddress'
         })
       this.$refs.adamantAddressInput.disabled = true
     },
@@ -165,13 +158,16 @@ export default {
         .then(res => {
           if (res.status === 200) {
             this.UPDATE_ACCOUNT({ se2faEnabled: res.data.verified })
-            if (this.account.se2faEnabled) {
-              this.note.hotp = '2FA successfully enabled'
+            if (res.data.verified) {
+              this.note.hotp = '2faEnabled'
               this.hotpError.count = 0
               this.show2fa = false
             } else {
               this.$refs.hotpInput.disabled = false
-              this.note.hotp = 'Code is not valid, ' + (2 - this.hotpError.count) + ' attempts left'
+              this.note.hotp = {
+                path: '2faNotValid',
+                args: { count: 2 - this.hotpError.count }
+              }
               if (this.hotpError.value !== this.hotp) {
                 this.hotpError.count = 1
                 this.hotpError.value = this.hotp
@@ -180,7 +176,7 @@ export default {
                 if (this.hotpError.count > 2) {
                   this.show2fa = false
                   this.show2faHotp = false
-                  this.note.hotp = ''
+                  this.note.hotp = 'empty'
                   this.$refs.adamantAddressInput.disabled = false
                 }
               }

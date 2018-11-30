@@ -1,0 +1,62 @@
+{
+  "204": {
+    "logout": "Logged out"
+  },
+  "2fa": "2FA",
+  "2faCode": "2FA code",
+  "2faEnabled": "2FA successfully enabled",
+  "2faNotValid": "Code is not valid, {count} attempts left",
+  "2faRequest": "2FA enabled on this account<br/>Enter the code you received in ADAMANT messenger",
+  "2faSendFail": "Code did not send, {reason}",
+  "2faSent": "Code sent with transaction ID {id}",
+  "400": {
+    "login": "Username is required",
+    "signup": "Username is required"
+  },
+  "401": {
+    "login": "User with this name not signed up or wrong password"
+  },
+  "422": {
+    "login": "User with this name already signed up or username/password not defined",
+    "postAdamantAddress": "Address already registered or unknown",
+    "signup": "User with this name already signed up or username/password not defined"
+  },
+  "empty": "",
+  "enable2fa": "Enable 2FA",
+  "enter2faCode": "Enter the 2FA code you received",
+  "enterAdamantAddress": "ADAMANT address to receive 2FA codes",
+  "get2faCode": "Get 2FA code",
+  "login": "Login",
+  "logout": "Logout",
+  "password": "Password",
+  "patternMismatch": {
+    "adamantAddress": "Address does not match pattern",
+    "hotp": "Code does not match pattern",
+    "hotpEnable": "Code does not match pattern"
+  },
+  "redirectAdamant": {
+    "inner": "Create one in a second",
+    "outer": "Do not have ADAMANT account yet? {0}"
+  },
+  "redirectLogin": "I already have an account. Let me in",
+  "redirectSignup": "Do not have an account yet? Signup one",
+  "signup": "Signup",
+  "settings": "Settings",
+  "tooLong": {
+    "adamantAddress": "Address is too long",
+    "hotp": "Code is too long",
+    "hotpEnable": "Code is too long"
+  },
+  "tooShort": {
+    "adamantAddress": "Address is too short",
+    "hotp": "Code is too short",
+    "hotpEnable": "Code is too short"
+  },
+  "username": "Username",
+  "valueMissing": {
+    "adamantAddress": "Address is required to send 2FA codes",
+    "hotp": "Code is required to login",
+    "hotpEnable": "Code is required to enable 2FA"
+  },
+  "verify": "Verify"
+}

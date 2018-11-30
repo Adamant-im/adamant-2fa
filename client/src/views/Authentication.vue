@@ -1,32 +1,32 @@
 <template>
   <div v-if="!session.verified">
-    <h1>{{this.$route.name === 'login' ? 'Login' : 'Signup'}}</h1>
-    <router-link to="/login" v-if="this.$route.name === 'signup' && session.lastSeen">
-      I already have an account. Let me in
-    </router-link>
-    <router-link to="/signup" v-else-if="this.$route.name === 'login' && !session.lastSeen">
-      Do not have an account yet? Signup one
+    <h1>{{ $t(this.$route.name) }}</h1>
+    <router-link to="/login" v-if="this.$route.name === 'signup' && session.lastSeen"
+      v-t="'redirectLogin'"></router-link>
+    <router-link to="/signup" v-else-if="this.$route.name === 'login' && !session.lastSeen"
+      v-t="'redirectSignup'">
     </router-link>
     <fieldset v-if="session.created && account.se2faEnabled">
-      <label class="block">
+      <p v-html="$t('2faRequest')"></p>
+      <label>
         <input @input="validateHotp" maxlength="6" minlength="6" pattern="^\d+$"
-          placeholder="2FA code" ref="hotpInput" required v-model="hotp"/>
+          v-bind:placeholder="$t('2faCode')" ref="hotpInput" required v-model="hotp"/>
       </label>
       <button @click="verifyHotp" ref="hotpButton">Verify</button>
-      <div class="note">{{note.hotp}}</div>
+      <div class="note" v-t="note.hotp"></div>
     </fieldset>
     <fieldset v-else>
       <label class="block">
-        Username
+        {{ $t('username') }}
         <input autocomplete="on" v-model="account.username"/>
       </label>
       <label class="block">
-        Password
+        {{ $t('password') }}
         <input autocomplete="on" type="password" v-model="account.password"/>
       </label>
-      <button @click="login" v-if="this.$route.name === 'login'">Login</button>
-      <button @click="signup" v-else-if="this.$route.name === 'signup'">Signup</button>
-      <div class="note">{{note.auth}}</div>
+      <button @click="login" v-if="this.$route.name === 'login'" v-t="'login'"></button>
+      <button @click="signup" v-else-if="this.$route.name === 'signup'" v-t="'signup'"></button>
+      <div class="note" v-t="note.auth"></div>
     </fieldset>
   </div>
 </template>
@@ -48,8 +48,8 @@ export default {
         value: null
       },
       note: {
-        auth: null,
-        hotp: null
+        auth: 'empty',
+        hotp: 'empty'
       }
     }
   },
@@ -77,7 +77,7 @@ export default {
               se2faEnabled: res.data.se2faEnabled,
               username: res.data.username
             })
-            this.note.auth = ''
+            this.note.auth = 'empty'
             if (!this.account.se2faEnabled) {
               this.$router.push('settings')
             }
@@ -86,7 +86,7 @@ export default {
         })
         .catch(err => {
           console.error(err)
-          this.note.auth = String(err.response.status)
+          this.note.auth = err.response.status + '.login'
         })
     },
     logout () {
@@ -119,7 +119,7 @@ export default {
         })
         .catch(err => {
           console.error(err)
-          this.note.auth = String(err.response.status)
+          this.note.auth = err.response.status + '.signup'
         })
     },
     validateHotp (e) {
@@ -129,15 +129,10 @@ export default {
         const reason = Object.keys(Object.getPrototypeOf(state)).find(
           key => state[key]
         )
-        this.note.hotp = {
-          patternMismatch: 'Code does not match pattern',
-          tooLong: 'Code is too long', // Never appears?
-          tooShort: 'Code is too short',
-          valueMissing: 'Code is required to login'
-        }[reason]
+        this.note.hotp = reason + '.hotp'
         this.$refs.hotpButton.disabled = true
       } else {
-        this.note.hotp = ''
+        this.note.hotp = 'empty'
         this.$refs.hotpButton.disabled = false
       }
       this.hotpError.count = 0
@@ -159,7 +154,10 @@ export default {
               this.$router.push('settings')
             } else {
               this.$refs.hotpInput.disabled = false
-              this.note.hotp = 'Code is not valid, ' + (2 - this.hotpError.count) + ' attempts left'
+              this.note.hotp = {
+                path: '2faNotValid',
+                args: { count: 2 - this.hotpError.count }
+              }
               if (this.hotpError.value !== this.hotp) {
                 this.hotpError.count = 1
                 this.hotpError.value = this.hotp
@@ -168,7 +166,7 @@ export default {
                 if (this.hotpError.count > 2) {
                   this.hotpError.count = 0
                   this.hotpError.value = null
-                  this.note.hotp = ''
+                  this.note.hotp = 'empty'
                   this.hotp = null
                   this.logout()
                 }
@@ -181,10 +179,10 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next(vm => { vm.note.auth = '' })
+    next(vm => { vm.note.auth = 'empty' })
   },
   beforeRouteLeave (to, from, next) {
-    this.note.auth = ''
+    this.note.auth = 'empty'
     next()
   }
 }

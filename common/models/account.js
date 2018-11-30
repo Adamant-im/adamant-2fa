@@ -75,6 +75,7 @@ module.exports = function(Account) {
       output.setAttributes({
         adamantAddress: account.adamantAddress,
         se2faEnabled: account.se2faEnabled,
+        username: account.username,
       });
       next(null, output);
     });

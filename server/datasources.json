@@ -8,7 +8,7 @@
     "port": 5432,
     "url": "",
     "database": "adamant-2fa",
-    "password": "ScZx3Pw5",
+    "password": "password",
     "name": "postgresql10",
     "debug": true,
     "user": "adamant-2fa",

@@ -17,17 +17,20 @@
     "login": "User with this name not signed up or wrong password"
   },
   "422": {
-    "login": "User with this name already signed up or username/password not defined",
-    "postAdamantAddress": "Address already registered or unknown",
+    "adamantAddress": "Address already registered or unknown",
     "signup": "User with this name already signed up or username/password not defined"
   },
+  "documentTitle": "ADAMANT 2FA",
   "empty": "",
   "enable2fa": "Enable 2FA",
   "enter2faCode": "Enter the 2FA code you received",
   "enterAdamantAddress": "ADAMANT address to receive 2FA codes",
+  "general": "General",
   "get2faCode": "Get 2FA code",
+  "language": "Language",
   "login": "Login",
   "logout": "Logout",
+  "name": "English",
   "password": "Password",
   "patternMismatch": {
     "adamantAddress": "Address does not match pattern",
@@ -40,8 +43,15 @@
   },
   "redirectLogin": "I already have an account. Let me in",
   "redirectSignup": "Do not have an account yet? Signup one",
-  "signup": "Signup",
+  "required": {
+    "adamantAddress": "Enter ADAMANT address",
+    "hotp": "Enter 2FA code",
+    "password": "Enter password",
+    "username": "Enter username"
+  },
+  "security": "Security",
   "settings": "Settings",
+  "signup": "Signup",
   "tooLong": {
     "adamantAddress": "Address is too long",
     "hotp": "Code is too long",

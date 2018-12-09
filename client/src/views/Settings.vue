@@ -1,70 +1,87 @@
 <template>
-  <div v-if="session.verified">
-    <h1 v-t="'settings'"></h1>
-    <label>
-      <input @change="enable2fa" ref="enable2faCheckbox" type="checkbox" v-model="se2faChecked"/>
-        {{ $t('enable2fa') }}
-    </label>
-    <fieldset v-show="show2fa">
-      <legend v-t="'2fa'"></legend>
-      <label>
-        {{ $t('enterAdamantAddress') }}
-        <input @input="validateAdamantAddress" autocomplete="on" maxlength="23" minlength="7"
-          pattern="^U\d+$" ref="adamantAddressInput" required v-model="account.adamantAddress"/>
-      </label>
-      <button @click="postAdamantAddress" :disabled="!account.adamantAddress"
-        ref="adamantAddressButton" v-t="'get2faCode'"></button>
-      <i18n for="inner" path="redirectAdamant.outer" tag="p">
-        <a href="https://msg.adamant.im/" target="_blank" v-t="'redirectAdamant.inner'"></a>
-      </i18n>
-      <div class="note" v-t="note.adamantAddress"></div>
-      <div v-show="show2faHotp">
-        <label>
-          {{ $t('enter2faCode') }}
-          <input @input="validateHotp" maxlength="6" minlength="6" pattern="^\d+$" ref="hotpInput"
-            v-model="hotp"/>
-        </label>
-        <button @click="verifyHotp" ref="hotpButton" v-t="'verify'"></button>
-      </div>
-    </fieldset>
-    <div class="note" v-t="note.hotp"></div>
-  </div>
+  <v-layout justify-center row wrap v-if="session.verified">
+    <v-flex md4 xs12>
+      <h3 class="grey--text mb-3 text--darken-3 title">{{ $t('general') }}</h3>
+      <v-layout align-center class="mb-5" row wrap>
+        <v-flex xs6>
+          <v-subheader class="pa-0">{{ $t('language') }}</v-subheader>
+        </v-flex>
+        <v-flex class="text-xs-right" xs6>
+          <LanguageSwitcher/>
+        </v-flex>
+      </v-layout>
+      <h3 class="grey--text mb-3 text--darken-3 title">{{ $t('security') }}</h3>
+      <v-layout align-center class="mb-5" row wrap>
+        <v-flex xs12>
+          <v-checkbox :label="$t('enable2fa')" @change="enable2fa" color="darken-1 grey"
+            ref="enable2faCheckbox" v-model="se2faChecked"/>
+        </v-flex>
+        <v-flex xs12 v-show="show2fa">
+          <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
+            :rules="adamantAddress.rules" browser-autocomplete="on" class="text-xs-center"
+            maxlength="23" v-model="account.adamantAddress"/>
+          <v-btn @click="postAdamantAddress" :disabled="!account.adamantAddress"
+            ref="adamantAddressButton" v-t="'get2faCode'"/>
+          <i18n for="inner" path="redirectAdamant.outer" tag="p">
+            <a href="https://msg.adamant.im/" target="_blank" v-t="'redirectAdamant.inner'"></a>
+          </i18n>
+          <div v-show="show2faHotp">
+            <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotp.rules"
+              browser-autocomplete="on" class="text-xs-center" maxlength="6" v-model="hotp.value"/>
+            <v-btn @click="verifyHotp" ref="hotpButton" v-t="'verify'"/>
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-flex>
+    <SnackbarNote :text="snackbarNote"/>
+  </v-layout>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
+import SnackbarNote from '@/components/SnackbarNote'
 
 export default {
+  components: { LanguageSwitcher, SnackbarNote },
   computed: {
-    ...mapGetters([
-      'account', 'apiUrl', 'session'
-    ])
+    ...mapGetters(['account', 'apiUrl', 'session'])
   },
   data () {
     return {
+      adamantAddress: {
+        disabled: false,
+        rules: [
+          value => /^U\d+$/.test(value) || this.$i18n.t('patternMismatch.adamantAddress'),
+          value => Boolean(value) || this.$i18n.t('required.adamantAddress'),
+          value => value && value.length < 24 || this.$i18n.t('tooLong.adamantAddress'),
+          value => value && value.length > 6 || this.$i18n.t('tooShort.adamantAddress')
+        ]
+      },
+      hotp: {
+        disabled: false,
+        rules: [
+          value => /^\d+$/.test(value) || this.$i18n.t('patternMismatch.hotp'),
+          value => Boolean(value) || this.$i18n.t('required.hotp'),
+          value => value && value.length < 7 || this.$i18n.t('tooLong.hotp'),
+          value => value && value.length > 5 || this.$i18n.t('tooShort.hotp')
+        ],
+        value: null
+      },
+      hotpError: {count: 0, value: null},
       se2faChecked: false,
       show2fa: false,
       show2faHotp: false,
-      hotp: null,
-      hotpError: {
-        count: 0,
-        value: null
-      },
-      note: {
-        adamantAddress: 'empty',
-        hotp: 'empty'
-      }
+      snackbarNote: 'empty'
     }
   },
   methods: {
-    ...mapMutations([
-      'UPDATE_ACCOUNT'
-    ]),
-    enable2fa (e) {
-      this.show2fa = e.target.checked
-      if (e.target.checked) {
+    ...mapMutations(['UPDATE_ACCOUNT']),
+    enable2fa (checked) {
+      this.show2fa = checked
+      if (checked) {
         this.show2faHotp = false
-        this.$refs.adamantAddressInput.disabled = false
+        this.adamantAddress.disabled = false
       } else if (this.account.se2faEnabled) {
         this.axios.get(this.apiUrl + 'disable2fa', {
           params: {
@@ -79,38 +96,8 @@ export default {
             } else console.warn(res)
           })
           .catch(err => console.error(err))
-        this.note.hotp = ''
+        this.snackbarNote = ''
       }
-    },
-    validateAdamantAddress (e) {
-      const state = e.target.validity
-      if (!state.valid) {
-        // Firefox and IE have no own properties on the ValidityState object
-        const reason = Object.keys(Object.getPrototypeOf(state)).find(
-          key => state[key]
-        )
-        this.note.adamantAddress = reason + '.adamantAddress'
-        this.$refs.adamantAddressButton.disabled = true
-      } else {
-        this.note.adamantAddress = 'empty'
-        this.$refs.adamantAddressButton.disabled = false
-      }
-    },
-    validateHotp (e) {
-      const state = e.target.validity
-      if (!state.valid) {
-        // Firefox and IE have no own properties on the ValidityState object
-        const reason = Object.keys(Object.getPrototypeOf(state)).find(
-          key => state[key]
-        )
-        this.note.hotp = reason + '.hotpEnable'
-        this.$refs.hotpButton.disabled = true
-      } else {
-        this.note.hotp = 'empty'
-        this.$refs.hotpButton.disabled = false
-      }
-      this.hotpError.count = 0
-      this.hotpError.value = null
     },
     postAdamantAddress () {
       this.axios.post(
@@ -126,45 +113,45 @@ export default {
             this.hotpError.value = this.hotp
             if (res.data.success) {
               this.show2faHotp = true
-              this.note.hotp = {
-                path: '2faSent',
-                args: { id: res.data.transactionId }
+              this.snackbarNote = {
+                args: { id: res.data.transactionId },
+                path: '2faSent'
               }
             } else {
-              this.note.hotp = {
-                path: '2faSendFail',
-                args: { reason: res.data.message }
+              this.snackbarNote = {
+                args: { reason: res.data.message },
+                path: '2faSendFail'
               }
-              this.$refs.adamantAddressInput.disabled = false
+              this.adamantAddress.disabled = false
             }
             console.info(res)
           } else console.warn(res)
         })
         .catch(err => {
           console.error(err)
-          this.note.adamantAddress = err.response.status + '.postAdamantAddress'
+          this.snackbarNote = err.response.status + '.adamantAddress'
         })
-      this.$refs.adamantAddressInput.disabled = true
+      this.adamantAddress.disabled = true
     },
     verifyHotp () {
-      this.$refs.hotpInput.disabled = true
+      this.hotp.disabled = true
       this.axios.get(this.apiUrl + 'verifyHotp', {
         params: {
           access_token: this.session.id,
           id: this.account.id,
-          hotp: this.hotp
+          hotp: this.hotp.value
         }
       })
         .then(res => {
           if (res.status === 200) {
             this.UPDATE_ACCOUNT({ se2faEnabled: res.data.verified })
             if (res.data.verified) {
-              this.note.hotp = '2faEnabled'
+              this.snackbarNote = '2faEnabled'
               this.hotpError.count = 0
               this.show2fa = false
             } else {
-              this.$refs.hotpInput.disabled = false
-              this.note.hotp = {
+              this.hotp.disabled = false
+              this.snackbarNote = {
                 path: '2faNotValid',
                 args: { count: 2 - this.hotpError.count }
               }
@@ -176,8 +163,8 @@ export default {
                 if (this.hotpError.count > 2) {
                   this.show2fa = false
                   this.show2faHotp = false
-                  this.note.hotp = 'empty'
-                  this.$refs.adamantAddressInput.disabled = false
+                  this.snackbarNote = 'empty'
+                  this.adamantAddress.disabled = false
                 }
               }
             }

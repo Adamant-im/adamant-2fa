@@ -54,9 +54,7 @@ export default new Vuex.Store({
     }
   },
   plugins: [
-    createPersistedState({
-      storage: window.localStorage
-    })
+    createPersistedState({ storage: window.localStorage })
   ],
   state: {
     account: {
@@ -65,6 +63,7 @@ export default new Vuex.Store({
       se2faEnabled: null,
       username: null
     },
+    apiUrl: 'http://localhost:3000/api/Accounts/',
     session: {
       created: null, // Created ISO timestamp string
       id: null, // Access token
@@ -72,7 +71,6 @@ export default new Vuex.Store({
       timeDelta: null, // Difference between server and client time
       ttl: null, // Time to live, 20 minutes 16 seconds approximately by default
       verified: null // Indicates that user logged in and passed 2FA
-    },
-    apiUrl: 'http://localhost:3000/api/Accounts/'
+    }
   }
 })

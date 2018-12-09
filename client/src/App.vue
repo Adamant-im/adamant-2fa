@@ -1,59 +1,43 @@
 <template>
-  <div id="app">
-    <div class="right">
-      <select class="right" v-model="$i18n.locale">
-        <option v-for="(lang, i) in ['ru', 'en']" :key="`Lang${i}`" :value="lang">
-          {{ lang.toUpperCase() }}
-        </option>
-      </select>
-      <div v-if="session.created && session.verified">{{account.username}}</div>
-    </div>
-    <ul id="nav">
-      <li v-if="!session.created">
-        <router-link to="/login" v-t="'login'"></router-link>
-      </li>
-      <li v-if="session.created">
-        <a @click="logout" class="link" v-t="'logout'"></a>
-      </li>
-      <li v-if="session.created && session.verified">
-        <router-link to="/settings" v-t="'settings'"></router-link>
-      </li>
-      <li v-if="!session.created">
-        <router-link to="/signup" v-t="'signup'"></router-link>
-      </li>
-    </ul>
-    <router-view/>
-    <span class="note">{{(sessionTimeLeft / 1000 / 60) || ''}}</span>
+  <div>
+    <component :is="'default'" class="application--linear-gradient">
+      <router-view/>
+    </component>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
-import Authentication from '@/views/Authentication.vue'
 
 export default {
-  computed: {
-    ...mapGetters([
-      'account', 'apiUrl', 'session', 'sessionTimeLeft'
-    ])
+  data () {
+    return {
+      documentTitle: this.$i18n.t('documentTitle')
+    }
   },
   methods: {
-    ...mapMutations([
-      'CLEAR_SESSION'
-    ]),
-    logout: Authentication.methods.logout
+    ...mapMutations(['CLEAR_SESSION'])
   },
   created () {
     if (this.sessionTimeLeft < 0) {
       this.CLEAR_SESSION()
       this.$router.push('login')
     }
+  },
+  updated () {
+    document.title = this.documentTitle
   }
 }
 </script>
 
 <style scoped>
-.link {cursor: pointer; text-decoration: underline}
-.note {color: lightgray}
-.right {float: right}
+.application--linear-gradient {
+  background: repeating-linear-gradient(
+    140deg,
+    #f6f6f6,
+    #f6f6f6 1px,
+    #fefefe 0,
+    #fefefe 5px
+  ) !important;
+}
 </style>

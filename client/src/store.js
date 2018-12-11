@@ -60,6 +60,7 @@ export default new Vuex.Store({
     account: {
       adamantAddress: null,
       id: null,
+      locale: 'ru', // Get locale from Loopback
       se2faEnabled: null,
       username: null
     },

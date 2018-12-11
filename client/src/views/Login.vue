@@ -89,6 +89,7 @@ export default {
             this.SET_ACCOUNT({
               adamantAddress: res.data.adamantAddress,
               id: res.data.userId,
+              locale: this.account.locale, // Get locale from Loopback
               se2faEnabled: res.data.se2faEnabled,
               username: res.data.username
             })

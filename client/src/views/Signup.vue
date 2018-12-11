@@ -36,7 +36,7 @@
         </v-flex>
       </v-layout>
     </v-flex>
-    <SnackbarNote :text="snackbarNote"/>
+    <SnackbarNote :options="snackbarNote"/>
   </v-layout>
 </template>
 

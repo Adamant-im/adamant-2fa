@@ -2,6 +2,14 @@
   <v-layout justify-center row wrap v-if="session.verified">
     <v-flex md4 xs12>
       <h3 class="grey--text mb-3 text--darken-3 title">{{ $t('general') }}</h3>
+      <!--v-layout align-center class="mb-5" row wrap>
+        <v-flex xs6>
+          <v-subheader class="pa-0">{{ account.username }}</v-subheader>
+        </v-flex>
+        <v-flex class="text-xs-right" xs6>
+          <span>{{(sessionTimeLeft / 1000 / 60) || 'Session expired'}}</span>
+        </v-flex>
+      </v-layout-->
       <v-layout align-center class="mb-5" row wrap>
         <v-flex xs6>
           <v-subheader class="pa-0">{{ $t('language') }}</v-subheader>
@@ -33,7 +41,7 @@
         </v-flex>
       </v-layout>
     </v-flex>
-    <SnackbarNote :text="snackbarNote"/>
+    <SnackbarNote :options="snackbarNote"/>
   </v-layout>
 </template>
 
@@ -45,7 +53,7 @@ import SnackbarNote from '@/components/SnackbarNote'
 export default {
   components: { LanguageSwitcher, SnackbarNote },
   computed: {
-    ...mapGetters(['account', 'apiUrl', 'session'])
+    ...mapGetters(['account', 'apiUrl', 'session', 'sessionTimeLeft'])
   },
   data () {
     return {

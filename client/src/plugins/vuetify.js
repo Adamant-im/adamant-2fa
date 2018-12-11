@@ -3,9 +3,13 @@ import Vuetify from 'vuetify/lib'
 import 'vuetify/src/stylus/app.styl'
 import 'vuetify/dist/vuetify.min.css'
 
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import 'roboto-fontface/css/roboto/roboto-fontface.css'
+import '@mdi/font/css/materialdesignicons.css'
+
 Vue.use(Vuetify, {
   customProperties: true,
-  iconfont: 'md',
+  iconfont: 'mdi',
   theme: {
     primary: '#2E7EED',
     secondary: '#424242',

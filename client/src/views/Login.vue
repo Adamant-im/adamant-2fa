@@ -18,7 +18,7 @@
                 v-model="account.username"/>
               <v-text-field :label="$t('password')" :rules="password.rules"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
-                v-model="account.password"/>
+                v-model="password.value"/>
               <v-btn @click="login" v-t="'login'"/>
             </v-form>
           </v-flex>
@@ -36,7 +36,7 @@
         </v-flex>
       </v-layout>
     </v-flex>
-    <SnackbarNote :text="snackbarNote"/>
+    <SnackbarNote :options="snackbarNote"/>
   </v-layout>
 </template>
 
@@ -55,7 +55,8 @@ export default {
       password: {
         rules: [
           value => Boolean(value) || this.$i18n.t('required.password')
-        ]
+        ],
+        value: null
       },
       username: {
         rules: [
@@ -69,15 +70,13 @@ export default {
     ...mapMutations(['SET_ACCOUNT', 'SET_SESSION']),
     login () {
       this.axios.post(this.apiUrl + 'login',
-        this.account
+        {
+          ...this.account,
+          password: this.password.value
+        }
       )
         .then(res => {
           if (res.status === 200) {
-            if (this.account.se2faEnabled) {
-              this.$router.push('verify')
-            } else {
-              this.$router.push('settings')
-            }
             this.SET_SESSION({
               created: res.data.created,
               id: res.data.id,
@@ -89,10 +88,17 @@ export default {
             this.SET_ACCOUNT({
               adamantAddress: res.data.adamantAddress,
               id: res.data.userId,
-              locale: this.account.locale, // Get locale from Loopback
+              locale: res.data.locale,
               se2faEnabled: res.data.se2faEnabled,
               username: res.data.username
             })
+            if (this.account.se2faEnabled) {
+              this.$router.push('verify')
+            } else {
+              this.$router.push('settings')
+            }
+            this.password.value = null
+            this.$i18n.locale = this.account.locale
             this.snackbarNote = 'empty'
             console.info(res)
           } else console.warn(res)

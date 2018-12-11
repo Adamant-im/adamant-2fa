@@ -6,13 +6,10 @@ import './plugins/vuetify'
 import './registerServiceWorker'
 import App from './App.vue'
 import i18n from './i18n'
-import Default from './layouts/default'
 import router from './router'
 import store from './store'
 
 Vue.use(VueAxios, axios)
-
-Vue.component('default', Default)
 
 Vue.config.productionTip = false
 

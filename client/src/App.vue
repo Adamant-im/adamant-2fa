@@ -1,22 +1,27 @@
 <template>
-  <div>
-    <component :is="'default'" class="application--linear-gradient">
-      <router-view/>
-    </component>
-  </div>
+  <v-app class="application--linear-gradient">
+    <v-content>
+      <v-container fill-height fluid>
+        <router-view/>
+      </v-container>
+    </v-content>
+    <NavigationMenu :props="navigationMenu"/>
+  </v-app>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
+import NavigationMenu from '@/components/NavigationMenu'
 
 export default {
-  data () {
-    return {
-      documentTitle: this.$i18n.t('documentTitle')
+  components: { NavigationMenu },
+  computed: {
+    navigationMenu () {
+      return {
+        settings: 0 // Currently active button
+        // ...other pages with navigation menu
+      }[this.$route.name]
     }
-  },
-  methods: {
-    ...mapMutations(['CLEAR_SESSION'])
   },
   created () {
     if (this.sessionTimeLeft < 0) {
@@ -24,8 +29,8 @@ export default {
       this.$router.push('login')
     }
   },
-  updated () {
-    document.title = this.documentTitle
+  methods: {
+    ...mapMutations(['CLEAR_SESSION'])
   }
 }
 </script>

@@ -1,29 +1,40 @@
 <template>
-  <v-bottom-nav :active.sync="active" :value="value" app class="app-navigation">
-    <v-btn color="black" flat to="/settings">
-      <span>{{ $t('settings') }}</span>
-      <v-icon>mdi-settings</v-icon>
-    </v-btn>
-    <v-btn @click="logout" flat>
-      <span>{{ $t('logout') }}</span>
-      <v-icon>mdi-logout-variant</v-icon>
-    </v-btn>
-  </v-bottom-nav>
+  <div>
+    <v-bottom-nav :active="active" app class="app-navigation" v-model="value">
+      <v-btn color="black" flat to="/settings">
+        <span>{{ $t('settings') }}</span>
+        <v-icon>mdi-settings</v-icon>
+      </v-btn>
+      <v-btn @click="logout" flat>
+        <span>{{ $t('logout') }}</span>
+        <v-icon>mdi-logout-variant</v-icon>
+      </v-btn>
+    </v-bottom-nav>
+    <SnackbarNote :options="snackbarNote"/>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+import SnackbarNote from '@/components/SnackbarNote'
 
 export default {
+  components: { SnackbarNote },
   computed: {
     ...mapGetters(['apiUrl', 'session']),
+    active () {
+      return {
+        settings: 0 // Currently active button
+        // ...other pages with navigation menu
+      }[this.$route.name]
+    },
     value () {
-      return typeof this.props === 'number'
+      return typeof this.active === 'number'
     }
   },
   data () {
     return {
-      active: this.props
+      snackbarNote: 'empty'
     }
   },
   methods: {
@@ -34,6 +45,7 @@ export default {
           if (res.status === 204) {
             this.CLEAR_SESSION()
             this.$router.push('login')
+            this.snackbarNote = res.status + '.logout'
             console.info(res)
           } else console.warn(res)
         })
@@ -45,8 +57,7 @@ export default {
           }
         })
     }
-  },
-  props: ['props']
+  }
 }
 </script>
 

@@ -5,23 +5,18 @@
         <router-view/>
       </v-container>
     </v-content>
-    <NavigationMenu :props="navigationMenu"/>
+    <NavigationMenu/>
   </v-app>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import NavigationMenu from '@/components/NavigationMenu'
 
 export default {
   components: { NavigationMenu },
   computed: {
-    navigationMenu () {
-      return {
-        settings: 0 // Currently active button
-        // ...other pages with navigation menu
-      }[this.$route.name]
-    }
+    ...mapGetters(['account', 'sessionTimeLeft'])
   },
   created () {
     if (this.sessionTimeLeft < 0) {
@@ -31,6 +26,9 @@ export default {
   },
   methods: {
     ...mapMutations(['CLEAR_SESSION'])
+  },
+  mounted () {
+    this.$i18n.locale = this.account.locale || this.$i18n.fallbackLocale
   }
 }
 </script>

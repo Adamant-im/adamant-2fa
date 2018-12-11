@@ -42,12 +42,12 @@ export default {
         rules: [
           value => /^\d+$/.test(value) || this.$i18n.t('patternMismatch.hotp'),
           value => Boolean(value) || this.$i18n.t('required.hotp'),
-          value => value && value.length < 7 || this.$i18n.t('tooLong.hotp'),
-          value => value && value.length > 5 || this.$i18n.t('tooShort.hotp')
+          value => (value && value.length < 7) || this.$i18n.t('tooLong.hotp'),
+          value => (value && value.length > 5) || this.$i18n.t('tooShort.hotp')
         ],
         value: null
       },
-      hotpError: {count: 0, value: null},
+      hotpError: { count: 0, value: null },
       snackbarNote: 'empty'
     }
   },
@@ -141,7 +141,6 @@ export default {
     height: 300px;
   }
 }
-
 
 /**
  * Centering input text and label.

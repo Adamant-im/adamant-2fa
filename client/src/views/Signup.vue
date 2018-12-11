@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import SnackbarNote from '@/components/SnackbarNote'
 

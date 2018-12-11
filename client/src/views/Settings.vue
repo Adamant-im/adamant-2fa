@@ -54,8 +54,8 @@ export default {
         rules: [
           value => /^U\d+$/.test(value) || this.$i18n.t('patternMismatch.adamantAddress'),
           value => Boolean(value) || this.$i18n.t('required.adamantAddress'),
-          value => value && value.length < 24 || this.$i18n.t('tooLong.adamantAddress'),
-          value => value && value.length > 6 || this.$i18n.t('tooShort.adamantAddress')
+          value => (value && value.length < 24) || this.$i18n.t('tooLong.adamantAddress'),
+          value => (value && value.length > 6) || this.$i18n.t('tooShort.adamantAddress')
         ]
       },
       hotp: {
@@ -63,12 +63,12 @@ export default {
         rules: [
           value => /^\d+$/.test(value) || this.$i18n.t('patternMismatch.hotp'),
           value => Boolean(value) || this.$i18n.t('required.hotp'),
-          value => value && value.length < 7 || this.$i18n.t('tooLong.hotp'),
-          value => value && value.length > 5 || this.$i18n.t('tooShort.hotp')
+          value => (value && value.length < 7) || this.$i18n.t('tooLong.hotp'),
+          value => (value && value.length > 5) || this.$i18n.t('tooShort.hotp')
         ],
         value: null
       },
-      hotpError: {count: 0, value: null},
+      hotpError: { count: 0, value: null },
       se2faChecked: false,
       show2fa: false,
       show2faHotp: false,

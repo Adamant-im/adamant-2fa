@@ -13,12 +13,12 @@
         <v-layout justify-center>
           <v-flex md8 xs12>
             <v-form class="login-form">
-              <v-text-field :label="$t('username')" :rules="username.rules"
+              <v-text-field :label="$t('username')" :rules="usernameRules"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15"
                 v-model="account.username"/>
-              <v-text-field :label="$t('password')" :rules="password.rules"
+              <v-text-field :label="$t('password')" :rules="passwordRules"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
-                v-model="password.value"/>
+                v-model="password"/>
               <v-btn @click="login" v-t="'login'"/>
             </v-form>
           </v-flex>
@@ -48,21 +48,27 @@ import SnackbarNote from '@/components/SnackbarNote'
 export default {
   components: { LanguageSwitcher, SnackbarNote },
   computed: {
-    ...mapGetters(['account', 'apiUrl', 'session'])
+    ...mapGetters(['account', 'apiUrl', 'session']),
+    passwordRules () {
+      // Translate validation messages on i18n locale change
+      const value = this.password; let message = true
+      switch (false) {
+        case Boolean(value): message = this.$i18n.t('required.password')
+      }
+      return [message]
+    },
+    usernameRules () {
+      // Translate validation messages on i18n locale change
+      const value = this.account.username; let message = true
+      switch (false) {
+        case Boolean(value): message = this.$i18n.t('required.username')
+      }
+      return [message]
+    }
   },
   data () {
     return {
-      password: {
-        rules: [
-          value => Boolean(value) || this.$i18n.t('required.password')
-        ],
-        value: null
-      },
-      username: {
-        rules: [
-          value => Boolean(value) || this.$i18n.t('required.username')
-        ]
-      },
+      password: null,
       snackbarNote: 'empty'
     }
   },
@@ -72,7 +78,7 @@ export default {
       this.axios.post(this.apiUrl + 'login',
         {
           ...this.account,
-          password: this.password.value
+          password: this.password
         }
       )
         .then(res => {
@@ -92,13 +98,13 @@ export default {
               se2faEnabled: res.data.se2faEnabled,
               username: res.data.username
             })
+            this.$i18n.locale = this.account.locale
             if (this.account.se2faEnabled) {
               this.$router.push('verify')
             } else {
               this.$router.push('settings')
             }
-            this.password.value = null
-            this.$i18n.locale = this.account.locale
+            this.password = null
             this.snackbarNote = 'empty'
             console.info(res)
           } else console.warn(res)

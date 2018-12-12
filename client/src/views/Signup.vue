@@ -13,12 +13,12 @@
         <v-layout justify-center>
           <v-flex md8 xs12>
             <v-form class="login-form">
-              <v-text-field :label="$t('username')" :rules="username.rules"
+              <v-text-field :label="$t('username')" :rules="usernameRules"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15"
                 v-model="account.username"/>
-              <v-text-field :label="$t('password')" :rules="password.rules"
+              <v-text-field :label="$t('password')" :rules="passwordRules"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
-                v-model="account.password"/>
+                v-model="password"/>
               <v-btn @click="signup" v-t="'signup'"/>
             </v-form>
           </v-flex>
@@ -48,32 +48,41 @@ import SnackbarNote from '@/components/SnackbarNote'
 export default {
   components: { LanguageSwitcher, SnackbarNote },
   computed: {
-    ...mapGetters(['account', 'apiUrl', 'session'])
+    ...mapGetters(['account', 'apiUrl', 'session']),
+    passwordRules () {
+      // Translate validation messages on i18n locale change
+      const value = this.password; let message = true
+      switch (false) {
+        case Boolean(value): message = this.$i18n.t('required.password')
+      }
+      return [message]
+    },
+    usernameRules () {
+      // Translate validation messages on i18n locale change
+      const value = this.account.username; let message = true
+      switch (false) {
+        case Boolean(value): message = this.$i18n.t('required.username')
+      }
+      return [message]
+    }
   },
   data () {
     return {
-      password: {
-        rules: [
-          value => Boolean(value) || this.$i18n.t('required.password')
-        ]
-      },
-      username: {
-        rules: [
-          value => Boolean(value) || this.$i18n.t('required.username')
-        ]
-      },
+      password: null,
       snackbarNote: 'empty'
     }
   },
   methods: {
     signup () {
       this.axios.post(this.apiUrl, {
-        password: this.account.password,
+        password: this.password,
         username: this.account.username
       })
         .then(res => {
           if (res.status === 200) {
             this.$router.push('login')
+            this.password = null
+            this.snackbarNote = 'empty'
             console.info(res)
           } else console.warn(res)
         })

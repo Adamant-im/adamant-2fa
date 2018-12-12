@@ -14,7 +14,7 @@
             <v-form class="login-form">
               <p v-html="$t('2faRequest')"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
-                :rules="hotp.rules" class="text-xs-center" maxlength="6" v-model="hotp.value"/>
+                :rules="hotpRules" class="text-xs-center" maxlength="6" v-model="hotp.value"/>
               <v-btn @click="verify" v-t="'verify'"/>
             </v-form>
           </v-flex>
@@ -33,18 +33,22 @@ import SnackbarNote from '@/components/SnackbarNote'
 export default {
   components: { LanguageSwitcher, SnackbarNote },
   computed: {
-    ...mapGetters(['account', 'apiUrl', 'session'])
+    ...mapGetters(['account', 'apiUrl', 'session']),
+    hotpRules () {
+      // Translate validation messages on i18n locale change
+      const value = this.hotp.value; let message = true
+      switch (false) {
+        case Boolean(value): message = this.$i18n.t('required.hotp'); break
+        case /^\d+$/.test(value): message = this.$i18n.t('patternMismatch.hotp'); break
+        case value && value.length > 5: message = this.$i18n.t('tooShort.hotp')
+      }
+      return [message]
+    }
   },
   data () {
     return {
       hotp: {
         disabled: false,
-        rules: [
-          value => /^\d+$/.test(value) || this.$i18n.t('patternMismatch.hotp'),
-          value => Boolean(value) || this.$i18n.t('required.hotp'),
-          value => (value && value.length < 7) || this.$i18n.t('tooLong.hotp'),
-          value => (value && value.length > 5) || this.$i18n.t('tooShort.hotp')
-        ],
         value: null
       },
       hotpError: { count: 0, value: null },

@@ -26,7 +26,7 @@
         </v-flex>
         <v-flex xs12 v-show="show2fa">
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
-            :rules="adamantAddress.rules" browser-autocomplete="on" class="text-xs-center"
+            :rules="adamantAddressRules" browser-autocomplete="on" class="text-xs-center"
             maxlength="23" v-model="account.adamantAddress"/>
           <v-btn @click="postAdamantAddress" :disabled="!account.adamantAddress"
             ref="adamantAddressButton" v-t="'get2faCode'"/>
@@ -34,7 +34,7 @@
             <a href="https://msg.adamant.im/" target="_blank" v-t="'redirectAdamant.inner'"></a>
           </i18n>
           <div v-show="show2faHotp">
-            <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotp.rules"
+            <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
               browser-autocomplete="on" class="text-xs-center" maxlength="6" v-model="hotp.value"/>
             <v-btn @click="verifyHotp" ref="hotpButton" v-t="'verify'"/>
           </div>
@@ -53,27 +53,35 @@ import SnackbarNote from '@/components/SnackbarNote'
 export default {
   components: { LanguageSwitcher, SnackbarNote },
   computed: {
-    ...mapGetters(['account', 'apiUrl', 'session', 'sessionTimeLeft'])
+    ...mapGetters(['account', 'apiUrl', 'session', 'sessionTimeLeft']),
+    adamantAddressRules () {
+      // Translate validation messages on i18n locale change
+      const value = this.account.adamantAddress; let message = true
+      switch (false) {
+        case Boolean(value): message = this.$i18n.t('required.adamantAddress'); break
+        case /^U\d+$/.test(value): message = this.$i18n.t('patternMismatch.adamantAddress'); break
+        case value && value.length > 6: message = this.$i18n.t('tooShort.adamantAddress')
+      }
+      return [message]
+    },
+    hotpRules () {
+      // Translate validation messages on i18n locale change
+      const value = this.hotp.value; let message = true
+      switch (false) {
+        case Boolean(value): message = this.$i18n.t('required.hotp'); break
+        case /^\d+$/.test(value): message = this.$i18n.t('patternMismatch.hotp'); break
+        case value && value.length > 5: message = this.$i18n.t('tooShort.hotp')
+      }
+      return [message]
+    }
   },
   data () {
     return {
       adamantAddress: {
-        disabled: false,
-        rules: [
-          value => /^U\d+$/.test(value) || this.$i18n.t('patternMismatch.adamantAddress'),
-          value => Boolean(value) || this.$i18n.t('required.adamantAddress'),
-          value => (value && value.length < 24) || this.$i18n.t('tooLong.adamantAddress'),
-          value => (value && value.length > 6) || this.$i18n.t('tooShort.adamantAddress')
-        ]
+        disabled: false
       },
       hotp: {
         disabled: false,
-        rules: [
-          value => /^\d+$/.test(value) || this.$i18n.t('patternMismatch.hotp'),
-          value => Boolean(value) || this.$i18n.t('required.hotp'),
-          value => (value && value.length < 7) || this.$i18n.t('tooLong.hotp'),
-          value => (value && value.length > 5) || this.$i18n.t('tooShort.hotp')
-        ],
         value: null
       },
       hotpError: { count: 0, value: null },

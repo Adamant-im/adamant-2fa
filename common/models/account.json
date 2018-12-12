@@ -21,6 +21,11 @@
       "required": false,
       "type": "string"
     },
+    "locale": {
+      "default": "en",
+      "required": true,
+      "type": "string"
+    },
     "password": {
       "required": true,
       "type": "string"
@@ -76,6 +81,13 @@
       "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
+      "property": "locale"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
       "property": "verifyHotp"
     }
   ],
@@ -113,6 +125,28 @@
       "http": {
         "verb": "get",
         "path": "/disable2fa"
+      },
+      "returns": {
+        "arg": "data",
+        "type": "boolean",
+        "root": true
+      }
+    },
+    "locale": {
+      "accepts": [
+        {
+          "arg": "locale",
+          "type": "string"
+        },
+        {
+          "arg": "id",
+          "type": "number"
+        }
+      ],
+      "description": "Change account's i18n locale",
+      "http": {
+        "verb": "post",
+        "path": "/locale"
       },
       "returns": {
         "arg": "data",

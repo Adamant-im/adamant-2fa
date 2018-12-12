@@ -18,20 +18,31 @@ import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters(['apiUrl', 'account']),
+    ...mapGetters(['apiUrl', 'account', 'session']),
     localeName () {
-      return this.$i18n.messages[this.account.locale].name
+      return this.$i18n.messages[this.$i18n.locale].name
     }
   },
   methods: {
     ...mapMutations(['UPDATE_ACCOUNT']),
     update (locale) {
       this.$i18n.locale = locale
-      this.UPDATE_ACCOUNT({ locale: this.$i18n.locale })
+      if (this.session.created) {
+        this.axios.post(
+          this.apiUrl + 'locale?access_token=' + this.session.id, {
+            id: this.account.id,
+            locale
+          }
+        )
+          .then(res => {
+            if (res.status === 200) {
+              this.UPDATE_ACCOUNT({ locale: res.data.locale })
+              console.info(res)
+            } else console.warn(res)
+          })
+          .catch(err => console.error(err))
+      }
     }
-  },
-  created () {
-    this.$i18n.locale = this.account.locale
   },
   watch: {
     localeName: {

@@ -43,6 +43,18 @@ module.exports = function(Account) {
     });
   };
 
+  Account.locale = function(locale, id, next) {
+    // Id must be restricted to owner
+    Account.findById(id, (err, account) => {
+      if (err) next(err);
+      const res = {locale};
+      account.updateAttributes(res, err => {
+        if (err) next(err);
+        next(null, res);
+      });
+    });
+  };
+
   Account.verifyHotp = function(hotp, id, next) {
     // Id must be restricted to owner
     Account.findById(id, (err, account) => {
@@ -74,6 +86,7 @@ module.exports = function(Account) {
       if (err) next(err);
       output.setAttributes({
         adamantAddress: account.adamantAddress,
+        locale: account.locale,
         se2faEnabled: account.se2faEnabled,
         username: account.username,
       });
@@ -92,6 +105,11 @@ module.exports = function(Account) {
     allowNull: true,
     message: 'Address does not match pattern',
     with: /^U\d+$/,
+  });
+  Account.validatesFormatOf('locale', {
+    allowNull: true,
+    message: 'Locale does not match pattern',
+    with: /^[a-z]{2}$/,
   });
   Account.validatesLengthOf('adamantAddress', {
     allowNull: true,

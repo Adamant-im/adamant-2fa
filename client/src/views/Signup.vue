@@ -37,17 +37,15 @@
         </v-flex>
       </v-layout>
     </v-flex>
-    <SnackbarNote :options="snackbarNote"/>
   </v-layout>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
-import SnackbarNote from '@/components/SnackbarNote'
 
 export default {
-  components: { LanguageSwitcher, SnackbarNote },
+  components: { LanguageSwitcher },
   computed: {
     ...mapGetters(['account', 'apiUrl', 'session']),
     passwordRules () {
@@ -77,8 +75,7 @@ export default {
       },
       username: {
         valid: false
-      },
-      snackbarNote: 'empty'
+      }
     }
   },
   methods: {
@@ -91,13 +88,13 @@ export default {
           if (res.status === 200) {
             this.$router.push('login')
             this.password.value = null
-            this.snackbarNote = 'empty'
+            this.$emit('snackbar-note', 'signedUp')
             console.info(res)
           } else console.warn(res)
         })
         .catch(err => {
           console.error(err)
-          this.snackbarNote = err.response.status + '.signup'
+          this.$emit('snackbar-note', err.response.status + '.signup')
         })
     }
   }

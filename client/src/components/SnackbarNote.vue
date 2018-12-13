@@ -6,20 +6,33 @@
 
 <script>
 export default {
-  computed: {
-    args () {
-      return typeof this.options === 'string' ? null : this.options.args
-    },
-    path () {
-      return typeof this.options === 'string' ? this.options : this.options.path
-    }
-  },
   data () {
     return {
-      timeout: 1500,
-      value: true
+      args: null,
+      path: 'empty',
+      timeout: 3e3,
+      value: false
     }
   },
-  props: ['options']
+  props: ['options'],
+  watch: {
+    options: {
+      handler () {
+        if (this.options) {
+          this.value = true // Resets to false after timeout
+          if (typeof this.options.note === 'string') {
+            // i18n string syntax
+            this.args = null
+            this.path = this.options.note
+          } else {
+            // i18n object syntax
+            this.args = this.options.note.args
+            this.path = this.options.note.path
+          }
+        }
+      },
+      immediate: true
+    }
+  }
 }
 </script>

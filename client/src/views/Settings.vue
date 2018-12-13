@@ -42,17 +42,15 @@
         </v-flex>
       </v-layout>
     </v-flex>
-    <SnackbarNote :options="snackbarNote"/>
   </v-layout>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
-import SnackbarNote from '@/components/SnackbarNote'
 
 export default {
-  components: { LanguageSwitcher, SnackbarNote },
+  components: { LanguageSwitcher },
   computed: {
     ...mapGetters(['account', 'apiUrl', 'session', 'sessionTimeLeft']),
     adamantAddressRules () {
@@ -92,8 +90,7 @@ export default {
       hotpError: { count: 0, value: null },
       se2faChecked: false,
       show2fa: false,
-      show2faHotp: false,
-      snackbarNote: 'empty'
+      show2faHotp: false
     }
   },
   methods: {
@@ -117,7 +114,6 @@ export default {
             } else console.warn(res)
           })
           .catch(err => console.error(err))
-        this.snackbarNote = ''
       }
     },
     postAdamantAddress () {
@@ -135,15 +131,15 @@ export default {
             this.hotpError.value = this.hotp
             if (res.data.success) {
               this.show2faHotp = true
-              this.snackbarNote = {
+              this.$emit('snackbar-note', {
                 args: { id: res.data.transactionId },
                 path: '2faSent'
-              }
+              })
             } else {
-              this.snackbarNote = {
+              this.$emit('snackbar-note', {
                 args: { reason: res.data.message },
                 path: '2faSendFail'
-              }
+              })
               this.adamantAddress.disabled = false
             }
             console.info(res)
@@ -151,7 +147,7 @@ export default {
         })
         .catch(err => {
           console.error(err)
-          this.snackbarNote = err.response.status + '.adamantAddress'
+          this.$emit('snackbar-note', err.response.status + '.adamantAddress')
           this.adamantAddress.disabled = false
         })
     },
@@ -168,14 +164,14 @@ export default {
           if (res.status === 200) {
             this.UPDATE_ACCOUNT({ se2faEnabled: res.data.verified })
             if (res.data.verified) {
-              this.snackbarNote = '2faEnabled'
+              this.$emit('snackbar-note', '2faEnabled')
               this.hotpError.count = 0
               this.show2fa = false
             } else {
-              this.snackbarNote = {
+              this.$emit('snackbar-note', {
                 path: '2faNotValid',
                 args: { count: 2 - this.hotpError.count }
-              }
+              })
               this.hotp.disabled = false
               if (this.hotpError.value !== this.hotp) {
                 this.hotpError.count = 1
@@ -185,7 +181,6 @@ export default {
                 if (this.hotpError.count > 2) {
                   this.show2fa = false
                   this.show2faHotp = false
-                  this.snackbarNote = 'empty'
                   this.adamantAddress.disabled = false
                 }
               }

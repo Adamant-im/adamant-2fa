@@ -21,17 +21,15 @@
         </v-layout>
       </v-card>
     </v-flex>
-    <SnackbarNote :options="snackbarNote"/>
   </v-layout>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
-import SnackbarNote from '@/components/SnackbarNote'
 
 export default {
-  components: { LanguageSwitcher, SnackbarNote },
+  components: { LanguageSwitcher },
   computed: {
     ...mapGetters(['account', 'apiUrl', 'session']),
     hotpRules () {
@@ -53,8 +51,7 @@ export default {
         valid: false,
         value: null
       },
-      hotpError: { count: 0, value: null },
-      snackbarNote: 'empty'
+      hotpError: { count: 0, value: null }
     }
   },
   methods: {
@@ -92,10 +89,10 @@ export default {
               this.$router.push('settings')
             } else {
               this.hotp.disabled = false
-              this.snackbarNote = {
+              this.$emit('snackbar-note', {
                 path: '2faNotValid',
                 args: { count: 2 - this.hotpError.count }
-              }
+              })
               if (this.hotpError.value !== this.hotp.value) {
                 this.hotpError.count = 1
                 this.hotpError.value = this.hotp.value
@@ -104,7 +101,6 @@ export default {
                 if (this.hotpError.count > 2) {
                   this.hotpError.count = 0
                   this.hotpError.value = null
-                  this.snackbarNote = 'empty'
                   this.hotp.value = null
                   this.logout()
                 }

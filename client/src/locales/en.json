@@ -51,6 +51,7 @@
   },
   "security": "Security",
   "settings": "Settings",
+  "signedUp": "You signed up",
   "signup": "Signup",
   "tooLong": {
     "adamantAddress": "Address is too long",

@@ -10,16 +10,13 @@
         <v-icon>mdi-logout-variant</v-icon>
       </v-btn>
     </v-bottom-nav>
-    <SnackbarNote :options="snackbarNote"/>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
-import SnackbarNote from '@/components/SnackbarNote'
 
 export default {
-  components: { SnackbarNote },
   computed: {
     ...mapGetters(['apiUrl', 'session']),
     active () {
@@ -32,11 +29,6 @@ export default {
       return typeof this.active === 'number'
     }
   },
-  data () {
-    return {
-      snackbarNote: 'empty'
-    }
-  },
   methods: {
     ...mapMutations(['CLEAR_SESSION']),
     logout () {
@@ -45,7 +37,7 @@ export default {
           if (res.status === 204) {
             this.CLEAR_SESSION()
             this.$router.push('login')
-            this.snackbarNote = res.status + '.logout'
+            this.$emit('snackbar-note', res.status + '.logout')
             console.info(res)
           } else console.warn(res)
         })

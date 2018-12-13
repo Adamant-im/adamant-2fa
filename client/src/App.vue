@@ -2,19 +2,21 @@
   <v-app class="application--linear-gradient">
     <v-content>
       <v-container fill-height fluid>
-        <router-view/>
+        <router-view @snackbar-note="showSnackbarNote"/>
       </v-container>
     </v-content>
     <NavigationMenu/>
+    <SnackbarNote :options="snackbarNote"/>
   </v-app>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import NavigationMenu from '@/components/NavigationMenu'
+import SnackbarNote from '@/components/SnackbarNote'
 
 export default {
-  components: { NavigationMenu },
+  components: { NavigationMenu, SnackbarNote },
   computed: {
     ...mapGetters(['account', 'sessionTimeLeft'])
   },
@@ -24,8 +26,17 @@ export default {
       this.$router.push('login')
     }
   },
+  data () {
+    return {
+      snackbarNote: null
+    }
+  },
   methods: {
-    ...mapMutations(['CLEAR_SESSION'])
+    ...mapMutations(['CLEAR_SESSION']),
+    showSnackbarNote (note) {
+      // Object wrap adds reactivity to prop and triggers SnackbarNote component update
+      this.snackbarNote = { note }
+    }
   },
   mounted () {
     this.$i18n.locale = this.account.locale || this.$i18n.fallbackLocale

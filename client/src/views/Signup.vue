@@ -18,8 +18,9 @@
                 v-model="account.username"/>
               <v-text-field :label="$t('password')" :rules="passwordRules"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
-                v-model="password"/>
-              <v-btn @click="signup" v-t="'signup'"/>
+                v-model="password.value"/>
+              <v-btn :disabled="!(password.valid && username.valid)" @click="signup"
+                v-t="'signup'"/>
             </v-form>
           </v-flex>
         </v-layout>
@@ -51,37 +52,45 @@ export default {
     ...mapGetters(['account', 'apiUrl', 'session']),
     passwordRules () {
       // Translate validation messages on i18n locale change
-      const value = this.password; let message = true
+      const value = this.password.value; let state = true
       switch (false) {
-        case Boolean(value): message = this.$i18n.t('required.password')
+        case Boolean(value): state = this.$i18n.t('required.password')
       }
-      return [message]
+      this.password.valid = state === true
+      return [state]
     },
     usernameRules () {
       // Translate validation messages on i18n locale change
-      const value = this.account.username; let message = true
+      const value = this.account.username; let state = true
       switch (false) {
-        case Boolean(value): message = this.$i18n.t('required.username')
+        case Boolean(value): state = this.$i18n.t('required.username')
       }
-      return [message]
+      this.username.valid = state === true
+      return [state]
     }
   },
   data () {
     return {
-      password: null,
+      password: {
+        valid: false,
+        value: null
+      },
+      username: {
+        valid: false
+      },
       snackbarNote: 'empty'
     }
   },
   methods: {
     signup () {
       this.axios.post(this.apiUrl, {
-        password: this.password,
+        password: this.password.value,
         username: this.account.username
       })
         .then(res => {
           if (res.status === 200) {
             this.$router.push('login')
-            this.password = null
+            this.password.value = null
             this.snackbarNote = 'empty'
             console.info(res)
           } else console.warn(res)

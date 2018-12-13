@@ -15,7 +15,7 @@
               <p v-html="$t('2faRequest')"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
                 :rules="hotpRules" class="text-xs-center" maxlength="6" v-model="hotp.value"/>
-              <v-btn @click="verify" v-t="'verify'"/>
+              <v-btn :disabled="!hotp.valid" @click="verify" v-t="'verify'"/>
             </v-form>
           </v-flex>
         </v-layout>
@@ -36,19 +36,21 @@ export default {
     ...mapGetters(['account', 'apiUrl', 'session']),
     hotpRules () {
       // Translate validation messages on i18n locale change
-      const value = this.hotp.value; let message = true
+      const value = this.hotp.value; let state = true
       switch (false) {
-        case Boolean(value): message = this.$i18n.t('required.hotp'); break
-        case /^\d+$/.test(value): message = this.$i18n.t('patternMismatch.hotp'); break
-        case value && value.length > 5: message = this.$i18n.t('tooShort.hotp')
+        case Boolean(value): state = this.$i18n.t('required.hotp'); break
+        case /^\d+$/.test(value): state = this.$i18n.t('patternMismatch.hotp'); break
+        case value && value.length > 5: state = this.$i18n.t('tooShort.hotp')
       }
-      return [message]
+      this.hotp.valid = state === true
+      return [state]
     }
   },
   data () {
     return {
       hotp: {
         disabled: false,
+        valid: false,
         value: null
       },
       hotpError: { count: 0, value: null },

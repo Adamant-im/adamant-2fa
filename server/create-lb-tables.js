@@ -1,5 +1,6 @@
-/*
- * @url https://loopback.io/doc/en/lb3/Creating-a-database-schema-from-models#creating-database-tables-for-built-in-models
+/**
+ * @url https://loopback.io/doc/en/lb3/Creating-a-database-schema-from-models
+ *   #creating-database-tables-for-built-in-models
  * @url https://loopback.io/doc/en/lb3/Attaching-models-to-data-sources.html
  */
 'use strict';

@@ -5,7 +5,7 @@ module.exports = function enableAuthentication(server) {
   delete server.models.Account.validations.email;
   // Enable authentication
   server.enableAuth({
-    // Let LoopBack take care of attaching any built-in models required by the access control feature
+    // Let LoopBack take care of attaching any built-in models required by the access control
     datasource: 'postgresql10',
   });
 };

@@ -76,7 +76,7 @@ export default {
         case value && value.length > 5: state = 'tooShort.hotp'
       }
       this.hotp.note = state
-      this.hotp.valid = Boolean(state)
+      this.hotp.valid = !state
     },
     verify () {
       this.hotp.disabled = true

@@ -15,7 +15,7 @@
             <v-form class="login-form">
               <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15"
-                v-model="account.username"/>
+                v-model="username.value"/>
               <v-text-field :label="$t('password')" :rules="passwordRules" @input="validatePassword"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
                 v-model="password.value"/>
@@ -47,7 +47,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher'
 export default {
   components: { LanguageSwitcher },
   computed: {
-    ...mapGetters(['account', 'apiUrl', 'session']),
+    ...mapGetters(['account', 'apiUrl']),
     passwordRules () {
       // Translate validation messages on i18n locale change
       return [this.$i18n.t(this.password.note) || true]
@@ -66,7 +66,8 @@ export default {
       },
       username: {
         note: '',
-        valid: false
+        valid: false,
+        value: null
       }
     }
   },
@@ -74,7 +75,7 @@ export default {
     signup () {
       this.axios.post(this.apiUrl, {
         password: this.password.value,
-        username: this.account.username
+        username: this.username.value
       })
         .then(res => {
           if (res.status === 200) {
@@ -95,7 +96,7 @@ export default {
         case Boolean(value): state = 'required.password'
       }
       this.password.note = state
-      this.password.valid = Boolean(state)
+      this.password.valid = !state
     },
     validateUsername (value) {
       let state = ''
@@ -103,8 +104,13 @@ export default {
         case Boolean(value): state = 'required.username'
       }
       this.username.note = state
-      this.username.valid = Boolean(state)
+      this.username.valid = !state
     }
+  },
+  mounted () {
+    this.username.value = this.account.username
+    this.validatePassword(this.password.value)
+    this.validateUsername(this.username.value)
   }
 }
 </script>

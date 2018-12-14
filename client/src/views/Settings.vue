@@ -1,5 +1,5 @@
 <template>
-  <v-layout justify-center row wrap v-if="session.verified">
+  <v-layout justify-center row wrap>
     <v-flex md4 xs12>
       <h3 class="grey--text mb-3 text--darken-3 title">{{ $t('general') }}</h3>
       <!--v-layout align-center class="mb-5" row wrap>
@@ -27,8 +27,7 @@
         <v-flex xs12 v-show="show2fa">
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
             :rules="adamantAddressRules" @input="validateAdamantAddress" browser-autocomplete="on"
-            class="text-xs-center"
-            maxlength="23" v-model="account.adamantAddress"/>
+            class="text-xs-center" maxlength="23" v-model="adamantAddress.value"/>
           <v-btn @click="postAdamantAddress" :disabled="!adamantAddress.valid" v-t="'get2faCode'"/>
           <i18n for="inner" path="redirectAdamant.outer" tag="p">
             <a href="https://msg.adamant.im/" target="_blank" v-t="'redirectAdamant.inner'"></a>
@@ -67,7 +66,8 @@ export default {
       adamantAddress: {
         disabled: false,
         note: '',
-        valid: false
+        valid: false,
+        value: null
       },
       hotp: {
         disabled: false,
@@ -108,7 +108,7 @@ export default {
       this.adamantAddress.disabled = true
       this.axios.post(
         this.apiUrl + 'adamantAddress?access_token=' + this.session.id, {
-          adamantAddress: this.account.adamantAddress,
+          adamantAddress: this.adamantAddress.value,
           id: this.account.id
         }
       )
@@ -147,7 +147,7 @@ export default {
         case value && value.length > 6: state = 'tooShort.adamantAddress'
       }
       this.adamantAddress.note = state
-      this.adamantAddress.valid = Boolean(state)
+      this.adamantAddress.valid = !state
     },
     validateHotp (value) {
       let state = ''
@@ -157,7 +157,7 @@ export default {
         case value && value.length > 5: state = 'tooShort.hotp'
       }
       this.hotp.note = state
-      this.hotp.valid = Boolean(state)
+      this.hotp.valid = !state
     },
     verifyHotp () {
       this.hotp.disabled = true
@@ -200,9 +200,9 @@ export default {
     }
   },
   mounted () {
-    if (this.account.se2faEnabled) {
-      this.se2faChecked = true
-    }
+    if (this.account.se2faEnabled) this.se2faChecked = true
+    this.adamantAddress.value = this.account.adamantAddress
+    this.validateAdamantAddress(this.adamantAddress.value)
   }
 }
 </script>

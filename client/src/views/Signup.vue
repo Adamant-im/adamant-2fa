@@ -13,10 +13,10 @@
         <v-layout justify-center>
           <v-flex md8 xs12>
             <v-form class="login-form">
-              <v-text-field :label="$t('username')" :rules="usernameRules"
+              <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15"
                 v-model="account.username"/>
-              <v-text-field :label="$t('password')" :rules="passwordRules"
+              <v-text-field :label="$t('password')" :rules="passwordRules" @input="validatePassword"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
                 v-model="password.value"/>
               <v-btn :disabled="!(password.valid && username.valid)" @click="signup"
@@ -50,30 +50,22 @@ export default {
     ...mapGetters(['account', 'apiUrl', 'session']),
     passwordRules () {
       // Translate validation messages on i18n locale change
-      const value = this.password.value; let state = true
-      switch (false) {
-        case Boolean(value): state = this.$i18n.t('required.password')
-      }
-      this.password.valid = state === true
-      return [state]
+      return [this.$i18n.t(this.password.note) || true]
     },
     usernameRules () {
       // Translate validation messages on i18n locale change
-      const value = this.account.username; let state = true
-      switch (false) {
-        case Boolean(value): state = this.$i18n.t('required.username')
-      }
-      this.username.valid = state === true
-      return [state]
+      return [this.$i18n.t(this.username.note) || true]
     }
   },
   data () {
     return {
       password: {
+        note: '',
         valid: false,
         value: null
       },
       username: {
+        note: '',
         valid: false
       }
     }
@@ -96,6 +88,22 @@ export default {
           console.error(err)
           this.$emit('snackbar-note', err.response.status + '.signup')
         })
+    },
+    validatePassword (value) {
+      let state = ''
+      switch (false) {
+        case Boolean(value): state = 'required.password'
+      }
+      this.password.note = state
+      this.password.valid = Boolean(state)
+    },
+    validateUsername (value) {
+      let state = ''
+      switch (false) {
+        case Boolean(value): state = 'required.username'
+      }
+      this.username.note = state
+      this.username.valid = Boolean(state)
     }
   }
 }

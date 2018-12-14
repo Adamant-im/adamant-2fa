@@ -22,22 +22,22 @@
       <v-layout align-center class="mb-5" row wrap>
         <v-flex xs12>
           <v-checkbox :label="$t('enable2fa')" @change="enable2fa" color="darken-1 grey"
-            ref="enable2faCheckbox" v-model="se2faChecked"/>
+            v-model="se2faChecked"/>
         </v-flex>
         <v-flex xs12 v-show="show2fa">
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
-            :rules="adamantAddressRules" browser-autocomplete="on" class="text-xs-center"
+            :rules="adamantAddressRules" @input="validateAdamantAddress" browser-autocomplete="on"
+            class="text-xs-center"
             maxlength="23" v-model="account.adamantAddress"/>
-          <v-btn @click="postAdamantAddress" :disabled="!adamantAddress.valid"
-            ref="adamantAddressButton" v-t="'get2faCode'"/>
+          <v-btn @click="postAdamantAddress" :disabled="!adamantAddress.valid" v-t="'get2faCode'"/>
           <i18n for="inner" path="redirectAdamant.outer" tag="p">
             <a href="https://msg.adamant.im/" target="_blank" v-t="'redirectAdamant.inner'"></a>
           </i18n>
           <div v-show="show2faHotp">
             <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
-              browser-autocomplete="on" class="text-xs-center" maxlength="6" v-model="hotp.value"/>
-            <v-btn :disabled="!hotp.valid" @click="verifyHotp" ref="hotpButton"
-              v-t="'verify'"/>
+              @input="validateHotp" browser-autocomplete="on" class="text-xs-center"
+              maxlength="6" v-model="hotp.value"/>
+            <v-btn :disabled="!hotp.valid" @click="verifyHotp" v-t="'verify'"/>
           </div>
         </v-flex>
       </v-layout>
@@ -55,35 +55,23 @@ export default {
     ...mapGetters(['account', 'apiUrl', 'session', 'sessionTimeLeft']),
     adamantAddressRules () {
       // Translate validation messages on i18n locale change
-      const value = this.account.adamantAddress; let state = true
-      switch (false) {
-        case Boolean(value): state = this.$i18n.t('required.adamantAddress'); break
-        case /^U\d+$/.test(value): state = this.$i18n.t('patternMismatch.adamantAddress'); break
-        case value && value.length > 6: state = this.$i18n.t('tooShort.adamantAddress')
-      }
-      this.adamantAddress.valid = state === true
-      return [state]
+      return [this.$i18n.t(this.adamantAddress.note) || true]
     },
     hotpRules () {
       // Translate validation messages on i18n locale change
-      const value = this.hotp.value; let state = true
-      switch (false) {
-        case Boolean(value): state = this.$i18n.t('required.hotp'); break
-        case /^\d+$/.test(value): state = this.$i18n.t('patternMismatch.hotp'); break
-        case value && value.length > 5: state = this.$i18n.t('tooShort.hotp')
-      }
-      this.hotp.valid = state === true
-      return [state]
+      return [this.$i18n.t(this.hotp.note) || true]
     }
   },
   data () {
     return {
       adamantAddress: {
         disabled: false,
+        note: '',
         valid: false
       },
       hotp: {
         disabled: false,
+        note: '',
         valid: false,
         value: null
       },
@@ -150,6 +138,26 @@ export default {
           this.$emit('snackbar-note', err.response.status + '.adamantAddress')
           this.adamantAddress.disabled = false
         })
+    },
+    validateAdamantAddress (value) {
+      let state = ''
+      switch (false) {
+        case Boolean(value): state = 'required.adamantAddress'; break
+        case /^U\d+$/.test(value): state = 'patternMismatch.adamantAddress'; break
+        case value && value.length > 6: state = 'tooShort.adamantAddress'
+      }
+      this.adamantAddress.note = state
+      this.adamantAddress.valid = Boolean(state)
+    },
+    validateHotp (value) {
+      let state = ''
+      switch (false) {
+        case Boolean(value): state = 'required.hotp'; break
+        case /^\d+$/.test(value): state = 'patternMismatch.hotp'; break
+        case value && value.length > 5: state = 'tooShort.hotp'
+      }
+      this.hotp.note = state
+      this.hotp.valid = Boolean(state)
     },
     verifyHotp () {
       this.hotp.disabled = true

@@ -16,22 +16,19 @@ export default {
   },
   props: ['options'],
   watch: {
-    options: {
-      handler () {
-        if (this.options) {
-          this.value = true // Resets to false after timeout
-          if (typeof this.options.note === 'string') {
-            // i18n string syntax
-            this.args = null
-            this.path = this.options.note
-          } else {
-            // i18n object syntax
-            this.args = this.options.note.args
-            this.path = this.options.note.path
-          }
+    options () {
+      if (this.options) {
+        this.value = true // Resets to false after timeout
+        if (typeof this.options.note === 'string') {
+          // i18n string syntax
+          this.args = null
+          this.path = this.options.note
+        } else {
+          // i18n object syntax
+          this.args = this.options.note.args
+          this.path = this.options.note.path
         }
-      },
-      immediate: true
+      }
     }
   }
 }

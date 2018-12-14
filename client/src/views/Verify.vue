@@ -46,7 +46,7 @@ export default {
         valid: false,
         value: null
       },
-      hotpError: { count: 0, value: null }
+      hotpError: { count: 2, value: null }
     }
   },
   methods: {
@@ -94,22 +94,24 @@ export default {
               this.$router.push('settings')
             } else {
               this.hotp.disabled = false
-              this.$emit('snackbar-note', {
-                path: '2faNotValid',
-                args: { count: 2 - this.hotpError.count }
-              })
               if (this.hotpError.value !== this.hotp.value) {
-                this.hotpError.count = 1
+                this.hotpError.count = 2
                 this.hotpError.value = this.hotp.value
+                this.$emit('snackbar-note', {
+                  args: { count: this.hotpError.count },
+                  path: '2faNotValid'
+                })
               } else {
-                this.hotpError.count++
-                if (this.hotpError.count > 2) {
-                  this.hotpError.count = 0
-                  this.hotpError.value = null
-                  this.hotp.value = null
+                if (this.hotpError.count < 1) {
                   this.logout()
+                } else {
+                  this.$emit('snackbar-note', {
+                    args: { count: this.hotpError.count },
+                    path: '2faNotValid'
+                  })
                 }
               }
+              this.hotpError.count--
             }
             console.info(res)
           } else console.warn(res)

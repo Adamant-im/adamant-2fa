@@ -75,7 +75,7 @@ export default {
         valid: false,
         value: null
       },
-      hotpError: { count: 0, value: null },
+      hotpError: { count: 2, value: null },
       se2faChecked: false,
       show2fa: false,
       show2faHotp: false
@@ -115,8 +115,7 @@ export default {
         .then(res => {
           if (res.status === 200) {
             this.UPDATE_ACCOUNT({ adamantAddress: res.data.adamantAddress })
-            this.hotpError.count = 0
-            this.hotpError.value = this.hotp
+            this.hotpError.count = 2
             if (res.data.success) {
               this.show2faHotp = true
               this.$emit('snackbar-note', {
@@ -173,25 +172,31 @@ export default {
             this.UPDATE_ACCOUNT({ se2faEnabled: res.data.verified })
             if (res.data.verified) {
               this.$emit('snackbar-note', '2faEnabled')
-              this.hotpError.count = 0
+              this.hotpError.count = 2
               this.show2fa = false
             } else {
-              this.$emit('snackbar-note', {
-                path: '2faNotValid',
-                args: { count: 2 - this.hotpError.count }
-              })
               this.hotp.disabled = false
-              if (this.hotpError.value !== this.hotp) {
-                this.hotpError.count = 1
-                this.hotpError.value = this.hotp
+              if (this.hotpError.value !== this.hotp.value) {
+                this.hotpError.count = 2
+                this.hotpError.value = this.hotp.value
+                this.$emit('snackbar-note', {
+                  args: { count: this.hotpError.count },
+                  path: '2faNotValid'
+                })
               } else {
-                this.hotpError.count++
-                if (this.hotpError.count > 2) {
+                if (this.hotpError.count < 1) {
                   this.show2fa = false
                   this.show2faHotp = false
                   this.adamantAddress.disabled = false
+                  this.hotp.value = null
+                } else {
+                  this.$emit('snackbar-note', {
+                    args: { count: this.hotpError.count },
+                    path: '2faNotValid'
+                  })
                 }
               }
+              this.hotpError.count--
             }
             console.info(res)
           } else console.warn(res)
@@ -208,5 +213,5 @@ export default {
 </script>
 
 <style scoped>
-.note {color: red}
+
 </style>

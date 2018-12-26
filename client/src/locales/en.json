@@ -7,7 +7,7 @@
   "2faEnabled": "2FA successfully enabled",
   "2faNotValid": "Code is not valid, {count} attempts left",
   "2faRequest": "2FA enabled on this account<br/>Enter the code you received in ADAMANT messenger",
-  "2faSendFail": "Code did not send, {reason}",
+  "2faSendFail": "Code did not send: {reason}",
   "2faSent": "Code sent with transaction ID {id}",
   "400": {
     "login": "Username is required",
@@ -17,7 +17,7 @@
     "login": "User with this name not signed up or wrong password"
   },
   "422": {
-    "adamantAddress": "Address already registered or unknown",
+    "adamantAddress": "ADAMANT address already registered or unknown",
     "signup": "User with this name already signed up or username/password not defined"
   },
   "documentTitle": "ADAMANT 2FA",

@@ -124,7 +124,7 @@ export default {
               })
             } else {
               this.$emit('snackbar-note', {
-                args: { reason: res.data.message },
+                args: { reason: this.$i18n.t('422.adamantAddress') },
                 path: '2faSendFail'
               })
               this.adamantAddress.disabled = false

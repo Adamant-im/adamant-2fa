@@ -123,10 +123,7 @@ export default {
                 path: '2faSent'
               })
             } else {
-              this.$emit('snackbar-note', {
-                args: { reason: this.$i18n.t('422.adamantAddress') },
-                path: '2faSendFail'
-              })
+              this.$emit('snackbar-note', '422.adamantAddress')
               this.adamantAddress.disabled = false
             }
             console.info(res)
@@ -180,7 +177,7 @@ export default {
                 this.hotpError.count = 2
                 this.hotpError.value = this.hotp.value
                 this.$emit('snackbar-note', {
-                  args: { count: this.hotpError.count },
+                  choice: this.hotpError.count,
                   path: '2faNotValid'
                 })
               } else {
@@ -191,7 +188,7 @@ export default {
                   this.hotp.value = null
                 } else {
                   this.$emit('snackbar-note', {
-                    args: { count: this.hotpError.count },
+                    choice: this.hotpError.count,
                     path: '2faNotValid'
                   })
                 }

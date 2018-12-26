@@ -12,7 +12,7 @@ export default new Vuex.Store({
       })
         .then(res => {
           if (res.status === 200) {
-            commit('SET_ACCOUNT', res.data)
+            commit('setAccount', res.data)
           } else console.warn(res)
         })
         .catch(err => console.error(err))
@@ -31,7 +31,7 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    CLEAR_SESSION: state => {
+    clearSession: state => {
       // Shallow iteration
       for (let k in state.session) {
         if (state.session.hasOwnProperty(k)) {
@@ -40,16 +40,16 @@ export default new Vuex.Store({
       }
       state.session.lastSeen = Date.now()
     },
-    SET_ACCOUNT: (state, account) => {
+    setAccount: (state, account) => {
       state.account = account
     },
-    SET_SESSION: (state, session) => {
+    setSession: (state, session) => {
       state.session = session
     },
-    UPDATE_ACCOUNT: (state, account) => {
+    updateAccount: (state, account) => {
       Object.assign(state.account, account)
     },
-    UPDATE_SESSION: (state, session) => {
+    updateSession: (state, session) => {
       Object.assign(state.session, session)
     }
   },

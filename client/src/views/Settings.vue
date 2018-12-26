@@ -82,7 +82,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['UPDATE_ACCOUNT']),
+    ...mapMutations(['updateAccount']),
     enable2fa (checked) {
       this.show2fa = checked
       if (checked) {
@@ -97,7 +97,7 @@ export default {
         })
           .then(res => {
             if (res.status === 200) {
-              this.UPDATE_ACCOUNT({ se2faEnabled: res.data.se2faEnabled })
+              this.updateAccount({ se2faEnabled: res.data.se2faEnabled })
               console.info(res)
             } else console.warn(res)
           })
@@ -114,7 +114,7 @@ export default {
       )
         .then(res => {
           if (res.status === 200) {
-            this.UPDATE_ACCOUNT({ adamantAddress: res.data.adamantAddress })
+            this.updateAccount({ adamantAddress: res.data.adamantAddress })
             this.hotpError.count = 2
             if (res.data.success) {
               this.show2faHotp = true
@@ -169,7 +169,7 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            this.UPDATE_ACCOUNT({ se2faEnabled: res.data.verified })
+            this.updateAccount({ se2faEnabled: res.data.verified })
             if (res.data.verified) {
               this.$emit('snackbar-note', '2faEnabled')
               this.hotpError.count = 2

@@ -30,12 +30,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['CLEAR_SESSION']),
+    ...mapMutations(['clearSession']),
     logout () {
       this.axios.post(this.apiUrl + 'logout/?access_token=' + this.session.id)
         .then(res => {
           if (res.status === 204) {
-            this.CLEAR_SESSION()
+            this.clearSession()
             this.$router.push('login')
             this.$emit('snackbar-note', res.status + '.logout')
             console.info(res)
@@ -44,7 +44,7 @@ export default {
         .catch(err => {
           console.error(err)
           if (err.status === 401) { // Access token expired
-            this.CLEAR_SESSION()
+            this.clearSession()
             this.$router.push('login')
           }
         })

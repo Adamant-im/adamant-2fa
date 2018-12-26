@@ -72,7 +72,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['SET_ACCOUNT', 'SET_SESSION']),
+    ...mapMutations(['setAccount', 'setSession']),
     login () {
       this.axios.post(this.apiUrl + 'login', {
         password: this.password.value,
@@ -80,7 +80,7 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            this.SET_SESSION({
+            this.setSession({
               created: res.data.created,
               id: res.data.id,
               lastSeen: Date.now(),
@@ -88,7 +88,7 @@ export default {
               ttl: res.data.ttl,
               verified: res.data.se2faEnabled ? null : true
             })
-            this.SET_ACCOUNT({
+            this.setAccount({
               adamantAddress: res.data.adamantAddress,
               id: res.data.userId,
               locale: res.data.locale,

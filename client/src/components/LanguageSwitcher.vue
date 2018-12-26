@@ -24,7 +24,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['UPDATE_ACCOUNT']),
+    ...mapMutations(['updateAccount']),
     update (locale) {
       this.$i18n.locale = locale
       if (this.session.created) {
@@ -36,7 +36,7 @@ export default {
         )
           .then(res => {
             if (res.status === 200) {
-              this.UPDATE_ACCOUNT({ locale: res.data.locale })
+              this.updateAccount({ locale: res.data.locale })
               console.info(res)
             } else console.warn(res)
           })

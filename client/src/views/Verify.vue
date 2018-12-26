@@ -50,12 +50,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['CLEAR_SESSION', 'UPDATE_SESSION']),
+    ...mapMutations(['clearSession', 'updateSession']),
     logout () {
       this.axios.post(this.apiUrl + 'logout/?access_token=' + this.session.id)
         .then(res => {
           if (res.status === 204) {
-            this.CLEAR_SESSION()
+            this.clearSession()
             this.$router.push('login')
             console.info(res)
           } else console.warn(res)
@@ -63,7 +63,7 @@ export default {
         .catch(err => {
           console.error(err)
           if (err.status === 401) { // Access token expired
-            this.CLEAR_SESSION()
+            this.clearSession()
             this.$router.push('login')
           }
         })
@@ -89,7 +89,7 @@ export default {
       })
         .then(res => {
           if (res.status === 200) {
-            this.UPDATE_SESSION({ verified: res.data.verified })
+            this.updateSession({ verified: res.data.verified })
             if (this.session.verified) {
               this.$router.push('settings')
             } else {

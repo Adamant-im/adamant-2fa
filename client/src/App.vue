@@ -22,7 +22,7 @@ export default {
   },
   created () {
     if (this.sessionTimeLeft < 0) {
-      this.CLEAR_SESSION()
+      this.clearSession()
       this.$router.push('login')
     }
   },
@@ -32,7 +32,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['CLEAR_SESSION']),
+    ...mapMutations(['clearSession']),
     showSnackbarNote (note) {
       // Object wrap adds reactivity to prop and triggers SnackbarNote component update
       this.snackbarNote = { note }

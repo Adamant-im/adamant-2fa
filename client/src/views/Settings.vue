@@ -2,14 +2,6 @@
   <v-layout justify-center row wrap>
     <v-flex md4 xs12>
       <h3 class="grey--text mb-3 text--darken-3 title">{{ $t('general') }}</h3>
-      <!--v-layout align-center class="mb-5" row wrap>
-        <v-flex xs6>
-          <v-subheader class="pa-0">{{ account.username }}</v-subheader>
-        </v-flex>
-        <v-flex class="text-xs-right" xs6>
-          <span>{{(sessionTimeLeft / 1000 / 60) || 'Session expired'}}</span>
-        </v-flex>
-      </v-layout-->
       <v-layout align-center class="mb-5" row wrap>
         <v-flex xs6>
           <v-subheader class="pa-0">{{ $t('language') }}</v-subheader>
@@ -21,14 +13,15 @@
       <h3 class="grey--text mb-3 text--darken-3 title">{{ $t('security') }}</h3>
       <v-layout align-center class="mb-5" row wrap>
         <v-flex xs12>
-          <v-checkbox :label="$t('enable2fa')" @change="enable2fa" color="darken-1 grey"
+          <v-checkbox :label="$t('enable2fa')" @change="check2fa" color="darken-1 grey"
             v-model="se2faChecked"/>
         </v-flex>
         <v-flex xs12 v-show="show2fa">
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
             :rules="adamantAddressRules" @input="validateAdamantAddress" browser-autocomplete="on"
             class="text-xs-center" maxlength="23" v-model="adamantAddress.value"/>
-          <v-btn @click="postAdamantAddress" :disabled="!adamantAddress.valid" v-t="'get2faCode'"/>
+          <v-btn @click="updateAdamantAddress" :disabled="!adamantAddress.valid"
+            v-t="'get2faCode'"/>
           <i18n for="inner" path="redirectAdamant.outer" tag="p">
             <a href="https://msg.adamant.im/" target="_blank" v-t="'redirectAdamant.inner'"></a>
           </i18n>
@@ -45,13 +38,13 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 export default {
   components: { LanguageSwitcher },
   computed: {
-    ...mapGetters(['account', 'apiUrl', 'session', 'sessionTimeLeft']),
+    ...mapState(['account']),
     adamantAddressRules () {
       // Translate validation messages on i18n locale change
       return [this.$i18n.t(this.adamantAddress.note) || true]
@@ -82,58 +75,38 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['updateAccount']),
-    enable2fa (checked) {
+    ...mapActions(['disable2fa', 'enable2fa', 'postAdamantAddress']),
+    check2fa (checked) {
       this.show2fa = checked
       if (checked) {
         this.show2faHotp = false
         this.adamantAddress.disabled = false
       } else if (this.account.se2faEnabled) {
-        this.axios.get(this.apiUrl + 'disable2fa', {
-          params: {
-            access_token: this.session.id,
-            id: this.account.id
-          }
+        this.disable2fa().then(status => {
+          this.$emit('snackbar-note', '2faDisabled')
         })
-          .then(res => {
-            if (res.status === 200) {
-              this.updateAccount({ se2faEnabled: res.data.se2faEnabled })
-              console.info(res)
-            } else console.warn(res)
-          })
-          .catch(err => console.error(err))
       }
     },
-    postAdamantAddress () {
+    updateAdamantAddress () {
       this.adamantAddress.disabled = true
-      this.axios.post(
-        this.apiUrl + 'adamantAddress?access_token=' + this.session.id, {
-          adamantAddress: this.adamantAddress.value,
-          id: this.account.id
-        }
-      )
-        .then(res => {
-          if (res.status === 200) {
-            this.updateAccount({ adamantAddress: res.data.adamantAddress })
-            this.hotpError.count = 2
-            if (res.data.success) {
-              this.show2faHotp = true
-              this.$emit('snackbar-note', {
-                args: { id: res.data.transactionId },
-                path: '2faSent'
-              })
-            } else {
-              this.$emit('snackbar-note', '422.adamantAddress')
-              this.adamantAddress.disabled = false
-            }
-            console.info(res)
-          } else console.warn(res)
-        })
-        .catch(err => {
-          console.error(err)
-          this.$emit('snackbar-note', err.response.status + '.adamantAddress')
+      this.postAdamantAddress(this.adamantAddress.value).then(({ data, status }) => {
+        if (status === 200) {
+          this.hotpError.count = 2
+          if (data.success) {
+            this.show2faHotp = true
+            this.$emit('snackbar-note', {
+              args: { id: data.transactionId },
+              path: '2faSent'
+            })
+          } else {
+            this.$emit('snackbar-note', '422.adamantAddress')
+            this.adamantAddress.disabled = false
+          }
+        } else {
+          this.$emit('snackbar-note', status + '.adamantAddress')
           this.adamantAddress.disabled = false
-        })
+        }
+      })
     },
     validateAdamantAddress (value) {
       let state = ''
@@ -157,48 +130,39 @@ export default {
     },
     verifyHotp () {
       this.hotp.disabled = true
-      this.axios.get(this.apiUrl + 'verifyHotp', {
-        params: {
-          access_token: this.session.id,
-          id: this.account.id,
-          hotp: this.hotp.value
-        }
-      })
-        .then(res => {
-          if (res.status === 200) {
-            this.updateAccount({ se2faEnabled: res.data.verified })
-            if (res.data.verified) {
-              this.$emit('snackbar-note', '2faEnabled')
+      this.enable2fa(this.hotp.value).then(({ data, status }) => {
+        if (status === 200) {
+          if (data.verified) {
+            this.$emit('snackbar-note', '2faEnabled')
+            this.hotpError.count = 2
+            this.show2fa = false
+          } else {
+            this.hotp.disabled = false
+            if (this.hotpError.value !== this.hotp.value) {
               this.hotpError.count = 2
-              this.show2fa = false
+              this.hotpError.value = this.hotp.value
+              this.$emit('snackbar-note', {
+                choice: this.hotpError.count,
+                path: '2faNotValid'
+              })
             } else {
-              this.hotp.disabled = false
-              if (this.hotpError.value !== this.hotp.value) {
-                this.hotpError.count = 2
-                this.hotpError.value = this.hotp.value
+              if (this.hotpError.count < 1) {
+                this.show2fa = false
+                this.show2faHotp = false
+                this.adamantAddress.disabled = false
+                this.hotp.value = null
+                this.se2faChecked = false
+              } else {
                 this.$emit('snackbar-note', {
                   choice: this.hotpError.count,
                   path: '2faNotValid'
                 })
-              } else {
-                if (this.hotpError.count < 1) {
-                  this.show2fa = false
-                  this.show2faHotp = false
-                  this.adamantAddress.disabled = false
-                  this.hotp.value = null
-                } else {
-                  this.$emit('snackbar-note', {
-                    choice: this.hotpError.count,
-                    path: '2faNotValid'
-                  })
-                }
               }
-              this.hotpError.count--
             }
-            console.info(res)
-          } else console.warn(res)
-        })
-        .catch(err => console.error(err))
+            this.hotpError.count--
+          }
+        }
+      })
     }
   },
   mounted () {

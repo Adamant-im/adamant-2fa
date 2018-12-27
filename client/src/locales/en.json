@@ -4,6 +4,7 @@
   },
   "2fa": "2FA",
   "2faCode": "2FA code",
+  "2faDisabled": "2FA disabled",
   "2faEnabled": "2FA successfully enabled",
   "2faNotValid": "| Code is not valid 1 attempt left | Code is not valid {n} attempts left",
   "2faRequest": "2FA enabled on this account<br/>Enter the code you received in ADAMANT messenger",
@@ -14,7 +15,8 @@
     "signup": "Username is required"
   },
   "401": {
-    "login": "User with this name not signed up or wrong password"
+    "login": "User with this name not signed up or wrong password",
+    "logout": "Session time expired"
   },
   "422": {
     "adamantAddress": "ADAMANT address already registered or unknown",

@@ -14,33 +14,21 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters(['apiUrl', 'account', 'session']),
+    ...mapState(['session']),
     localeName () {
       return this.$i18n.messages[this.$i18n.locale].name
     }
   },
   methods: {
-    ...mapMutations(['updateAccount']),
+    ...mapActions(['locale']),
     update (locale) {
       this.$i18n.locale = locale
       if (this.session.created) {
-        this.axios.post(
-          this.apiUrl + 'locale?access_token=' + this.session.id, {
-            id: this.account.id,
-            locale
-          }
-        )
-          .then(res => {
-            if (res.status === 200) {
-              this.updateAccount({ locale: res.data.locale })
-              console.info(res)
-            } else console.warn(res)
-          })
-          .catch(err => console.error(err))
+        this.locale(locale)
       }
     }
   },

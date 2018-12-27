@@ -5,25 +5,32 @@
         <router-view @snackbar-note="showSnackbarNote"/>
       </v-container>
     </v-content>
-    <NavigationMenu/>
+    <NavigationMenu @snackbar-note="showSnackbarNote"/>
     <SnackbarNote :options="snackbarNote"/>
   </v-app>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import NavigationMenu from '@/components/NavigationMenu'
 import SnackbarNote from '@/components/SnackbarNote'
 
 export default {
   components: { NavigationMenu, SnackbarNote },
   computed: {
-    ...mapGetters(['account', 'sessionTimeLeft'])
+    ...mapGetters(['sessionTimeLeft']),
+    ...mapState(['account'])
   },
   created () {
     if (this.sessionTimeLeft < 0) {
-      this.clearSession()
-      this.$router.push('login')
+      this.logout().then(status => {
+        // Clear expired session even if backend not available
+        if (status !== 204) {
+          this.clearSession()
+        }
+        this.$router.push('login')
+        this.$emit('snackbar-note', status + '.logout')
+      })
     }
   },
   data () {
@@ -32,8 +39,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['logout']),
     ...mapMutations(['clearSession']),
     showSnackbarNote (note) {
+      console.log(note)
       // Object wrap adds reactivity to prop and triggers SnackbarNote component update
       this.snackbarNote = { note }
     }

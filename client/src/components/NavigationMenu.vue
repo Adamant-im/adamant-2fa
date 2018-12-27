@@ -5,7 +5,7 @@
         <span>{{ $t('settings') }}</span>
         <v-icon>mdi-settings</v-icon>
       </v-btn>
-      <v-btn @click="logout" flat>
+      <v-btn @click="logoutUser" flat>
         <span>{{ $t('logout') }}</span>
         <v-icon>mdi-logout-variant</v-icon>
       </v-btn>
@@ -14,11 +14,11 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters(['apiUrl', 'session']),
+    ...mapState(['apiUrl', 'session']),
     active () {
       return {
         settings: 0 // Currently active button
@@ -26,28 +26,19 @@ export default {
       }[this.$route.name]
     },
     value () {
+      // Do not show NavigationMenu if no button is active
       return typeof this.active === 'number'
     }
   },
   methods: {
-    ...mapMutations(['clearSession']),
-    logout () {
-      this.axios.post(this.apiUrl + 'logout/?access_token=' + this.session.id)
-        .then(res => {
-          if (res.status === 204) {
-            this.clearSession()
-            this.$router.push('login')
-            this.$emit('snackbar-note', res.status + '.logout')
-            console.info(res)
-          } else console.warn(res)
-        })
-        .catch(err => {
-          console.error(err)
-          if (err.status === 401) { // Access token expired
-            this.clearSession()
-            this.$router.push('login')
-          }
-        })
+    ...mapActions(['logout']),
+    logoutUser () {
+      this.logout().then(status => {
+        if (status === 204) {
+          this.$router.push('login')
+        }
+        this.$emit('snackbar-note', status + '.logout')
+      })
     }
   }
 }

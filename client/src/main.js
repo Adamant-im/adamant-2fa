@@ -16,8 +16,8 @@ Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
   const authentification = to.matched.some(route => route.meta.authentification)
   const verification = to.matched.some(route => route.meta.verification)
-  const account = store.getters.account
-  const session = store.getters.session
+  const account = store.state.account
+  const session = store.state.session
   if (verification) {
     if (session.verified) {
       next()

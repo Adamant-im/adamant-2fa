@@ -19,7 +19,7 @@
               <v-text-field :label="$t('password')" :rules="passwordRules" @input="validatePassword"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
                 v-model="password.value"/>
-              <v-btn :disabled="!(password.valid && username.valid)" @click="login"
+              <v-btn :disabled="!(password.valid && username.valid)" @click="loginUser"
                 v-t="'login'"/>
             </v-form>
           </v-flex>
@@ -41,13 +41,13 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 export default {
   components: { LanguageSwitcher },
   computed: {
-    ...mapGetters(['account', 'apiUrl', 'session']),
+    ...mapState(['account']),
     passwordRules () {
       // Translate validation messages on i18n locale change
       return [this.$i18n.t(this.password.note) || true]
@@ -72,43 +72,22 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setAccount', 'setSession']),
-    login () {
-      this.axios.post(this.apiUrl + 'login', {
+    ...mapActions(['login']),
+    loginUser () {
+      this.login({
         password: this.password.value,
         username: this.username.value
+      }).then(status => {
+        if (status === 200) {
+          this.$i18n.locale = this.account.locale
+          if (this.account.se2faEnabled) {
+            this.$router.push('verify')
+          } else {
+            this.$router.push('settings')
+          }
+          // this.password.value = null
+        } else this.$emit('snackbar-note', status + '.login')
       })
-        .then(res => {
-          if (res.status === 200) {
-            this.setSession({
-              created: res.data.created,
-              id: res.data.id,
-              lastSeen: Date.now(),
-              timeDelta: Date.now() - Date.parse(res.data.created),
-              ttl: res.data.ttl,
-              verified: res.data.se2faEnabled ? null : true
-            })
-            this.setAccount({
-              adamantAddress: res.data.adamantAddress,
-              id: res.data.userId,
-              locale: res.data.locale,
-              se2faEnabled: res.data.se2faEnabled,
-              username: res.data.username
-            })
-            this.$i18n.locale = this.account.locale
-            if (this.account.se2faEnabled) {
-              this.$router.push('verify')
-            } else {
-              this.$router.push('settings')
-            }
-            this.password.value = null
-            console.info(res)
-          } else console.warn(res)
-        })
-        .catch(err => {
-          console.error(err)
-          this.$emit('snackbar-note', err.response.status + '.login')
-        })
     },
     validatePassword (value) {
       let state = ''

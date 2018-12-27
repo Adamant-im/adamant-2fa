@@ -19,7 +19,7 @@
               <v-text-field :label="$t('password')" :rules="passwordRules" @input="validatePassword"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
                 v-model="password.value"/>
-              <v-btn :disabled="!(password.valid && username.valid)" @click="signup"
+              <v-btn :disabled="!(password.valid && username.valid)" @click="signupUser"
                 v-t="'signup'"/>
             </v-form>
           </v-flex>
@@ -41,13 +41,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 export default {
   components: { LanguageSwitcher },
   computed: {
-    ...mapGetters(['account', 'apiUrl']),
+    ...mapState(['account']),
     passwordRules () {
       // Translate validation messages on i18n locale change
       return [this.$i18n.t(this.password.note) || true]
@@ -72,23 +72,19 @@ export default {
     }
   },
   methods: {
-    signup () {
-      this.axios.post(this.apiUrl, {
+    ...mapActions(['signup']),
+    signupUser () {
+      this.signup({
+        locale: this.$i18n.locale,
         password: this.password.value,
         username: this.username.value
+      }).then(status => {
+        if (status === 200) {
+          this.$router.push('login')
+          // this.password.value = null
+          this.$emit('snackbar-note', 'signedUp')
+        } else this.$emit('snackbar-note', status + '.signup')
       })
-        .then(res => {
-          if (res.status === 200) {
-            this.$router.push('login')
-            this.password.value = null
-            this.$emit('snackbar-note', 'signedUp')
-            console.info(res)
-          } else console.warn(res)
-        })
-        .catch(err => {
-          console.error(err)
-          this.$emit('snackbar-note', err.response.status + '.signup')
-        })
     },
     validatePassword (value) {
       let state = ''

@@ -6,22 +6,155 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   actions: {
-    getAccountData: ({ commit, state }) => {
-      Vue.axios.get(state.apiUrl + state.session.userId, {
-        params: { access_token: state.session.id }
+    disable2fa ({ commit, state }) {
+      return Vue.axios.get(state.apiUrl + 'disable2fa', {
+        params: {
+          access_token: state.session.id,
+          id: state.account.id
+        }
+      }).then(res => {
+        if (res.status === 200) {
+          commit('updateAccount', {
+            se2faEnabled: res.data.se2faEnabled
+          })
+          console.info(res)
+        } else console.warn(res)
+        return res.status
+      }).catch(error => {
+        console.error(error)
+        return error.response.status
       })
-        .then(res => {
-          if (res.status === 200) {
-            commit('setAccount', res.data)
-          } else console.warn(res)
-        })
-        .catch(err => console.error(err))
+    },
+    enable2fa ({ commit, state }, hotp) {
+      return Vue.axios.get(state.apiUrl + 'verifyHotp', {
+        params: {
+          access_token: state.session.id,
+          id: state.account.id,
+          hotp
+        }
+      }).then(res => {
+        if (res.status === 200) {
+          commit('updateAccount', {
+            se2faEnabled: res.data.verified
+          })
+          console.info(res)
+        } else console.warn(res)
+        return res
+      }).catch(error => {
+        console.error(error)
+        return error.response
+      })
+    },
+    locale ({ commit, state }, locale) {
+      return Vue.axios.post(state.apiUrl + 'locale?access_token=' + state.session.id, {
+        id: state.account.id,
+        locale
+      }).then(res => {
+        if (res.status === 200) {
+          commit('updateAccount', {
+            locale: res.data.locale
+          })
+          console.info(res)
+        } else console.warn(res)
+        return res.status
+      }).catch(error => {
+        console.error(error)
+        return error.response.status
+      })
+    },
+    login ({ commit, state }, params) {
+      return Vue.axios.post(state.apiUrl + 'login', params).then(res => {
+        if (res.status === 200) {
+          commit('setSession', {
+            created: res.data.created,
+            id: res.data.id,
+            lastSeen: Date.now(),
+            timeDelta: Date.now() - Date.parse(res.data.created),
+            ttl: res.data.ttl,
+            verified: res.data.se2faEnabled ? null : true
+          })
+          commit('setAccount', {
+            adamantAddress: res.data.adamantAddress,
+            id: res.data.userId,
+            locale: res.data.locale,
+            se2faEnabled: res.data.se2faEnabled,
+            username: res.data.username
+          })
+          console.info(res)
+        } else console.warn(res)
+        return res.status
+      }).catch(error => {
+        console.error(error)
+        return error.response.status
+      })
+    },
+    logout ({ commit, state }) {
+      return Vue.axios.post(
+        state.apiUrl + 'logout/?access_token=' + state.session.id
+      ).then(res => {
+        if (res.status === 204) {
+          commit('clearSession')
+          console.info(res)
+        } else console.warn(res)
+        return res.status
+      }).catch(error => {
+        console.error(error)
+        if (error.response.status === 401) { // Access token expired
+          commit('clearSession')
+        }
+        return error.response.status
+      })
+    },
+    postAdamantAddress ({ commit, state }, adamantAddress) {
+      return Vue.axios.post(state.apiUrl + 'adamantAddress?access_token=' + state.session.id, {
+        adamantAddress,
+        id: state.account.id
+      }).then(res => {
+        if (res.status === 200) {
+          commit('updateAccount', {
+            adamantAddress: res.data.adamantAddress
+          })
+          console.info(res)
+        } else console.warn(res)
+        return res
+      }).catch(error => {
+        console.error(error)
+        return error.response
+      })
+    },
+    signup ({ state }, params) {
+      return Vue.axios.post(state.apiUrl, params).then(res => {
+        if (res.status === 200) {
+          console.info(res)
+        } else console.warn(res)
+        return res.status
+      }).catch(error => {
+        console.error(error)
+        return error.response.status
+      })
+    },
+    verify ({ commit, state }, hotp) {
+      return Vue.axios.get(state.apiUrl + 'verifyHotp', {
+        params: {
+          access_token: state.session.id,
+          id: state.account.id,
+          hotp
+        }
+      }).then(res => {
+        if (res.status === 200) {
+          commit('updateSession', {
+            verified: res.data.verified
+          })
+          console.info(res)
+        } else console.warn(res)
+        return res
+      }).catch(error => {
+        console.error(error)
+        return error.response
+      })
     }
   },
   getters: {
-    account: state => state.account,
-    apiUrl: state => state.apiUrl,
-    session: state => state.session,
     sessionTimeLeft: state => {
       return (
         Date.parse(state.session.created) +
@@ -73,5 +206,6 @@ export default new Vuex.Store({
       ttl: null, // Time to live, 20 minutes 16 seconds approximately by default
       verified: null // Indicates that user logged in and passed 2FA
     }
-  }
+  },
+  strict: process.env.NODE_ENV !== 'production'
 })

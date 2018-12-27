@@ -16,7 +16,7 @@
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
                 :rules="hotpRules" @input="validateHotp" class="text-xs-center" maxlength="6"
                 v-model="hotp.value"/>
-              <v-btn :disabled="!hotp.valid" @click="verify" v-t="'verify'"/>
+              <v-btn :disabled="!hotp.valid" @click="verifyHotp" v-t="'verify'"/>
             </v-form>
           </v-flex>
         </v-layout>
@@ -26,13 +26,13 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 export default {
   components: { LanguageSwitcher },
   computed: {
-    ...mapGetters(['account', 'apiUrl', 'session']),
+    ...mapState(['session']),
     hotpRules () {
       // Translate validation messages on i18n locale change
       return [this.$i18n.t(this.hotp.note) || true]
@@ -50,23 +50,14 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['clearSession', 'updateSession']),
-    logout () {
-      this.axios.post(this.apiUrl + 'logout/?access_token=' + this.session.id)
-        .then(res => {
-          if (res.status === 204) {
-            this.clearSession()
-            this.$router.push('login')
-            console.info(res)
-          } else console.warn(res)
-        })
-        .catch(err => {
-          console.error(err)
-          if (err.status === 401) { // Access token expired
-            this.clearSession()
-            this.$router.push('login')
-          }
-        })
+    ...mapActions(['logout', 'verify']),
+    logoutUser () {
+      this.logout().then(status => {
+        if (status === 204) {
+          this.$router.push('login')
+        }
+        this.$emit('snackbar-note', status + '.logout')
+      })
     },
     validateHotp (value) {
       let state = ''
@@ -78,45 +69,35 @@ export default {
       this.hotp.note = state
       this.hotp.valid = !state
     },
-    verify () {
+    verifyHotp () {
       this.hotp.disabled = true
-      this.axios.get(this.apiUrl + 'verifyHotp', {
-        params: {
-          access_token: this.session.id,
-          id: this.account.id,
-          hotp: this.hotp.value
-        }
-      })
-        .then(res => {
-          if (res.status === 200) {
-            this.updateSession({ verified: res.data.verified })
-            if (this.session.verified) {
-              this.$router.push('settings')
+      this.verify(this.hotp.value).then(({ data, status }) => {
+        if (status === 200) {
+          if (this.session.verified) {
+            this.$router.push('settings')
+          } else {
+            this.hotp.disabled = false
+            if (this.hotpError.value !== this.hotp.value) {
+              this.hotpError.count = 2
+              this.hotpError.value = this.hotp.value
+              this.$emit('snackbar-note', {
+                choice: this.hotpError.count,
+                path: '2faNotValid'
+              })
             } else {
-              this.hotp.disabled = false
-              if (this.hotpError.value !== this.hotp.value) {
-                this.hotpError.count = 2
-                this.hotpError.value = this.hotp.value
+              if (this.hotpError.count < 1) {
+                this.logoutUser()
+              } else {
                 this.$emit('snackbar-note', {
-                  args: { count: this.hotpError.count },
+                  choice: this.hotpError.count,
                   path: '2faNotValid'
                 })
-              } else {
-                if (this.hotpError.count < 1) {
-                  this.logout()
-                } else {
-                  this.$emit('snackbar-note', {
-                    args: { count: this.hotpError.count },
-                    path: '2faNotValid'
-                  })
-                }
               }
-              this.hotpError.count--
             }
-            console.info(res)
-          } else console.warn(res)
-        })
-        .catch(err => console.error(err))
+            this.hotpError.count--
+          }
+        }
+      })
     }
   }
 }

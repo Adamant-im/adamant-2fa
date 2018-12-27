@@ -7,37 +7,34 @@ const methods = require('./account.json').methods;
 module.exports = function(Account) {
   Account.adamantAddress = function(adamantAddress, id, next) {
     // Id must be restricted to owner
-    Account.findById(id, (err, account) => {
-      if (err) next(err);
+    Account.findById(id, (error, account) => {
+      if (error) next(error);
       const secret = speakeasy.generateSecret({
         name: 'ADAMANT-' + adamantAddress,
       });
       const seCounter = 1;
       const data = {
-        adamantAddress,
+        // adamantAddress,
         seCounter,
         seSecretAscii: secret.ascii,
         seSecretBase32: secret.base32,
         seSecretHex: secret.hex,
         seSecretUrl: secret.otpauth_url,
       };
-      account.updateAttributes(data, err => {
-        if (err) {
-          next(err);
-        } else { // Else clause prevents "Error: Callback was already called."
-          admSend(account, {adamantAddress}, next);
-        }
+      account.updateAttributes(data, error => {
+        if (error) next(error);
+        admSend(account, {adamantAddress}, next);
       });
     });
   };
 
   Account.disable2fa = function(id, next) {
     // Id must be restricted to owner
-    Account.findById(id, (err, account) => {
-      if (err) next(err);
+    Account.findById(id, (error, account) => {
+      if (error) next(error);
       const res = {se2faEnabled: false};
-      account.updateAttributes(res, err => {
-        if (err) next(err);
+      account.updateAttributes(res, error => {
+        if (error) next(error);
         next(null, res);
       });
     });
@@ -45,11 +42,11 @@ module.exports = function(Account) {
 
   Account.locale = function(locale, id, next) {
     // Id must be restricted to owner
-    Account.findById(id, (err, account) => {
-      if (err) next(err);
+    Account.findById(id, (error, account) => {
+      if (error) next(error);
       const res = {locale};
-      account.updateAttributes(res, err => {
-        if (err) next(err);
+      account.updateAttributes(res, error => {
+        if (error) next(error);
         next(null, res);
       });
     });
@@ -57,8 +54,8 @@ module.exports = function(Account) {
 
   Account.verifyHotp = function(hotp, id, next) {
     // Id must be restricted to owner
-    Account.findById(id, (err, account) => {
-      if (err) next(err);
+    Account.findById(id, (error, account) => {
+      if (error) next(error);
       let verified = false;
       if (/^\d{6}$/.test(hotp)) {
         verified = speakeasy.hotp.verify({
@@ -71,8 +68,8 @@ module.exports = function(Account) {
           account.updateAttributes({
             se2faEnabled: true,
             seCounter: account.seCounter + 1,
-          }, err => {
-            if (err) next(err);
+          }, error => {
+            if (error) next(error);
             // Generate new code
             admSend(account, {verified}, next);
           });
@@ -82,8 +79,8 @@ module.exports = function(Account) {
   };
 
   Account.afterRemote('login', function(ctx, output, next) {
-    Account.findById(output.userId, (err, account) => {
-      if (err) next(err);
+    Account.findById(output.userId, (error, account) => {
+      if (error) next(error);
       output.setAttributes({
         adamantAddress: account.adamantAddress,
         locale: account.locale,
@@ -99,7 +96,7 @@ module.exports = function(Account) {
     if (output.error) {
       error = new Error();
       error.statusCode = 422;
-      error.message = output.error.toLowerCase();
+      error.message = error.message || output.error.toLowerCase();
       error.code = output.error.toUpperCase().replace(' ', '_');
     }
     next(error);
@@ -146,20 +143,26 @@ module.exports = function(Account) {
       secret: account.seSecretAscii,
     });
     const command = `
-      adm send message ${account.adamantAddress} "2FA code: ${hotp}"
+      adm send message ${payload.adamantAddress || account.adamantAddress} "2FA code: ${hotp}"
     `;
-    exec(command, function(err, stdout, stderr) {
-      if (err) next(err);
+    exec(command, function(error, stdout, stderr) {
+      if (error) next(error);
       console.info(command, stdout, stderr);
       try {
         var answer = JSON.parse(stdout);
       } catch (x) {
         answer = {
+          error: 'unprocessable entity',
           message: String(stdout).toLowerCase(),
-          success: false,
         };
       }
-      next(null, Object.assign(answer, payload));
+      // Save only known ADAMANT address
+      if (payload.adamantAddress && !answer.error) {
+        account.updateAttribute('adamantAddress', payload.adamantAddress, error => {
+          if (error) next(error);
+          next(null, Object.assign(answer, payload));
+        });
+      } else next(null, Object.assign(answer, payload));
     });
   }
 };

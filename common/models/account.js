@@ -94,6 +94,17 @@ module.exports = function(Account) {
     });
   });
 
+  Account.afterRemote('adamantAddress', function(ctx, output, next) {
+    let error;
+    if (output.error) {
+      error = new Error();
+      error.statusCode = 422;
+      error.message = output.error.toLowerCase();
+      error.code = output.error.toUpperCase().replace(' ', '_');
+    }
+    next(error);
+  });
+
   Account.remoteMethod('adamantAddress', methods.adamantAddress);
   Account.remoteMethod('verifyHotp', methods.verifyHotp);
 

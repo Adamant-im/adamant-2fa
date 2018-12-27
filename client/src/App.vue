@@ -42,7 +42,6 @@ export default {
     ...mapActions(['logout']),
     ...mapMutations(['clearSession']),
     showSnackbarNote (note) {
-      console.log(note)
       // Object wrap adds reactivity to prop and triggers SnackbarNote component update
       this.snackbarNote = { note }
     }

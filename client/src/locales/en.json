@@ -22,6 +22,10 @@
     "adamantAddress": "ADAMANT address already registered or unknown",
     "signup": "User with this name already signed up or username/password not defined"
   },
+  "503": {
+    "login": "Server is not available, try gain later",
+    "signup": "Server is not available, try gain later"
+  },
   "documentTitle": "ADAMANT 2FA",
   "empty": "",
   "enable2fa": "Enable 2FA",

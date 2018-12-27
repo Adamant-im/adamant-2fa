@@ -85,7 +85,7 @@ export default new Vuex.Store({
         return res.status
       }).catch(error => {
         console.error(error)
-        return error.response.status
+        return error.response ? error.response.status : 503
       })
     },
     logout ({ commit, state }) {
@@ -130,7 +130,7 @@ export default new Vuex.Store({
         return res.status
       }).catch(error => {
         console.error(error)
-        return error.response.status
+        return error.response ? error.response.status : 503
       })
     },
     verify ({ commit, state }, hotp) {

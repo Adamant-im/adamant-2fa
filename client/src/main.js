@@ -13,30 +13,6 @@ Vue.use(VueAxios, axios)
 
 Vue.config.productionTip = false
 
-router.beforeEach((to, from, next) => {
-  const authentification = to.matched.some(route => route.meta.authentification)
-  const verification = to.matched.some(route => route.meta.verification)
-  const account = store.state.account
-  const session = store.state.session
-  if (verification) {
-    if (session.verified) {
-      next()
-    } else if (session.created && account.se2faEnabled) {
-      next('/verify')
-    } else {
-      next('/login')
-    }
-  } else if (authentification) {
-    if (session.created) {
-      next()
-    } else {
-      next('/login')
-    }
-  } else {
-    next()
-  }
-})
-
 new Vue({
   components: { App },
   i18n,

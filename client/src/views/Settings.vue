@@ -92,16 +92,11 @@ export default {
       this.postAdamantAddress(this.adamantAddress.value).then(({ data, status }) => {
         if (status === 200) {
           this.hotpError.count = 2
-          if (data.success) {
-            this.show2faHotp = true
-            this.$emit('snackbar-note', {
-              args: { id: data.transactionId },
-              path: '2faSent'
-            })
-          } else {
-            this.$emit('snackbar-note', '422.adamantAddress')
-            this.adamantAddress.disabled = false
-          }
+          this.show2faHotp = true
+          this.$emit('snackbar-note', {
+            args: { id: data.transactionId },
+            path: '2faSent'
+          })
         } else {
           this.$emit('snackbar-note', status + '.adamantAddress')
           this.adamantAddress.disabled = false

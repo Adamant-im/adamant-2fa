@@ -78,7 +78,7 @@ module.exports = function(Account) {
     });
   });
 
-  Account.afterRemote('adamantAddress', function(ctx, output, next) {
+  Account.afterRemote('prototype.updateAdamantAddress', function(ctx, output, next) {
     let error;
     if (output.error) {
       error = new Error();

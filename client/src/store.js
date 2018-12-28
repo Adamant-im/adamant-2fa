@@ -7,7 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   actions: {
     disable2fa ({ commit, state }) {
-      return Vue.axios.get(state.apiUrl + 'disable2fa', {
+      return Vue.axios.get(`${state.apiUrl}${state.account.id}/disable2fa`, {
         params: {
           access_token: state.session.id,
           id: state.account.id
@@ -26,7 +26,7 @@ export default new Vuex.Store({
       })
     },
     enable2fa ({ commit, state }, hotp) {
-      return Vue.axios.get(state.apiUrl + 'verifyHotp', {
+      return Vue.axios.get(`${state.apiUrl}${state.account.id}/verifyHotp`, {
         params: {
           access_token: state.session.id,
           id: state.account.id,
@@ -35,7 +35,10 @@ export default new Vuex.Store({
       }).then(res => {
         if (res.status === 200) {
           commit('updateAccount', {
-            se2faEnabled: res.data.verified
+            se2faEnabled: res.data.se2faEnabled
+          })
+          commit('updateSession', {
+            verified: res.data.verified
           })
           console.info(res)
         } else console.warn(res)
@@ -43,23 +46,6 @@ export default new Vuex.Store({
       }).catch(error => {
         console.error(error)
         return error.response
-      })
-    },
-    locale ({ commit, state }, locale) {
-      return Vue.axios.post(state.apiUrl + 'locale?access_token=' + state.session.id, {
-        id: state.account.id,
-        locale
-      }).then(res => {
-        if (res.status === 200) {
-          commit('updateAccount', {
-            locale: res.data.locale
-          })
-          console.info(res)
-        } else console.warn(res)
-        return res.status
-      }).catch(error => {
-        console.error(error)
-        return error.response.status
       })
     },
     login ({ commit, state }, params) {
@@ -90,7 +76,7 @@ export default new Vuex.Store({
     },
     logout ({ commit, state }) {
       return Vue.axios.post(
-        state.apiUrl + 'logout/?access_token=' + state.session.id
+        `${state.apiUrl}logout/?access_token=${state.session.id}`
       ).then(res => {
         if (res.status === 204) {
           commit('clearSession')
@@ -99,17 +85,19 @@ export default new Vuex.Store({
         return res.status
       }).catch(error => {
         console.error(error)
-        if (error.response.status === 401) { // Access token expired
+        if (error.response.status === 401) { // Access token expired or wrong
           commit('clearSession')
         }
         return error.response.status
       })
     },
     postAdamantAddress ({ commit, state }, adamantAddress) {
-      return Vue.axios.post(state.apiUrl + 'adamantAddress?access_token=' + state.session.id, {
-        adamantAddress,
-        id: state.account.id
-      }).then(res => {
+      return Vue.axios.post(
+        `${state.apiUrl}${state.account.id}/adamantAddress?access_token=${state.session.id}`,
+        {
+          adamantAddress
+        }
+      ).then(res => {
         if (res.status === 200) {
           commit('updateAccount', {
             adamantAddress: res.data.adamantAddress
@@ -120,6 +108,26 @@ export default new Vuex.Store({
       }).catch(error => {
         console.error(error)
         return error.response
+      })
+    },
+    postLocale ({ commit, state }, locale) {
+      return Vue.axios.post(
+        `${state.apiUrl}${state.account.id}/locale?access_token=${state.session.id}`,
+        {
+          id: state.account.id,
+          locale
+        }
+      ).then(res => {
+        if (res.status === 200) {
+          commit('updateAccount', {
+            locale: res.data.locale
+          })
+          console.info(res)
+        } else console.warn(res)
+        return res.status
+      }).catch(error => {
+        console.error(error)
+        return error.response.status
       })
     },
     signup ({ state }, params) {
@@ -134,7 +142,7 @@ export default new Vuex.Store({
       })
     },
     verify ({ commit, state }, hotp) {
-      return Vue.axios.get(state.apiUrl + 'verifyHotp', {
+      return Vue.axios.get(`${state.apiUrl}${state.account.id}/verifyHotp`, {
         params: {
           access_token: state.session.id,
           id: state.account.id,

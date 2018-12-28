@@ -34,9 +34,8 @@ export default {
     ...mapActions(['logout']),
     logoutUser () {
       this.logout().then(status => {
-        if (status === 204) {
-          this.$router.push('login')
-        }
+        // Logout user even if access token expired
+        this.$router.push('login')
         this.$emit('snackbar-note', status + '.logout')
       })
     }

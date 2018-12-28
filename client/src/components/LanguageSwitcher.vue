@@ -5,7 +5,7 @@
       <v-icon right>mdi-chevron-down</v-icon>
     </v-btn>
     <v-list>
-      <v-list-tile :key="locale" @click="update(locale)"
+      <v-list-tile :key="locale" @click="updateLocale(locale)"
         v-for="(language, locale) in this.$i18n.messages">
         <v-list-tile-title>{{language.name}}</v-list-tile-title>
       </v-list-tile>
@@ -24,11 +24,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['locale']),
-    update (locale) {
+    ...mapActions(['postLocale']),
+    updateLocale (locale) {
       this.$i18n.locale = locale
       if (this.session.created) {
-        this.locale(locale)
+        this.postLocale(locale)
       }
     }
   },

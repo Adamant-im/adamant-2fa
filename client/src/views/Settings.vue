@@ -172,9 +172,16 @@ export default {
   },
   // Does not trigger if browser URL was changed by user manually
   beforeRouteLeave (to, from, next) {
-    if (to.name === ('login' || 'signup' || 'verify')) {
-      next(false)
+    const session = this.$store.state.session
+    if (session.created) {
+      // User goes back in browser history
+      if (to.name === ('login' || 'signup' || 'verify')) {
+        next(false)
+      } else {
+        next()
+      }
     } else {
+      // User logged out
       next()
     }
   }

@@ -67,13 +67,6 @@
       "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
-      "property": "adamantAddress"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW",
       "property": "disable2fa"
     },
     {
@@ -81,7 +74,14 @@
       "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
-      "property": "locale"
+      "property": "updateLocale"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "updateAdamantAddress"
     },
     {
       "accessType": "EXECUTE",
@@ -92,89 +92,97 @@
     }
   ],
   "methods": {
-    "adamantAddress": {
-      "accepts": [
-        {
-          "arg": "adamantAddress",
-          "type": "string"
-        },
-        {
-          "arg": "id",
-          "type": "number"
-        }
-      ],
-      "description": "Change account's ADAMANT address and regenerate secret key",
-      "http": {
-        "verb": "post",
-        "path": "/adamantAddress"
-      },
-      "returns": {
-        "arg": "data",
-        "type": "Account",
-        "root": true
-      }
-    },
-    "disable2fa": {
-      "accepts": [
-        {
-          "arg": "id",
-          "type": "number"
-        }
-      ],
+    "prototype.disable2fa": {
       "description": "Disable 2FA for account",
-      "http": {
-        "verb": "get",
-        "path": "/disable2fa"
-      },
-      "returns": {
-        "arg": "data",
-        "type": "boolean",
-        "root": true
-      }
+      "http": [
+        {
+          "path": "/disable2fa",
+          "verb": "get"
+        }
+      ],
+      "returns": [
+        {
+          "arg": "data",
+          "description": "",
+          "root": true,
+          "type": "Account"
+        }
+      ]
     },
-    "locale": {
+    "prototype.updateLocale": {
       "accepts": [
         {
           "arg": "locale",
+          "description": "",
+          "required": true,
           "type": "string"
-        },
-        {
-          "arg": "id",
-          "type": "number"
         }
       ],
-      "description": "Change account's i18n locale",
-      "http": {
-        "verb": "post",
-        "path": "/locale"
-      },
-      "returns": {
-        "arg": "data",
-        "type": "boolean",
-        "root": true
-      }
+      "description": "Update account's i18n locale",
+      "http": [
+        {
+          "path": "/locale",
+          "verb": "post"
+        }
+      ],
+      "returns": [
+        {
+          "arg": "data",
+          "description": "",
+          "root": true,
+          "type": "Account"
+        }
+      ]
     },
-    "verifyHotp": {
+    "prototype.updateAdamantAddress": {
+      "accepts": [
+        {
+          "arg": "adamantAddress",
+          "description": "",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "description": "Update account's ADAMANT address and regenerate secret key",
+      "http": [
+        {
+          "path": "/adamantAddress",
+          "verb": "post"
+        }
+      ],
+      "returns": [
+        {
+          "arg": "data",
+          "description": "",
+          "root": true,
+          "type": "Account"
+        }
+      ]
+    },
+    "prototype.verifyHotp": {
       "accepts": [
         {
           "arg": "hotp",
+          "description": "",
+          "required": true,
           "type": "string"
-        },
-        {
-          "arg": "id",
-          "type": "number"
         }
       ],
-      "description": "Verify HOTP first time to enable 2FA",
-      "http": {
-        "verb": "get",
-        "path": "/verifyHotp"
-      },
-      "returns": {
-        "arg": "data",
-        "type": "boolean",
-        "root": true
-      }
+      "description": "Verify HOTP to enable 2FA or to complete login",
+      "http": [
+        {
+          "path": "/verifyHotp",
+          "verb": "get"
+        }
+      ],
+      "returns": [
+        {
+          "arg": "data",
+          "description": "",
+          "root": true,
+          "type": "object"
+        }
+      ]
     }
   }
 }

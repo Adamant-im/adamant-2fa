@@ -3,7 +3,6 @@ import Vue from 'vue'
 
 import Login from '@/views/Login'
 import Signup from '@/views/Signup'
-import NotFound from '@/views/NotFound'
 // import Settings from '@/views/Settings'
 import Verify from '@/views/Verify'
 
@@ -16,16 +15,6 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
-      alias: '/',
-      // Does not trigger if browser URL was changed by user manually
-      beforeEnter: (to, from, next) => {
-        const session = store.state.session
-        if (session.created) {
-          next(false)
-        } else {
-          next()
-        }
-      },
       component: Login,
       name: 'login',
       path: '/login'
@@ -33,68 +22,77 @@ const router = new Router({
     {
       component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings.vue'),
       // component: Settings,
-      meta: { verification: true },
+      meta: { authorization: true },
       name: 'settings',
       path: '/settings'
     },
     {
-      // Does not trigger if browser URL was changed by user manually
-      beforeEnter: (to, from, next) => {
-        const session = store.state.session
-        if (session.created) {
-          next(false)
-        } else {
-          next()
-        }
-      },
       component: Signup,
       name: 'signup',
       path: '/signup'
     },
     {
-      // Does not trigger if browser URL was changed by user manually
-      beforeEnter: (to, from, next) => {
-        const session = store.state.session
-        if (session.verified) {
-          next(false)
-        } else {
-          next()
-        }
-      },
       component: Verify,
-      meta: { authentification: true },
+      meta: { authentication: true },
       name: 'verify',
       path: '/verify'
     },
     {
-      component: NotFound,
-      name: 'notFound',
+      alias: '/signup',
       path: '*'
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  const authentification = to.matched.some(route => route.meta.authentification)
-  const verification = to.matched.some(route => route.meta.verification)
+  const authentication = to.matched.some(route => route.meta.authentication)
+  const authorization = to.matched.some(route => route.meta.authorization)
   const account = store.state.account
   const session = store.state.session
-  if (verification) {
+  if (authorization) {
+    // Authorization required - settings
     if (session.verified) {
       next()
     } else if (session.created && account.se2faEnabled) {
       next('/verify')
-    } else {
+    } else if (session.lastSeen) {
       next('/login')
+    } else {
+      next('/signup')
     }
-  } else if (authentification) {
-    if (session.created) {
+  } else if (authentication) {
+    // Authentication required - settings, verify
+    if (session.verified) {
+      next('/settings')
+    } else if (session.created && account.se2faEnabled) {
+      next()
+    } else if (session.lastSeen) {
+      next('/login')
+    } else {
+      next('/signup')
+    }
+  } else if (to.name) {
+    // No permission required - login, signup
+    if (session.verified) {
+      next('/settings')
+    } else if (session.created && account.se2faEnabled) {
+      next('/verify')
+    } else if (session.lastSeen) {
       next()
     } else {
-      next('/login')
+      next('/signup')
     }
   } else {
-    next()
+    // Path undefined
+    if (session.verified) {
+      next('/settings')
+    } else if (session.created && account.se2faEnabled) {
+      next('/verify')
+    } else if (session.lastSeen) {
+      next('/login')
+    } else {
+      next('/signup')
+    }
   }
 })
 

@@ -164,21 +164,6 @@ export default {
     if (this.account.se2faEnabled) this.se2faChecked = true
     this.adamantAddress.value = this.account.adamantAddress
     this.validateAdamantAddress(this.adamantAddress.value)
-  },
-  // Does not trigger if browser URL was changed by user manually
-  beforeRouteLeave (to, from, next) {
-    const session = this.$store.state.session
-    if (session.created) {
-      // User goes back in browser history
-      if (to.name === ('login' || 'signup' || 'verify')) {
-        next(false)
-      } else {
-        next()
-      }
-    } else {
-      // User logged out
-      next()
-    }
   }
 }
 </script>

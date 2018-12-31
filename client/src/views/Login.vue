@@ -14,7 +14,7 @@
           <v-flex md8 xs12>
             <v-form class="login-form">
               <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
-                browser-autocomplete="on" class="text-xs-center" maxlength="15"
+                browser-autocomplete="on" class="text-xs-center" maxlength="25"
                 v-model="username.value"/>
               <v-text-field :label="$t('password')" :rules="passwordRules" @input="validatePassword"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
@@ -92,7 +92,8 @@ export default {
     validatePassword (value) {
       let state = ''
       switch (false) {
-        case Boolean(value): state = 'required.password'
+        case Boolean(value): state = 'required.password'; break
+        case value && value.length > 7: state = 'tooShort.password'
       }
       this.password.note = state
       this.password.valid = !state
@@ -100,7 +101,8 @@ export default {
     validateUsername (value) {
       let state = ''
       switch (false) {
-        case Boolean(value): state = 'required.username'
+        case Boolean(value): state = 'required.username'; break
+        case value && value.length > 2: state = 'tooShort.username'
       }
       this.username.note = state
       this.username.valid = !state

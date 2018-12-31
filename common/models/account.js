@@ -1,8 +1,10 @@
 'use strict';
 
 const {exec} = require('child_process');
+const g = require('loopback/lib/globalize');
 const speakeasy = require('speakeasy');
-const methods = require('./account.json').methods;
+const MAX_PASSWORD_LENGTH = 15;
+const MIN_PASSWORD_LENGTH = 8;
 
 module.exports = function(Account) {
   Account.prototype.disable2fa = function(next) {
@@ -112,6 +114,14 @@ module.exports = function(Account) {
     max: 23,
     min: 7,
   });
+  Account.validatesLengthOf('username', {
+    message: {
+      max: 'Username is too long',
+      min: 'Username is too short',
+    },
+    max: 25,
+    min: 3,
+  });
   Account.validatesPresenceOf('username', 'password');
   Account.validatesUniquenessOf('adamantAddress', {
     adamantAddress: 'Address already registered',
@@ -119,6 +129,35 @@ module.exports = function(Account) {
   Account.validatesUniquenessOf('username', {
     message: 'User already exists',
   });
+
+  // validatesLengthOf is not applicable for password.
+  // Recommended solution is to override User.validatePassword method:
+  // https://github.com/strongloop/loopback/pull/941
+  Account.validatePassword = function(plain) {
+    var error;
+    if (!plain || typeof plain !== 'string') {
+      error = new Error(g.f('Invalid password.'));
+      error.code = 'INVALID_PASSWORD';
+      error.statusCode = 422;
+      throw error;
+    }
+    // Bcrypt only supports up to 72 bytes; the rest is silently dropped.
+    var len = Buffer.byteLength(plain, 'utf8');
+    if (len > MAX_PASSWORD_LENGTH) {
+      error = new Error(g.f('The password entered was too long. Max length is %d (entered %d)',
+        MAX_PASSWORD_LENGTH, len));
+      error.code = 'PASSWORD_TOO_LONG';
+      error.statusCode = 422;
+      throw error;
+    }
+    if (len < MIN_PASSWORD_LENGTH) {
+      error = new Error(g.f('The password entered was too short. Min length is %d (entered %d)',
+        MIN_PASSWORD_LENGTH, len));
+      error.code = 'PASSWORD_TOO_LONG';
+      error.statusCode = 422;
+      throw error;
+    }
+  };
 
   function admSend(account, payload, next) {
     const hotp = speakeasy.hotp({

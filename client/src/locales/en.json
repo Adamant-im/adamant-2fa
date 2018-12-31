@@ -67,7 +67,9 @@
   "tooShort": {
     "adamantAddress": "Address is too short",
     "hotp": "Code is too short",
-    "hotpEnable": "Code is too short"
+    "hotpEnable": "Code is too short",
+    "password": "Password is too short",
+    "username": "Username is too short"
   },
   "username": "Username",
   "valueMissing": {

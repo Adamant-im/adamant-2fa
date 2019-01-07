@@ -51,7 +51,7 @@ router.beforeEach((to, from, next) => {
   const session = store.state.session
   if (authorization) {
     // Authorization required - settings
-    if (session.verified) {
+    if (session.se2faVerified) {
       next()
     } else if (session.created && account.se2faEnabled) {
       next('/verify')
@@ -62,7 +62,7 @@ router.beforeEach((to, from, next) => {
     }
   } else if (authentication) {
     // Authentication required - settings, verify
-    if (session.verified) {
+    if (session.se2faVerified) {
       next('/settings')
     } else if (session.created && account.se2faEnabled) {
       next()
@@ -73,7 +73,7 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.name) {
     // No permission required - login, signup
-    if (session.verified) {
+    if (session.se2faVerified) {
       next('/settings')
     } else if (session.created && account.se2faEnabled) {
       next('/verify')
@@ -84,7 +84,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     // Path undefined
-    if (session.verified) {
+    if (session.se2faVerified) {
       next('/settings')
     } else if (session.created && account.se2faEnabled) {
       next('/verify')

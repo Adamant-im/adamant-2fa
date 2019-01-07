@@ -81,6 +81,8 @@ export default {
       if (checked) {
         this.show2faHotp = false
         this.adamantAddress.disabled = false
+        this.hotp.disabled = false
+        this.hotp.value = null
       } else if (this.account.se2faEnabled) {
         this.disable2fa().then(status => {
           this.$emit('snackbar-note', '2faDisabled')
@@ -125,9 +127,9 @@ export default {
     },
     verifyHotp () {
       this.hotp.disabled = true
-      this.enable2fa(this.hotp.value).then(({ data, status }) => {
+      this.enable2fa(this.hotp.value).then(status => {
         if (status === 200) {
-          if (data.verified) {
+          if (this.account.se2faEnabled) {
             this.$emit('snackbar-note', '2faEnabled')
             this.hotpError.count = 2
             this.show2fa = false

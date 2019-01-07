@@ -67,37 +67,43 @@
       "principalType": "ROLE",
       "principalId": "$owner",
       "permission": "ALLOW",
-      "property": "disable2fa"
+      "property": "verify2fa"
     },
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
-      "principalId": "$owner",
+      "principalId": "authorized",
       "permission": "ALLOW",
-      "property": "updateLocale"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW",
-      "property": "updateAdamantAddress"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$owner",
-      "permission": "ALLOW",
-      "property": "verifyHotp"
+      "property": [
+        "disable2fa", "enable2fa", "updateAdamantAddress", "updateLocale"
+      ]
     }
   ],
   "methods": {
     "prototype.disable2fa": {
+      "returns": [
+        {
+          "arg": "data",
+          "description": "",
+          "root": true,
+          "type": "Account"
+        }
+      ],
       "description": "Disable 2FA for account",
       "http": [
         {
           "path": "/disable2fa",
           "verb": "get"
+        }
+      ]
+    },
+    "prototype.enable2fa": {
+      "accepts": [
+        {
+          "arg": "hotp",
+          "description": "",
+          "required": true,
+          "type": "string"
         }
       ],
       "returns": [
@@ -106,6 +112,13 @@
           "description": "",
           "root": true,
           "type": "Account"
+        }
+      ],
+      "description": "Verify HOTP and enable 2FA",
+      "http": [
+        {
+          "path": "/enable2fa",
+          "verb": "get"
         }
       ]
     },
@@ -119,18 +132,18 @@
         }
       ],
       "description": "Update account's i18n locale",
-      "http": [
-        {
-          "path": "/locale",
-          "verb": "post"
-        }
-      ],
       "returns": [
         {
           "arg": "data",
           "description": "",
           "root": true,
           "type": "Account"
+        }
+      ],
+      "http": [
+        {
+          "path": "/locale",
+          "verb": "post"
         }
       ]
     },
@@ -159,7 +172,7 @@
         }
       ]
     },
-    "prototype.verifyHotp": {
+    "prototype.verify2fa": {
       "accepts": [
         {
           "arg": "hotp",
@@ -168,11 +181,11 @@
           "type": "string"
         }
       ],
-      "description": "Verify HOTP to enable 2FA or to complete login",
+      "description": "Verify HOTP and authorize to access settings",
       "http": [
         {
-          "path": "/verifyHotp",
-          "verb": "get"
+          "path": "/verify2fa",
+          "verb": "post"
         }
       ],
       "returns": [

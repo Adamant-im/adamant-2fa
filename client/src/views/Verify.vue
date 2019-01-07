@@ -71,9 +71,9 @@ export default {
     },
     verifyHotp () {
       this.hotp.disabled = true
-      this.verify(this.hotp.value).then(({ data, status }) => {
+      this.verify(this.hotp.value).then(status => {
         if (status === 200) {
-          if (this.session.verified) {
+          if (this.session.se2faVerified) {
             this.$router.push('settings')
           } else {
             this.hotp.disabled = false
@@ -96,7 +96,7 @@ export default {
             }
             this.hotpError.count--
           }
-        }
+        } else this.logoutUser()
       })
     }
   }

@@ -31,7 +31,13 @@
     }
   },
   "session": {},
-  "auth": {},
+  "auth": {
+    "loopback#token": {
+      "params": {
+        "currentUserLiteral": "user"
+      }
+    }
+  },
   "parse": {},
   "routes": {
     "loopback#rest": {

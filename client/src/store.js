@@ -26,7 +26,7 @@ export default new Vuex.Store({
       })
     },
     enable2fa ({ commit, state }, hotp) {
-      return Vue.axios.get(`${state.apiUrl}${state.account.id}/verifyHotp`, {
+      return Vue.axios.get(`${state.apiUrl}${state.account.id}/enable2fa`, {
         params: {
           access_token: state.session.id,
           id: state.account.id,
@@ -38,11 +38,12 @@ export default new Vuex.Store({
             se2faEnabled: res.data.se2faEnabled
           })
           commit('updateSession', {
-            verified: res.data.verified
+            // If 2FA enabled, verification already passed and vice versa
+            se2faVerified: res.data.se2faEnabled
           })
           console.info(res)
         } else console.warn(res)
-        return res
+        return res.status
       }).catch(error => {
         console.error(error)
         return error.response
@@ -57,7 +58,7 @@ export default new Vuex.Store({
             lastSeen: Date.now(),
             timeDelta: Date.now() - Date.parse(res.data.created),
             ttl: res.data.ttl,
-            verified: res.data.se2faEnabled ? null : true
+            se2faVerified: res.data.se2faEnabled ? null : true
           })
           commit('setAccount', {
             adamantAddress: res.data.adamantAddress,
@@ -142,20 +143,20 @@ export default new Vuex.Store({
       })
     },
     verify ({ commit, state }, hotp) {
-      return Vue.axios.get(`${state.apiUrl}${state.account.id}/verifyHotp`, {
-        params: {
-          access_token: state.session.id,
+      return Vue.axios.post(
+        `${state.apiUrl}${state.account.id}/verify2fa?access_token=${state.session.id}`,
+        {
           id: state.account.id,
           hotp
         }
-      }).then(res => {
+      ).then(res => {
         if (res.status === 200) {
           commit('updateSession', {
-            verified: res.data.verified
+            se2faVerified: res.data.se2faVerified
           })
           console.info(res)
         } else console.warn(res)
-        return res
+        return res.status
       }).catch(error => {
         console.error(error)
         return error.response
@@ -212,7 +213,7 @@ export default new Vuex.Store({
       lastSeen: null, // Indicates that user had been logged at least once
       timeDelta: null, // Difference between server and client time
       ttl: null, // Time to live, 20 minutes 16 seconds approximately by default
-      verified: null // Indicates that user logged in and passed 2FA
+      se2faVerified: null // Indicates that user logged in and passed 2FA
     }
   },
   strict: process.env.NODE_ENV !== 'production'

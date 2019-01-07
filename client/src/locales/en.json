@@ -23,8 +23,8 @@
     "signup": "User with this name already signed up or username/password not defined"
   },
   "503": {
-    "login": "Server is not available, try gain later",
-    "signup": "Server is not available, try gain later"
+    "login": "Server is not available, try again later",
+    "signup": "Server is not available, try again later"
   },
   "documentTitle": "ADAMANT 2FA",
   "empty": "",

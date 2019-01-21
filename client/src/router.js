@@ -72,15 +72,13 @@ router.beforeEach((to, from, next) => {
       next('/signup')
     }
   } else if (to.name) {
-    // No permission required - login, signup
+    // No permission required
     if (session.se2faVerified) {
       next('/settings')
     } else if (session.created && account.se2faEnabled) {
       next('/verify')
-    } else if (session.lastSeen) {
-      next()
     } else {
-      next('/signup')
+      next()
     }
   } else {
     // Path undefined

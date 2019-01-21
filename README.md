@@ -19,12 +19,12 @@
     $ cd server && node create-lb-tables.js
     $ cd ../
 ## Development
-### serve
+### Serve
 #### Loopback
     $ node .
 #### Vue
     $ cd client && yarn serve
-### build
+### Build
 #### Vue
     $ cd client && yarn build
     $ npm i -g serve

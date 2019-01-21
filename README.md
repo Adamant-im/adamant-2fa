@@ -18,8 +18,14 @@
 ### Create tables for built-in models
     $ cd server && node create-lb-tables.js
     $ cd ../
-## Start development server
-### Loopback
+## Development
+### serve
+#### Loopback
     $ node .
-### Vue
+#### Vue
     $ cd client && yarn serve
+### build
+#### Vue
+    $ cd client && yarn build
+    $ npm i -g serve
+    $ serve dist

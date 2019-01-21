@@ -15,11 +15,14 @@
     $ sudo nano /etc/postgresql/10/main/pg_hba.conf
         local   adamant-2fa  adamant-2fa        md5
     $ sudo service postgresql restart
-### Create tables for built-in models
+### Create tables for Loopback models
     $ cd server && node create-lb-tables.js
     $ cd ../
-## Start development server
-### Loopback
+## Development
+### Serve
     $ node .
-### Vue
     $ cd client && yarn serve
+### Build
+    $ cd client && yarn build
+    $ npm i -g serve
+    $ serve dist

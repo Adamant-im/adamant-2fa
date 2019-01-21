@@ -1,6 +1,7 @@
 'use strict';
 
-const {exec} = require('child_process');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 const g = require('loopback/lib/globalize');
 const speakeasy = require('speakeasy');
 const MAX_PASSWORD_LENGTH = 15;
@@ -33,8 +34,7 @@ module.exports = function(Account) {
               roleId: role.getId(),
             }, error => {
               if (error) return next(error);
-              // Generate new code
-              admSend(this, {se2faEnabled}, next);
+              next(null, {se2faEnabled});
             });
           });
         });
@@ -73,7 +73,14 @@ module.exports = function(Account) {
     };
     this.updateAttributes(data, error => {
       if (error) return next(error);
-      admSend(this, {adamantAddress}, next);
+      send2fa(adamantAddress, this).then(result => {
+        if (!result.error) {
+          this.updateAttribute('adamantAddress', adamantAddress, error => {
+            if (error) return next(error);
+            next(null, Object.assign(result, {adamantAddress}));
+          });
+        }
+      });
     });
   };
 
@@ -91,7 +98,7 @@ module.exports = function(Account) {
           if (error) return next(error);
           const Role = Account.app.models.Role;
           const RoleMapping = Account.app.models.RoleMapping;
-          // 2FA verification passed, grant permission
+          // 2FA verification passed, allow
           Role.findOne({where: {name: 'authorized'}}, (error, role) => {
             if (error) return next(error);
             RoleMapping.findOrCreate({where: {principalId: this.id}}, {
@@ -100,8 +107,7 @@ module.exports = function(Account) {
               roleId: role.getId(),
             }, error => {
               if (error) return next(error);
-              // Generate new code
-              admSend(this, {se2faVerified}, next);
+              next(null, {se2faVerified});
             });
           });
         });
@@ -110,12 +116,12 @@ module.exports = function(Account) {
   };
 
   // Failed request goes to afterRemoteError handler instead
-  Account.afterRemote('login', function(ctx, result, next) {
-    Account.findById(result.userId, (error, account) => {
+  Account.afterRemote('login', function(ctx, res, next) {
+    Account.findById(res.userId, (error, account) => {
       if (error) return next(error);
       const Role = Account.app.models.Role;
       const RoleMapping = Account.app.models.RoleMapping;
-      result.setAttributes({
+      res.setAttributes({
         adamantAddress: account.adamantAddress,
         locale: account.locale,
         se2faEnabled: account.se2faEnabled,
@@ -136,9 +142,11 @@ module.exports = function(Account) {
               // Revoke prevously assigned role and wait for 2FA verification
               roleMapping.destroy(error => {
                 if (error) return next(error);
-                next(null, result);
+                send2fa(res.adamantAddress, account).then(result => next(null, res));
               });
-            } else next(null, result);
+            } else {
+              send2fa(res.adamantAddress, account).then(result => next(null, res));
+            }
           });
         });
       } else {
@@ -151,20 +159,20 @@ module.exports = function(Account) {
             roleId: role.getId(),
           }, error => {
             if (error) return next(error);
-            next(null, result);
+            next(null, res);
           });
         });
       }
     });
   });
 
-  Account.afterRemote('prototype.updateAdamantAddress', function(ctx, result, next) {
+  Account.afterRemote('prototype.updateAdamantAddress', function(ctx, res, next) {
     let error;
-    if (result.error) {
+    if (res.error) {
       error = new Error();
       error.statusCode = 422;
-      error.message = error.message || result.error.toLowerCase();
-      error.code = result.error.toUpperCase().replace(' ', '_');
+      error.message = error.message || res.error.toLowerCase();
+      error.code = res.error.toUpperCase().replace(' ', '_');
     }
     next(error);
   });
@@ -237,33 +245,28 @@ module.exports = function(Account) {
     }
   };
 
-  function admSend(account, payload, next) {
+  async function send2fa(adamantAddress, account) {
     const hotp = speakeasy.hotp({
       counter: account.seCounter,
       // encoding: 'ascii',
       secret: account.seSecretAscii,
     });
-    const command = `
-      adm send message ${payload.adamantAddress || account.adamantAddress} "2FA code: ${hotp}"
-    `;
-    exec(command, function(error, stdout, stderr) {
-      if (error) return next(error);
-      console.info(command, stdout, stderr);
-      try {
-        var answer = JSON.parse(stdout);
-      } catch (x) {
-        answer = {
-          error: 'unprocessable entity',
-          message: String(stdout).toLowerCase(),
-        };
-      }
-      // Save only known ADAMANT address
-      if (payload.adamantAddress && !answer.error) {
-        account.updateAttribute('adamantAddress', payload.adamantAddress, error => {
-          if (error) return next(error);
-          next(null, Object.assign(answer, payload));
-        });
-      } else next(null, Object.assign(answer, payload));
-    });
+    const command = `adm send message ${adamantAddress} "2FA code: ${hotp}"`;
+    const { error, stdout, stderr } = await exec(command);
+    if (error) {
+      console.error('adm exec:' + error);
+      return;
+    }
+    console.info(command, stdout, stderr);
+    try {
+      var answer = JSON.parse(stdout);
+    } catch (error) {
+      console.error('adm parse:' + error);
+      answer = {
+        error: 'unprocessable entity',
+        message: String(stdout).toLowerCase(),
+      };
+    }
+    return answer;
   }
 };

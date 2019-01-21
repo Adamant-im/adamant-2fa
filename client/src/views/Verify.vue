@@ -50,7 +50,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['logout', 'verify']),
+    ...mapActions(['logout', 'verify2fa']),
     logoutUser () {
       this.logout().then(status => {
         if (status === 204) {
@@ -71,7 +71,7 @@ export default {
     },
     verifyHotp () {
       this.hotp.disabled = true
-      this.verify(this.hotp.value).then(status => {
+      this.verify2fa(this.hotp.value).then(status => {
         if (status === 200) {
           if (this.session.se2faVerified) {
             this.$router.push('settings')
@@ -96,7 +96,7 @@ export default {
             }
             this.hotpError.count--
           }
-        } else this.logoutUser()
+        }
       })
     }
   }

@@ -142,7 +142,7 @@ export default new Vuex.Store({
         return error.response ? error.response.status : 503
       })
     },
-    verify ({ commit, state }, hotp) {
+    verify2fa ({ commit, state }, hotp) {
       return Vue.axios.post(
         `${state.apiUrl}${state.account.id}/verify2fa?access_token=${state.session.id}`,
         {

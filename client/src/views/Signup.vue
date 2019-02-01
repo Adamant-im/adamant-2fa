@@ -1,13 +1,11 @@
 <template>
   <v-layout class="login-page" fill-height justify-center row>
-    <v-flex md5 sm8 xs12>
-      <div class="text-xs-right">
-        <LanguageSwitcher/>
-      </div>
+    <v-flex md7 sm8 xs12>
+      <LanguageSwitcher />
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
-        <img class="logo" src="/img/adamant-logo-transparent-512x512.png"/>
-        <h1 class="login-page__title" v-t="'documentTitle'"></h1>
-        <h2 class="hidden-sm-and-down login-page__subtitle mt-3" v-t="'signup'"></h2>
+        <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
+        <h1 class="login-page__title" v-t="'documentTitle'" />
+        <h2 class="hidden-sm-and-down login-page__subtitle mt-3" v-t="'signup'" />
       </v-card>
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>
@@ -15,12 +13,12 @@
             <v-form class="login-form">
               <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
                 browser-autocomplete="on" class="text-xs-center" maxlength="25"
-                v-model="username.value"/>
+                v-model="username.value" />
               <v-text-field :label="$t('password')" :rules="passwordRules" @input="validatePassword"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
-                v-model="password.value"/>
+                v-model="password.value" />
               <v-btn :disabled="!(password.valid && username.valid)" @click="signupUser"
-                v-t="'signup'"/>
+                color="white" v-t="'signup'" />
             </v-form>
           </v-flex>
         </v-layout>
@@ -29,8 +27,9 @@
         <v-flex md8 xs12>
           <div class="passphrase-generator">
             <div class="text-xs-center">
-              <h3 class="body-1 grey--text text--darken-2">
-                <router-link to="/login" v-t="'redirectLogin'"/>
+              <h3 class="subheading">
+                <router-link class="grey--text text--darken-2" to="/login"
+                  v-t="'redirectLogin'" />
               </h3>
             </div>
           </div>

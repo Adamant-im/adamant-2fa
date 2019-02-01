@@ -1,16 +1,19 @@
 <template>
-  <div>
-    <v-bottom-nav :active="active" app class="app-navigation" v-model="value">
-      <v-btn color="black" flat to="/settings">
-        <span>{{ $t('settings') }}</span>
-        <v-icon>mdi-settings</v-icon>
-      </v-btn>
-      <v-btn @click="logoutUser" flat>
-        <span>{{ $t('logout') }}</span>
-        <v-icon>mdi-logout-variant</v-icon>
-      </v-btn>
-    </v-bottom-nav>
-  </div>
+  <v-bottom-nav :active="active" app class="app-navigation"
+    v-model="value">
+    <v-layout justify-center>
+      <v-flex class="app-navigation__container text-xs-center" md7 sm8 xs12>
+        <v-btn color="black" flat to="/settings">
+          <span v-t="'settings'" />
+          <v-icon>mdi-settings</v-icon>
+        </v-btn>
+        <v-btn @click="logoutUser" flat>
+          <span v-t="'logout'" />
+          <v-icon>mdi-logout-variant</v-icon>
+        </v-btn>
+      </v-flex>
+    </v-layout>
+  </v-bottom-nav>
 </template>
 
 <script>
@@ -44,10 +47,19 @@ export default {
 </script>
 
 <style scoped>
+.app-navigation {
+  background-color: transparent !important
+}
+.app-navigation__container {
+  background-color: #fff !important
+}
 /**
  * Disable grayscale filter.
  */
 .app-navigation >>> .v-btn:not(.v-btn--active) {
   filter: unset
 }
+/* .v-bottom-nav {
+  border-top: 1px #D3D3D3 solid;
+} */
 </style>

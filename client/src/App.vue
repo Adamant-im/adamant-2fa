@@ -1,12 +1,10 @@
 <template>
   <v-app class="application--linear-gradient">
     <v-content>
-      <v-container fill-height fluid>
-        <router-view @snackbar-note="showSnackbarNote"/>
-      </v-container>
+      <router-view @snackbar-note="showSnackbarNote"/>
     </v-content>
-    <NavigationMenu @snackbar-note="showSnackbarNote"/>
-    <SnackbarNote :options="snackbarNote"/>
+    <NavigationMenu @snackbar-note="showSnackbarNote" />
+    <SnackbarNote :options="snackbarNote" />
   </v-app>
 </template>
 

@@ -1,35 +1,36 @@
 <template>
-  <v-layout justify-center row wrap>
-    <v-flex md4 xs12>
-      <h3 class="grey--text mb-3 text--darken-3 title">{{ $t('general') }}</h3>
+  <v-layout justify-center mt-5 row wrap>
+    <v-flex md7 sm8 xs12>
+      <h3 class="grey--text mb-3 text--darken-3 title" v-t="'general'" />
+      <hr />
       <v-layout align-center class="mb-5" row wrap>
         <v-flex xs6>
-          <v-subheader class="pa-0">{{ $t('language') }}</v-subheader>
+          <v-subheader class="pa-0 subheading" v-t="'language'" />
         </v-flex>
-        <v-flex class="text-xs-right" xs6>
-          <LanguageSwitcher/>
-        </v-flex>
+        <LanguageSwitcher />
       </v-layout>
-      <h3 class="grey--text mb-3 text--darken-3 title">{{ $t('security') }}</h3>
+      <h3 class="grey--text mb-3 text--darken-3 title" v-t="'security'" />
+      <hr />
       <v-layout align-center class="mb-5" row wrap>
         <v-flex xs12>
           <v-checkbox :label="$t('enable2fa')" @change="check2fa" color="darken-1 grey"
-            v-model="se2faChecked"/>
+            v-model="se2faChecked" />
         </v-flex>
         <v-flex xs12 v-show="show2fa">
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
             :rules="adamantAddressRules" @input="validateAdamantAddress" browser-autocomplete="on"
             class="text-xs-center" maxlength="23" v-model="adamantAddress.value"/>
           <v-btn @click="updateAdamantAddress" :disabled="!adamantAddress.valid"
-            v-t="'get2faCode'"/>
+            v-t="'get2faCode'" />
           <i18n for="inner" path="redirectAdamant.outer" tag="p">
-            <a href="https://msg.adamant.im/" target="_blank" v-t="'redirectAdamant.inner'"></a>
+            <a class="grey--text text--darken-2" href="https://msg.adamant.im/" target="_blank"
+              v-t="'redirectAdamant.inner'" />
           </i18n>
           <div v-show="show2faHotp">
             <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
               @input="validateHotp" browser-autocomplete="on" class="text-xs-center"
-              maxlength="6" v-model="hotp.value"/>
-            <v-btn :disabled="!hotp.valid" @click="verifyHotp" v-t="'verify'"/>
+              maxlength="6" v-model="hotp.value" />
+            <v-btn :disabled="!hotp.valid" @click="verifyHotp" v-t="'verify'" />
           </div>
         </v-flex>
       </v-layout>
@@ -171,5 +172,8 @@ export default {
 </script>
 
 <style scoped>
-
+hr {
+  border-width: 0;
+  border-top: 1px rgba(0, 0, 0, .12) solid;
+}
 </style>

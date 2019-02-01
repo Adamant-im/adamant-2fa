@@ -1,12 +1,10 @@
 <template>
   <v-layout class="login-page" fill-height justify-center row>
-    <v-flex md5 sm8 xs12>
-      <div class="text-xs-right">
-        <LanguageSwitcher/>
-      </div>
+    <v-flex md7 sm8 xs12>
+      <LanguageSwitcher />
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
-        <img class="logo" src="/img/adamant-logo-transparent-512x512.png"/>
-        <h1 class="login-page__title" v-t="'documentTitle'"></h1>
+        <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
+        <h1 class="login-page__title" v-t="'documentTitle'" />
       </v-card>
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>
@@ -15,8 +13,8 @@
               <p v-html="$t('2faRequest')"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
                 :rules="hotpRules" @input="validateHotp" class="text-xs-center" maxlength="6"
-                v-model="hotp.value"/>
-              <v-btn :disabled="!hotp.valid" @click="verifyHotp" v-t="'verify'"/>
+                v-model="hotp.value" />
+              <v-btn :disabled="!hotp.valid" @click="verifyHotp" color="white" v-t="'verify'" />
             </v-form>
           </v-flex>
         </v-layout>

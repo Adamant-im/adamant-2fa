@@ -11,8 +11,8 @@ Vue.use(Vuetify, {
   customProperties: true,
   iconfont: 'mdi',
   theme: {
-    primary: '#2E7EED',
-    secondary: '#424242',
+    primary: '#DDD',
+    secondary: '#444',
     accent: '#82B1FF',
     error: '#FF5252',
     info: '#2196F3',

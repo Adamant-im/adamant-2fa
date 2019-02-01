@@ -1,16 +1,11 @@
 <template>
-  <v-menu offset-y>
-    <v-btn class="ma-0" flat slot="activator">
-      {{localeName}}
-      <v-icon right>mdi-chevron-down</v-icon>
-    </v-btn>
-    <v-list>
-      <v-list-tile :key="locale" @click="updateLocale(locale)"
-        v-for="(language, locale) in this.$i18n.messages">
-        <v-list-tile-title>{{language.name}}</v-list-tile-title>
-      </v-list-tile>
-    </v-list>
-  </v-menu>
+  <v-layout justify-end>
+    <v-flex style="max-width: 112px !important">
+      <v-select :items="items" :label="value" background-color="transparent" flat
+        item-text="language" item-value="locale" hide-details solo v-model="value">
+      </v-select>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -19,21 +14,31 @@ import { mapActions, mapState } from 'vuex'
 export default {
   computed: {
     ...mapState(['session']),
-    localeName () {
-      return this.$i18n.messages[this.$i18n.locale].name
-    }
-  },
-  methods: {
-    ...mapActions(['postLocale']),
-    updateLocale (locale) {
-      this.$i18n.locale = locale
-      if (this.session.created) {
-        this.postLocale(locale)
+    value: {
+      get () {
+        return this.$i18n.messages[this.$i18n.locale].name
+      },
+      set (value) {
+        this.$i18n.locale = value
+        if (this.session.created) {
+          this.postLocale(value)
+        }
       }
     }
   },
+  data () {
+    return {
+      items: Object.keys(this.$i18n.messages).map(value => ({
+        language: this.$i18n.messages[value].name,
+        locale: value
+      }))
+    }
+  },
+  methods: {
+    ...mapActions(['postLocale'])
+  },
   watch: {
-    localeName: {
+    value: {
       handler () {
         // Since the root Vue instance initialized in <body>, Vue do not have access to <head>
         document.title = this.$i18n.t('documentTitle')

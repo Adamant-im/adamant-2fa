@@ -48,11 +48,13 @@ export default {
     ...mapState(['account']),
     adamantAddressRules () {
       // Translate validation messages on i18n locale change
-      return [this.$i18n.t(this.adamantAddress.note) || true]
+      // return [this.$i18n.t(this.adamantAddress.note) || true]
+      return [true]
     },
     hotpRules () {
       // Translate validation messages on i18n locale change
-      return [this.$i18n.t(this.hotp.note) || true]
+      // return [this.$i18n.t(this.hotp.note) || true]
+      return [true]
     }
   },
   data () {

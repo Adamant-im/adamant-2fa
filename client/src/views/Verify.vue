@@ -33,7 +33,8 @@ export default {
     ...mapState(['session']),
     hotpRules () {
       // Translate validation messages on i18n locale change
-      return [this.$i18n.t(this.hotp.note) || true]
+      // return [this.$i18n.t(this.hotp.note) || true]
+      return [true]
     }
   },
   data () {

@@ -49,11 +49,13 @@ export default {
     ...mapState(['account']),
     passwordRules () {
       // Translate validation messages on i18n locale change
-      return [this.$i18n.t(this.password.note) || true]
+      // return [this.$i18n.t(this.password.note) || true]
+      return [true]
     },
     usernameRules () {
       // Translate validation messages on i18n locale change
-      return [this.$i18n.t(this.username.note) || true]
+      // return [this.$i18n.t(this.username.note) || true]
+      return [true]
     }
   },
   data () {

@@ -74,12 +74,10 @@ module.exports = function(Account) {
     this.updateAttributes(data, error => {
       if (error) return next(error);
       send2fa(adamantAddress, this).then(result => {
-        if (!result.error) {
-          this.updateAttribute('adamantAddress', adamantAddress, error => {
-            if (error) return next(error);
-            next(null, Object.assign(result, {adamantAddress}));
-          });
-        }
+        this.updateAttribute('adamantAddress', adamantAddress, error => {
+          if (error) return next(error);
+          next(null, {...result, ...{adamantAddress}});
+        });
       });
     });
   };

@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-end>
-    <v-flex style="max-width: 112px !important">
+    <v-flex style="max-width: 96px">
       <v-select :items="items" :label="value" background-color="transparent" flat
         item-text="language" item-value="locale" hide-details solo v-model="value">
       </v-select>
@@ -48,3 +48,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.v-select .v-icon {
+  left: 0;
+  position: absolute;
+  right: auto;
+  transform: translateX(-100%) rotateZ(270deg) !important
+}
+</style>

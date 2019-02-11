@@ -1,6 +1,6 @@
 <template>
   <v-layout class="login-page" fill-height justify-center row>
-    <v-flex md7 sm8 xs12>
+    <v-flex lg6 md7 sm9 xl5 xs11>
       <LanguageSwitcher />
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
@@ -8,7 +8,7 @@
       </v-card>
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>
-          <v-flex md8 xs12>
+          <v-flex lg7 md8 sm9 xl6 xs10>
             <v-form class="login-form">
               <p v-html="$t('2faRequest')"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
@@ -33,7 +33,8 @@ export default {
     ...mapState(['session']),
     hotpRules () {
       // Translate validation messages on i18n locale change
-      return [this.$i18n.t(this.hotp.note) || true]
+      // return [this.$i18n.t(this.hotp.note) || true]
+      return [true]
     }
   },
   data () {

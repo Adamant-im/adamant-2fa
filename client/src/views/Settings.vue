@@ -1,8 +1,8 @@
 <template>
   <v-layout justify-center mt-5 row wrap>
-    <v-flex md7 sm8 xs12>
+    <v-flex lg6 md7 sm9 xl5 xs11>
       <h3 class="grey--text mb-3 text--darken-3 title" v-t="'general'" />
-      <hr />
+      <v-divider />
       <v-layout align-center class="mb-5" row wrap>
         <v-flex xs6>
           <v-subheader class="pa-0 subheading" v-t="'language'" />
@@ -10,13 +10,13 @@
         <LanguageSwitcher />
       </v-layout>
       <h3 class="grey--text mb-3 text--darken-3 title" v-t="'security'" />
-      <hr />
-      <v-layout align-center class="mb-5" row wrap>
-        <v-flex xs12>
+      <v-divider />
+      <v-layout align-start class="mb-5" column wrap>
+        <v-flex lg7 md8 sm9 xl6 xs10>
           <v-checkbox :label="$t('enable2fa')" @change="check2fa" color="darken-1 grey"
             v-model="se2faChecked" />
         </v-flex>
-        <v-flex xs12 v-show="show2fa">
+        <v-flex lg7 md8 sm9 xl6 xs10 v-show="show2fa">
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
             :rules="adamantAddressRules" @input="validateAdamantAddress" browser-autocomplete="on"
             class="text-xs-center" maxlength="23" v-model="adamantAddress.value"/>
@@ -48,11 +48,13 @@ export default {
     ...mapState(['account']),
     adamantAddressRules () {
       // Translate validation messages on i18n locale change
-      return [this.$i18n.t(this.adamantAddress.note) || true]
+      // return [this.$i18n.t(this.adamantAddress.note) || true]
+      return [true]
     },
     hotpRules () {
       // Translate validation messages on i18n locale change
-      return [this.$i18n.t(this.hotp.note) || true]
+      // return [this.$i18n.t(this.hotp.note) || true]
+      return [true]
     }
   },
   data () {

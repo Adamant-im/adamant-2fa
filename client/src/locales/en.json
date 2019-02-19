@@ -75,7 +75,7 @@
   "valueMissing": {
     "adamantAddress": "Enter ADAMANT address",
     "hotp": "Enter 2FA code to login",
-    "hotpEnable": "Enter 2FA code to enable 2FA"
+    "hotpEnable": "Enter code you've received to enable 2FA"
   },
   "verify": "Verify"
 }

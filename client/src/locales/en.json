@@ -1,35 +1,35 @@
 {
   "204": {
-    "logout": "Logged out"
+    "logout": "You've logged out"
   },
   "2fa": "2FA",
-  "2faCode": "2FA code",
-  "2faDisabled": "2FA disabled",
-  "2faEnabled": "2FA successfully enabled",
-  "2faNotValid": "| Code is not valid 1 attempt left | Code is not valid {n} attempts left",
-  "2faRequest": "2FA enabled on this account<br/>Enter the code you received in ADAMANT messenger",
-  "2faSendFail": "Code did not send: {reason}",
-  "2faSent": "Code sent with transaction ID {id}",
+  "2faCode": "Enter 2FA code",
+  "2faDisabled": "2FA is disabled now",
+  "2faEnabled": "2FA enabled successfully",
+  "2faNotValid": "| Code is invalid: 1 attempt left | Code is invalid: {n} attempts left",
+  "2faRequest": "Enter 2FA code received in ADAMANT Messenger",
+  "2faSendFail": "Error while sending 2FA code: {reason}",
+  "2faSent": "2FA code sent with Tx ID: {id}",
   "400": {
-    "login": "Username is required",
-    "signup": "Username is required"
+    "login": "Enter username",
+    "signup": "Enter username"
   },
   "401": {
-    "login": "User with this name not signed up or wrong password",
-    "logout": "Session time expired"
+    "login": "Wrong username or password",
+    "logout": "Session expired"
   },
   "422": {
-    "adamantAddress": "ADAMANT address already registered or unknown",
-    "signup": "User with this name already signed up or username/password not defined"
+    "adamantAddress": "This ADAMANT address is already taken",
+    "signup": "Username is already taken. Choose another one"
   },
   "503": {
-    "login": "Server is not available, try again later",
-    "signup": "Server is not available, try again later"
+    "login": "Server is not available. Try again later",
+    "signup": "Server is not available. Try again later"
   },
-  "documentTitle": "ADAMANT 2FA",
+  "documentTitle": "ADAMANT 2FA demo",
   "empty": "",
   "enable2fa": "Enable 2FA",
-  "enter2faCode": "Enter the 2FA code you received",
+  "enter2faCode": "Enter 2FA code you've received",
   "enterAdamantAddress": "ADAMANT address to receive 2FA codes",
   "general": "General",
   "get2faCode": "Get 2FA code",
@@ -39,16 +39,16 @@
   "name": "English",
   "password": "Password",
   "patternMismatch": {
-    "adamantAddress": "Address does not match pattern",
-    "hotp": "Code does not match pattern",
-    "hotpEnable": "Code does not match pattern"
+    "adamantAddress": "Wrong ADAMANT address",
+    "hotp": "Wrong 2FA code",
+    "hotpEnable": "Wrong 2FA code"
   },
   "redirectAdamant": {
-    "inner": "Create one in a second",
-    "outer": "Do not have ADAMANT account yet? {0}"
+    "inner": "Create in a second",
+    "outer": "Don't have ADAMANT account yet? {0}"
   },
-  "redirectLogin": "I already have an account. Let me in",
-  "redirectSignup": "Do not have an account yet? Signup one",
+  "redirectLogin": "I have an account. Let me in",
+  "redirectSignup": "Don't have an account? Signup",
   "required": {
     "adamantAddress": "Enter ADAMANT address",
     "hotp": "Enter 2FA code",
@@ -57,7 +57,7 @@
   },
   "security": "Security",
   "settings": "Settings",
-  "signedUp": "You signed up",
+  "signedUp": "You've signed up",
   "signup": "Signup",
   "tooLong": {
     "adamantAddress": "Address is too long",

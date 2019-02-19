@@ -26,7 +26,7 @@
     "login": "Server is not available. Try again later",
     "signup": "Server is not available. Try again later"
   },
-  "documentTitle": "ADAMANT 2FA demo",
+  "documentTitle": "ADAMANT 2FA",
   "empty": "",
   "enable2fa": "Enable 2FA",
   "enter2faCode": "Enter 2FA code you've received",
@@ -60,22 +60,22 @@
   "signedUp": "You've signed up",
   "signup": "Signup",
   "tooLong": {
-    "adamantAddress": "Address is too long",
-    "hotp": "Code is too long",
-    "hotpEnable": "Code is too long"
+    "adamantAddress": "Wrong ADAMANT address",
+    "hotp": "Wrong 2FA code",
+    "hotpEnable": "Wrong 2FA code"
   },
   "tooShort": {
-    "adamantAddress": "Address is too short",
-    "hotp": "Code is too short",
-    "hotpEnable": "Code is too short",
-    "password": "Password is too short",
-    "username": "Username is too short"
+    "adamantAddress": "Wrong ADAMANT address",
+    "hotp": "Wrong 2FA code",
+    "hotpEnable": "Wrong 2FA code",
+    "password": "Password must be at least 3 characters long",
+    "username": "Username must be at least 3 characters long"
   },
   "username": "Username",
   "valueMissing": {
-    "adamantAddress": "Address is required to send 2FA codes",
-    "hotp": "Code is required to login",
-    "hotpEnable": "Code is required to enable 2FA"
+    "adamantAddress": "Enter ADAMANT address",
+    "hotp": "Enter 2FA code to login",
+    "hotpEnable": "Enter 2FA code to enable 2FA"
   },
   "verify": "Verify"
 }

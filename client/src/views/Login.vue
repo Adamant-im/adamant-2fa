@@ -5,7 +5,7 @@
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
         <h1 class="login-page__title" v-t="'documentTitle'" />
-        <h2 class="hidden-sm-and-down login-page__subtitle mt-3" v-t="'login'" />
+        <h2 class="hidden-sm-and-down login-page__subtitle mt-3" v-t="'loginSubheader'" />
       </v-card>
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>
@@ -16,7 +16,7 @@
                 v-model="username.value" />
               <v-text-field :label="$t('password')" :rules="passwordRules" @input="validatePassword"
                 browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
-                v-model="password.value" />
+                v-model="password.value" @keyup.enter="loginUser"/>
               <v-btn :disabled="!(password.valid && username.valid)" @click="loginUser"
                 color="white" v-t="'login'" />
             </v-form>

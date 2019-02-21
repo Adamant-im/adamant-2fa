@@ -72,6 +72,7 @@ export default {
       }
     }
   },
+  props: ['newUsername'],
   methods: {
     ...mapActions(['login']),
     loginUser () {
@@ -94,7 +95,7 @@ export default {
       let state = ''
       switch (false) {
         case Boolean(value): state = 'required.password'; break
-        case value && value.length > 7: state = 'tooShort.password'
+        case value && value.length > 2: state = 'tooShort.password'
       }
       this.password.note = state
       this.password.valid = !state
@@ -111,6 +112,9 @@ export default {
   },
   mounted () {
     this.username.value = this.account.username
+    if (this.newUsername) {
+      this.username.value = this.newUsername
+    }
     this.validatePassword(this.password.value)
     this.validateUsername(this.username.value)
   }

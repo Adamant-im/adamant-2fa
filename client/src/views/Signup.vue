@@ -81,7 +81,7 @@ export default {
         username: this.username.value
       }).then(status => {
         if (status === 200) {
-          this.$router.push('login')
+          this.$router.push({ name: 'login', params: { newUsername: this.username.value } })
           // this.password.value = null
           this.$emit('snackbar-note', 'signedUp')
         } else this.$emit('snackbar-note', status + '.signup')
@@ -91,7 +91,7 @@ export default {
       let state = ''
       switch (false) {
         case Boolean(value): state = 'required.password'; break
-        case value && value.length > 7: state = 'tooShort.password'
+        case value && value.length > 2: state = 'tooShort.password'
       }
       this.password.note = state
       this.password.valid = !state

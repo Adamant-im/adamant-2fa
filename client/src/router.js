@@ -17,7 +17,8 @@ const router = new Router({
     {
       component: Login,
       name: 'login',
-      path: '/login'
+      path: '/login',
+      props: true
     },
     {
       component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings.vue'),

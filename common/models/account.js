@@ -5,7 +5,7 @@ const exec = util.promisify(require('child_process').exec);
 const g = require('loopback/lib/globalize');
 const speakeasy = require('speakeasy');
 const MAX_PASSWORD_LENGTH = 15;
-const MIN_PASSWORD_LENGTH = 8;
+const MIN_PASSWORD_LENGTH = 3;
 
 module.exports = function(Account) {
   Account.prototype.enable2fa = function(hotp, next) {
@@ -207,9 +207,6 @@ module.exports = function(Account) {
     min: 3,
   });
   Account.validatesPresenceOf('username', 'password');
-  Account.validatesUniquenessOf('adamantAddress', {
-    adamantAddress: 'Address already registered',
-  });
   Account.validatesUniquenessOf('username', {
     message: 'User already exists',
   });

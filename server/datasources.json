@@ -4,7 +4,7 @@
     "connector": "memory"
   },
   "postgresql10": {
-    "host": "/var/run/postgresql/",
+    "host": "127.0.0.1",
     "port": 5432,
     "url": "",
     "database": "adamant-2fa",

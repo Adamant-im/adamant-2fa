@@ -13,7 +13,7 @@
               <p v-html="$t('2faRequest')"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
                 :rules="hotpRules" @input="validateHotp" class="text-xs-center" maxlength="6"
-                v-model="hotp.value" />
+                v-model="hotp.value" ref="hotpField" />
               <v-btn :disabled="!hotp.valid" @click="verifyHotp" color="white" v-t="'verify'" />
             </v-form>
           </v-flex>
@@ -29,6 +29,9 @@ import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 export default {
   components: { LanguageSwitcher },
+  mounted: function () {
+    this.$refs.hotpField.$el.focus()
+  },
   computed: {
     ...mapState(['session']),
     hotpRules () {

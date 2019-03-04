@@ -17,20 +17,24 @@
             v-model="se2faChecked" />
         </v-flex>
         <v-flex lg7 md8 sm9 xl6 xs10 v-show="show2fa">
-          <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
-            :rules="adamantAddressRules" @input="validateAdamantAddress" browser-autocomplete="on"
-            class="text-xs-center" maxlength="23" v-model="adamantAddress.value"/>
-          <v-btn @click="updateAdamantAddress" :disabled="!adamantAddress.valid"
-            v-t="'get2faCode'" />
+          <v-form @submit.prevent="updateAdamantAddress">
+            <v-text-field ref="adamantAddress" :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
+              :rules="adamantAddressRules" @input="validateAdamantAddress" browser-autocomplete="on"
+              class="text-xs-center" maxlength="23" v-model="adamantAddress.value"/>
+            <v-btn @click="updateAdamantAddress" :disabled="!adamantAddress.valid"
+              v-t="'get2faCode'" />
+          </v-form>
           <i18n for="inner" path="redirectAdamant.outer" tag="p">
             <a class="grey--text text--darken-2" href="https://msg.adamant.im/" target="_blank"
               v-t="'redirectAdamant.inner'" />
           </i18n>
           <div v-show="show2faHotp">
-            <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
-              @input="validateHotp" browser-autocomplete="on" class="text-xs-center"
-              maxlength="6" v-model="hotp.value" />
-            <v-btn :disabled="!hotp.valid" @click="verifyHotp" v-t="'verify'" />
+            <v-form @submit.prevent="verifyHotp">
+              <v-text-field ref="hotpValidateField" :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
+                @input="validateHotp" browser-autocomplete="on" class="text-xs-center"
+                maxlength="6" v-model="hotp.value" />
+              <v-btn :disabled="!hotp.valid" @click="verifyHotp" v-t="'verify'" />
+            </v-form>
           </div>
         </v-flex>
       </v-layout>
@@ -86,6 +90,7 @@ export default {
         this.adamantAddress.disabled = false
         this.hotp.disabled = false
         this.hotp.value = null
+        this.$nextTick(() => this.$refs.adamantAddress.focus())
       } else if (this.account.se2faEnabled) {
         this.disable2fa().then(status => {
           this.$emit('snackbar-note', '2faDisabled')
@@ -103,6 +108,7 @@ export default {
             args: { id: data.transactionId },
             path: '2faSent'
           })
+          this.$nextTick(() => this.$refs.hotpValidateField.focus())
         } else {
           this.$emit('snackbar-note', status + '.adamantAddress')
           this.adamantAddress.disabled = false

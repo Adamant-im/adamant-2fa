@@ -30,7 +30,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher'
 export default {
   components: { LanguageSwitcher },
   mounted: function () {
-    this.$refs.hotpField.$el.focus()
+    this.$nextTick(() => this.$refs.hotpField.focus())
   },
   computed: {
     ...mapState(['session']),

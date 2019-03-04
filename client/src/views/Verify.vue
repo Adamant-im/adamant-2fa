@@ -9,7 +9,7 @@
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>
           <v-flex lg7 md8 sm9 xl6 xs10>
-            <v-form class="login-form">
+            <v-form class="login-form" @submit.prevent="verifyHotp">
               <p v-html="$t('2faRequest')"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
                 :rules="hotpRules" @input="validateHotp" class="text-xs-center" maxlength="6"

@@ -89,6 +89,7 @@ export default {
       } else if (this.account.se2faEnabled) {
         this.disable2fa().then(status => {
           this.$emit('snackbar-note', '2faDisabled')
+          this.adamantAddress.value = ''
         })
       }
     },

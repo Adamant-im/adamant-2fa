@@ -241,6 +241,8 @@ module.exports = function(Account) {
   };
 
   async function send2fa(adamantAddress, account) {
+    account.updateAttribute('seCounter', account.seCounter + 1, error => {});
+    account.seCounter = account.seCounter + 1;
     const hotp = speakeasy.hotp({
       counter: account.seCounter,
       // encoding: 'ascii',

@@ -12,11 +12,12 @@
           <v-flex lg7 md8 sm9 xl6 xs10>
             <v-form class="login-form">
               <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
-                browser-autocomplete="on" class="text-xs-center" maxlength="25"
-                v-model="username.value" />
-              <v-text-field :label="$t('password')" :rules="passwordRules" @input="validatePassword"
-                browser-autocomplete="on" class="text-xs-center" maxlength="15" type="password"
-                v-model="password.value" @keyup.enter="signupUser" />
+                @keyup.enter="verifyCredentials" browser-autocomplete="on" class="text-xs-center"
+                maxlength="25" v-model="username.value" />
+              <v-text-field :label="$t('password')" :name="Date.now()" :rules="passwordRules"
+                @input="validatePassword" @keyup.enter="verifyCredentials"
+                autocomplete="new-password" browser-autocomplete="on" class="text-xs-center"
+                maxlength="15" type="password" v-model="password.value" />
               <v-btn :disabled="!(password.valid && username.valid)" @click="signupUser"
                 color="white" v-t="'signup'" />
             </v-form>
@@ -90,7 +91,7 @@ export default {
     validatePassword (value) {
       let state = ''
       switch (false) {
-        case Boolean(value): state = 'required.password'; break
+        case Boolean(value): state = 'valueMissing.password'; break
         case value && value.length > 2: state = 'tooShort.password'
       }
       this.password.note = state
@@ -99,11 +100,20 @@ export default {
     validateUsername (value) {
       let state = ''
       switch (false) {
-        case Boolean(value): state = 'required.username'; break
+        case Boolean(value): state = 'valueMissing.username'; break
         case value && value.length > 2: state = 'tooShort.username'
       }
       this.username.note = state
       this.username.valid = !state
+    },
+    verifyCredentials () {
+      this.validatePassword(this.password.value)
+      this.validateUsername(this.username.value)
+      if (this.password.valid && this.username.valid) {
+        this.signupUser()
+      } else {
+        this.$emit('snackbar-note', this.password.note || this.username.note)
+      }
     }
   },
   mounted () {

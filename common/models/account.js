@@ -20,7 +20,7 @@ module.exports = function(Account) {
       if (se2faEnabled) {
         this.updateAttributes({
           se2faEnabled: true,
-          seCounter: this.seCounter + 1,
+          seCounter: this.seCounter,
         }, error => {
           if (error) return next(error);
           const Role = Account.app.models.Role;
@@ -62,10 +62,9 @@ module.exports = function(Account) {
     const secret = speakeasy.generateSecret({
       name: 'ADAMANT-' + adamantAddress,
     });
-    const seCounter = 1;
     const data = {
       // adamantAddress,
-      seCounter,
+      seCounter: 0,
       seSecretAscii: secret.ascii,
       seSecretBase32: secret.base32,
       seSecretHex: secret.hex,
@@ -92,7 +91,7 @@ module.exports = function(Account) {
         token: hotp,
       });
       if (se2faVerified) {
-        this.updateAttribute('seCounter', this.seCounter + 1, error => {
+        this.updateAttribute('seCounter', this.seCounter, error => {
           if (error) return next(error);
           const Role = Account.app.models.Role;
           const RoleMapping = Account.app.models.RoleMapping;
@@ -240,30 +239,34 @@ module.exports = function(Account) {
     }
   };
 
-  async function send2fa(adamantAddress, account) {
-    account.updateAttribute('seCounter', account.seCounter + 1, error => {});
-    account.seCounter = account.seCounter + 1;
-    const hotp = speakeasy.hotp({
-      counter: account.seCounter,
-      // encoding: 'ascii',
-      secret: account.seSecretAscii,
-    });
-    const command = `adm send message ${adamantAddress} "2FA code: ${hotp}"`;
-    const { error, stdout, stderr } = await exec(command);
-    if (error) {
-      console.error('adm exec:' + error);
-      return;
-    }
-    console.info(command, stdout, stderr);
-    try {
-      var answer = JSON.parse(stdout);
-    } catch (error) {
-      console.error('adm parse:' + error);
-      answer = {
-        error: 'unprocessable entity',
-        message: String(stdout).toLowerCase(),
-      };
-    }
-    return answer;
+  function send2fa(adamantAddress, account) {
+    const counter = account.seCounter + 1
+    return new Promise(resolve => {
+      account.updateAttribute('seCounter', counter, async x => {
+        if (x) return next(x);
+        const hotp = speakeasy.hotp({
+          counter,
+          // encoding: 'ascii',
+          secret: account.seSecretAscii,
+        });
+        const command = `adm send message ${adamantAddress} "2FA code: ${hotp}"`;
+        let { error, stdout, stderr } = await exec(command);
+        if (error) {
+          console.error('adm exec:' + error);
+          return;
+        }
+        console.info(command, stdout, stderr, account);
+        try {
+          var result = JSON.parse(stdout);
+        } catch (error) {
+          console.error('adm parse:' + error);
+          result = {
+            error: 'unprocessable entity',
+            message: String(stdout).toLowerCase(),
+          };
+        }
+        resolve(result)
+      });
+    }).catch(x => console.error(x))
   }
 };

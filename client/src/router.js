@@ -74,13 +74,14 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.name) {
     // No permission required
-    if (session.se2faVerified) {
+    /* if (session.se2faVerified) {
       next('/settings')
     } else if (session.created && account.se2faEnabled) {
       next('/verify')
     } else {
       next()
-    }
+    } */
+    next()
   } else {
     // Path undefined
     if (session.se2faVerified) {

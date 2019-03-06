@@ -18,8 +18,7 @@
                 @input="validatePassword" @keyup.enter="verifyCredentials"
                 autocomplete="new-password" browser-autocomplete="on" class="text-xs-center"
                 maxlength="15" type="password" v-model="password.value" />
-              <v-btn :disabled="!(password.valid && username.valid)" @click="loginUser"
-                color="white" v-t="'login'" />
+              <v-btn @click="verifyCredentials" color="white" v-t="'login'" />
             </v-form>
           </v-flex>
         </v-layout>
@@ -116,7 +115,7 @@ export default {
       if (this.password.valid && this.username.valid) {
         this.loginUser()
       } else {
-        this.$emit('snackbar-note', this.password.note || this.username.note)
+        this.$emit('snackbar-note', this.username.note || this.password.note)
       }
     }
   },

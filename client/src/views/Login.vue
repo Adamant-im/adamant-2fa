@@ -84,13 +84,14 @@ export default {
         if (status === 200) {
           this.$i18n.locale = this.account.locale
           if (this.account.se2faEnabled) {
+            this.$emit('snackbar-note', '2faSent')
             this.$router.push('verify')
           } else {
             this.$router.push('settings')
           }
-          this.$emit('lock-screen', false)
           // this.password.value = null
         } else this.$emit('snackbar-note', status + '.login')
+        this.$emit('lock-screen', false)
       })
     },
     validatePassword (value) {

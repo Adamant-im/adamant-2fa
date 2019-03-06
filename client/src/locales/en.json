@@ -9,7 +9,8 @@
   "2faNotValid": "| Code is invalid: 1 attempt left | Code is invalid: {n} attempts left",
   "2faRequest": "Enter 2FA code received in ADAMANT Messenger",
   "2faSendFail": "Error while sending 2FA code: {reason}",
-  "2faSent": "2FA code sent with Tx ID: {id}",
+  "2faSent": "2FA code sent",
+  "2faSentWithTx": "2FA code sent with Tx ID: {id}",
   "400": {
     "login": "Enter username",
     "signup": "Enter username"

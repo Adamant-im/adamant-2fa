@@ -104,7 +104,7 @@ export default {
           this.$nextTick(() => this.$refs.hotpField.focus())
           this.$emit('snackbar-note', {
             args: { id: data.transactionId },
-            path: '2faSent'
+            path: '2faSentWithTx'
           })
         } else {
           this.$emit('snackbar-note', status + '.adamantAddress')

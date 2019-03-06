@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import NavigationMenu from '@/components/NavigationMenu'
 import SnackbarNote from '@/components/SnackbarNote'
 
@@ -22,10 +22,6 @@ export default {
   created () {
     if (this.sessionTimeLeft < 0) {
       this.logout().then(status => {
-        // Clear expired session even if backend not available
-        if (status !== 204) {
-          this.clearSession()
-        }
         this.$router.push('login')
         this.$emit('snackbar-note', status + '.logout')
       })
@@ -38,7 +34,6 @@ export default {
   },
   methods: {
     ...mapActions(['logout']),
-    ...mapMutations(['clearSession']),
     showSnackbarNote (note) {
       // Object wrap adds reactivity to prop and triggers SnackbarNote component update
       this.snackbarNote = { note }

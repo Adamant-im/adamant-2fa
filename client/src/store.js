@@ -86,10 +86,9 @@ export default new Vuex.Store({
         return res.status
       }).catch(error => {
         console.error(error)
-        if (error.response.status === 401) { // Access token expired or wrong
-          commit('clearSession')
-        }
-        return error.response.status
+        // Clear expired session even if backend is not available
+        commit('clearSession')
+        return error.response ? error.response.status : 503
       })
     },
     postAdamantAddress ({ commit, state }, adamantAddress) {

@@ -76,6 +76,7 @@ export default {
   methods: {
     ...mapActions(['login']),
     loginUser () {
+      this.$emit('lock-screen')
       this.login({
         password: this.password.value,
         username: this.username.value
@@ -87,6 +88,7 @@ export default {
           } else {
             this.$router.push('settings')
           }
+          this.$emit('lock-screen', false)
           // this.password.value = null
         } else this.$emit('snackbar-note', status + '.login')
       })

@@ -18,9 +18,10 @@
         </v-flex>
         <v-flex lg7 md8 sm9 xl6 xs10 v-show="show2fa">
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
-            :rules="adamantAddressRules" @input="validateAdamantAddress" browser-autocomplete="on"
-            class="text-xs-center" maxlength="23" v-model="adamantAddress.value"/>
-          <v-btn @click="updateAdamantAddress" :disabled="!adamantAddress.valid"
+            :rules="adamantAddressRules" @input="validateAdamantAddress"
+            @keyup.enter="verifyAdamantAddress" browser-autocomplete="on" class="text-xs-center"
+            maxlength="23" ref="adamantAddressField" v-model="adamantAddress.value" />
+          <v-btn :disabled="!adamantAddress.valid" @click="submitAdamantAddress"
             v-t="'get2faCode'" />
           <i18n for="inner" path="redirectAdamant.outer" tag="p">
             <a class="grey--text text--darken-2" href="https://msg.adamant.im/" target="_blank"
@@ -28,9 +29,9 @@
           </i18n>
           <div v-show="show2faHotp">
             <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
-              @input="validateHotp" browser-autocomplete="on" class="text-xs-center"
-              maxlength="6" v-model="hotp.value" />
-            <v-btn :disabled="!hotp.valid" @click="verifyHotp" v-t="'verify'" />
+              @keyup.enter="verifyHotp" @input="validateHotp" browser-autocomplete="on"
+              class="text-xs-center" maxlength="6" ref="hotpField" v-model="hotp.value" />
+            <v-btn :disabled="!hotp.valid" @click="submitHotp" v-t="'verify'" />
           </div>
         </v-flex>
       </v-layout>
@@ -86,18 +87,21 @@ export default {
         this.adamantAddress.disabled = false
         this.hotp.disabled = false
         this.hotp.value = null
+        this.$nextTick(() => this.$refs.adamantAddressField.focus())
       } else if (this.account.se2faEnabled) {
         this.disable2fa().then(status => {
           this.$emit('snackbar-note', '2faDisabled')
+          this.adamantAddress.value = ''
         })
       }
     },
-    updateAdamantAddress () {
+    submitAdamantAddress () {
       this.adamantAddress.disabled = true
       this.postAdamantAddress(this.adamantAddress.value).then(({ data, status }) => {
         if (status === 200) {
           this.hotpError.count = 2
           this.show2faHotp = true
+          this.$nextTick(() => this.$refs.hotpField.focus())
           this.$emit('snackbar-note', {
             args: { id: data.transactionId },
             path: '2faSent'
@@ -108,27 +112,7 @@ export default {
         }
       })
     },
-    validateAdamantAddress (value) {
-      let state = ''
-      switch (false) {
-        case Boolean(value): state = 'required.adamantAddress'; break
-        case /^U\d+$/.test(value): state = 'patternMismatch.adamantAddress'; break
-        case value && value.length > 6: state = 'tooShort.adamantAddress'
-      }
-      this.adamantAddress.note = state
-      this.adamantAddress.valid = !state
-    },
-    validateHotp (value) {
-      let state = ''
-      switch (false) {
-        case Boolean(value): state = 'required.hotp'; break
-        case /^\d+$/.test(value): state = 'patternMismatch.hotp'; break
-        case value && value.length > 5: state = 'tooShort.hotp'
-      }
-      this.hotp.note = state
-      this.hotp.valid = !state
-    },
-    verifyHotp () {
+    submitHotp () {
       this.hotp.disabled = true
       this.enable2fa(this.hotp.value).then(status => {
         if (status === 200) {
@@ -163,6 +147,42 @@ export default {
           }
         }
       })
+    },
+    validateAdamantAddress (value) {
+      let state = ''
+      switch (false) {
+        case Boolean(value): state = 'valueMissing.adamantAddress'; break
+        case /^U\d+$/.test(value): state = 'patternMismatch.adamantAddress'; break
+        case value && value.length > 6: state = 'tooShort.adamantAddress'
+      }
+      this.adamantAddress.note = state
+      this.adamantAddress.valid = !state
+    },
+    validateHotp (value) {
+      let state = ''
+      switch (false) {
+        case Boolean(value): state = 'valueMissing.hotp'; break
+        case /^\d+$/.test(value): state = 'patternMismatch.hotp'; break
+        case value && value.length > 5: state = 'tooShort.hotp'
+      }
+      this.hotp.note = state
+      this.hotp.valid = !state
+    },
+    verifyAdamantAddress () {
+      this.validateAdamantAddress(this.adamantAddress.value)
+      if (this.adamantAddress.valid) {
+        this.submitAdamantAddress()
+      } else {
+        this.$emit('snackbar-note', this.adamantAddress.note)
+      }
+    },
+    verifyHotp () {
+      this.validateHotp(this.hotp.value)
+      if (this.hotp.valid) {
+        this.submitHotp()
+      } else {
+        this.$emit('snackbar-note', this.hotp.note)
+      }
     }
   },
   mounted () {

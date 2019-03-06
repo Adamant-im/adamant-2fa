@@ -50,12 +50,6 @@
   },
   "redirectLogin": "I have an account. Let me in",
   "redirectSignup": "Don't have an account? Signup",
-  "required": {
-    "adamantAddress": "Enter ADAMANT address",
-    "hotp": "Enter 2FA code",
-    "password": "Enter password",
-    "username": "Enter username"
-  },
   "security": "Security",
   "settings": "Settings",
   "signedUp": "You've signed up",
@@ -76,8 +70,9 @@
   "username": "Username",
   "valueMissing": {
     "adamantAddress": "Enter ADAMANT address",
-    "hotp": "Enter 2FA code to login",
-    "hotpEnable": "Enter code you've received to enable 2FA"
+    "hotp": "Enter 2FA code",
+    "password": "Enter password",
+    "username": "Enter username"
   },
   "verify": "Verify"
 }

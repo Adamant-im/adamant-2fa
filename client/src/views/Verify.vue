@@ -9,12 +9,12 @@
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>
           <v-flex lg7 md8 sm9 xl6 xs10>
-            <v-form class="login-form">
+            <v-form @submit.prevent class="login-form">
               <p v-html="$t('2faRequest')"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
-                :rules="hotpRules" @input="validateHotp" class="text-xs-center" maxlength="6"
-                v-model="hotp.value" />
-              <v-btn :disabled="!hotp.valid" @click="verifyHotp" color="white" v-t="'verify'" />
+                :rules="hotpRules" @input="validateHotp" @keyup.enter="verifyHotp"
+                class="text-xs-center" maxlength="6" ref="hotpField" v-model="hotp.value" />
+              <v-btn :disabled="!hotp.valid" @click="submitHotp" color="white" v-t="'verify'" />
             </v-form>
           </v-flex>
         </v-layout>
@@ -29,6 +29,9 @@ import LanguageSwitcher from '@/components/LanguageSwitcher'
 
 export default {
   components: { LanguageSwitcher },
+  mounted: function () {
+    this.$refs.hotpField.focus()
+  },
   computed: {
     ...mapState(['session']),
     hotpRules () {
@@ -58,17 +61,7 @@ export default {
         this.$emit('snackbar-note', status + '.logout')
       })
     },
-    validateHotp (value) {
-      let state = ''
-      switch (false) {
-        case Boolean(value): state = 'required.hotp'; break
-        case /^\d+$/.test(value): state = 'patternMismatch.hotp'; break
-        case value && value.length > 5: state = 'tooShort.hotp'
-      }
-      this.hotp.note = state
-      this.hotp.valid = !state
-    },
-    verifyHotp () {
+    submitHotp () {
       this.hotp.disabled = true
       this.verify2fa(this.hotp.value).then(status => {
         if (status === 200) {
@@ -97,6 +90,24 @@ export default {
           }
         }
       })
+    },
+    validateHotp (value) {
+      let state = ''
+      switch (false) {
+        case Boolean(value): state = 'valueMissing.hotp'; break
+        case /^\d+$/.test(value): state = 'patternMismatch.hotp'; break
+        case value && value.length > 5: state = 'tooShort.hotp'
+      }
+      this.hotp.note = state
+      this.hotp.valid = !state
+    },
+    verifyHotp () {
+      this.validateHotp(this.hotp.value)
+      if (this.hotp.valid) {
+        this.submitHotp()
+      } else {
+        this.$emit('snackbar-note', this.hotp.note)
+      }
     }
   }
 }

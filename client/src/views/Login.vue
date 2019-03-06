@@ -13,11 +13,11 @@
             <v-form class="login-form">
               <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
                 @keyup.enter="verifyCredentials" browser-autocomplete="on" class="text-xs-center"
-                maxlength="25" v-model="username.value" />
+                maxlength="25" ref="usernameField" v-model="username.value" />
               <v-text-field :label="$t('password')" :name="Date.now()" :rules="passwordRules"
                 @input="validatePassword" @keyup.enter="verifyCredentials"
                 autocomplete="new-password" browser-autocomplete="on" class="text-xs-center"
-                maxlength="15" type="password" v-model="password.value" />
+                maxlength="15" ref="passwordField" type="password" v-model="password.value" />
               <v-btn @click="verifyCredentials" color="white" v-t="'login'" />
             </v-form>
           </v-flex>
@@ -123,6 +123,9 @@ export default {
     this.username.value = this.account.username
     if (this.newUsername) {
       this.username.value = this.newUsername
+      this.$refs.passwordField.focus()
+    } else {
+      this.$refs.usernameField.focus()
     }
     this.validatePassword(this.password.value)
     this.validateUsername(this.username.value)

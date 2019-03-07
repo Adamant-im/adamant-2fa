@@ -193,9 +193,8 @@ export default {
 }
 </script>
 
-<style scoped>
-hr {
-  border-width: 0;
-  border-top: 1px rgba(0, 0, 0, .12) solid;
-}
+<style lang="stylus" scoped>
+.v-divider
+  border-width 0
+  border-top 1px rgba(0, 0, 0, .12) solid
 </style>

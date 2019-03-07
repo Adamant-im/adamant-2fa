@@ -25,6 +25,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  >>> .v-dialog
-    overflow-y hidden !important
+>>> .v-dialog
+  overflow-y hidden
 </style>

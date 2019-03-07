@@ -51,14 +51,13 @@ export default {
 }
 </script>
 
-<style scoped>
-.application--linear-gradient {
-  background: repeating-linear-gradient(
+<style lang="stylus" scoped>
+.application--linear-gradient
+  background repeating-linear-gradient(
     140deg,
     #f6f6f6,
     #f6f6f6 1px,
     #fefefe 0,
     #fefefe 5px
-  ) !important;
-}
+  ) !important
 </style>

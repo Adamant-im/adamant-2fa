@@ -4,7 +4,7 @@ import VueAxios from 'vue-axios'
 
 import './plugins/vuetify'
 import './registerServiceWorker'
-import '@/assets/stylus/app.styl'
+import '@/assets/app.styl'
 
 import App from './App.vue'
 import i18n from './plugins/i18n'

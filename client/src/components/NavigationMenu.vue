@@ -46,20 +46,13 @@ export default {
 }
 </script>
 
-<style scoped>
-.app-navigation {
-  background-color: transparent !important
-}
-.app-navigation__container {
-  background-color: #fff !important
-}
-/**
- * Disable grayscale filter.
- */
-.app-navigation >>> .v-btn:not(.v-btn--active) {
-  filter: unset
-}
-/* .v-bottom-nav {
-  border-top: 1px #D3D3D3 solid;
-} */
+<style lang="stylus" scoped>
+.app-navigation
+  background-color transparent !important
+  box-shadow none
+.app-navigation__container
+  background-color #fff !important
+  border-top 1px #D3D3D3 solid
+.app-navigation >>> .v-btn:not(.v-btn--active)
+  filter unset
 </style>

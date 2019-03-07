@@ -49,11 +49,11 @@ export default {
 }
 </script>
 
-<style>
-.v-select .v-icon {
-  left: 0;
-  position: absolute;
-  right: auto;
-  transform: translateX(-100%) rotateZ(270deg) !important
-}
+<style lang="stylus" scoped>
+>>> .v-select
+  transform translateX(40%)
+>>> .v-select .v-icon:hover
+  color #000
+>>> .v-select .v-icon
+  transform translateX(-300%) rotateZ(270deg) !important
 </style>

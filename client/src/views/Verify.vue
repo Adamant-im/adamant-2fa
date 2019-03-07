@@ -10,7 +10,7 @@
         <v-layout justify-center>
           <v-flex lg7 md8 sm9 xl6 xs10>
             <v-form @submit.prevent class="login-form">
-              <p v-html="$t('2faRequest')"></p>
+              <p v-html="$t('2faRequest', { address: this.account.adamantAddress.slice(-4) })"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
                 :rules="hotpRules" @input="validateHotp" @keyup.enter="verifyHotp"
                 class="text-xs-center" maxlength="6" ref="hotpField" v-model="hotp.value" />
@@ -33,7 +33,7 @@ export default {
     this.$refs.hotpField.focus()
   },
   computed: {
-    ...mapState(['session']),
+    ...mapState(['account', 'session']),
     hotpRules () {
       // Translate validation messages on i18n locale change
       // return [this.$i18n.t(this.hotp.note) || true]

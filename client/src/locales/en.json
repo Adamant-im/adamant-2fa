@@ -7,7 +7,7 @@
   "2faDisabled": "2FA is disabled now",
   "2faEnabled": "2FA enabled successfully",
   "2faNotValid": "| Code is invalid: 1 attempt left | Code is invalid: {n} attempts left",
-  "2faRequest": "Enter 2FA code received in ADAMANT Messenger",
+  "2faRequest": "Enter 2FA code received in U…{address}",
   "2faSendFail": "Error while sending 2FA code: {reason}",
   "2faSent": "2FA code sent",
   "2faSentWithTx": "2FA code sent with Tx ID: {id}",

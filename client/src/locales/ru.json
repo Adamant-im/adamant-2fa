@@ -27,7 +27,8 @@
     "login": "Сервер недоступен. Попробуйте позже",
     "signup": "Сервер недоступен. Попробуйте позже"
   },
-  "documentTitle": "Демо АДАМАНТ",
+  "documentTitle": "Демонстрация 2FA — АДАМАНТ",
+  "headerTitle": "ADAMANT 2FA",
   "empty": "",
   "enable2fa": "Включить 2FA",
   "enter2faCode": "Введите полученный код",
@@ -55,7 +56,7 @@
   "settings": "Настройки",
   "signedUp": "Аккаунт создан",
   "signup": "Создать аккаунт",
-  "signupSubheader": "Демонстрация <a href='https://medium.com/adamant-im/adamant-is-working-on-a-perfect-2fa-solution-15280b8a3349' target='_blank'>ADAMANT 2FA</a>. Безопасно, надежно, дешево.",
+  "signupSubheader": "Демонстрация ADAMANT 2FA. Безопасно, надежно, дешево.",
   "tooLong": {
     "adamantAddress": "Неверный адрес АДАМАНТа",
     "hotp": "Неверный код 2FA",

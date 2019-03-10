@@ -55,7 +55,7 @@
   "settings": "Настройки",
   "signedUp": "Аккаунт создан",
   "signup": "Создать аккаунт",
-  "signupSubheader": "Создать аккаунт",
+  "signupSubheader": "Демонстрация <a href='https://medium.com/adamant-im/adamant-is-working-on-a-perfect-2fa-solution-15280b8a3349' target='_blank'>ADAMANT 2FA</a>. Безопасно, надежно, дешево.",
   "tooLong": {
     "adamantAddress": "Неверный адрес АДАМАНТа",
     "hotp": "Неверный код 2FA",

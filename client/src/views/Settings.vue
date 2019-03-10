@@ -20,7 +20,8 @@
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
             :rules="adamantAddressRules" @input="validateAdamantAddress"
             @keyup.enter="verifyAdamantAddress" browser-autocomplete="on" class="text-xs-center"
-            maxlength="23" ref="adamantAddressField" v-model="adamantAddress.value" />
+            color="rgba(0, 0, 0, 0.54)" hide-details maxlength="23" ref="adamantAddressField"
+            v-model="adamantAddress.value" />
           <v-btn :disabled="!adamantAddress.valid" @click="submitAdamantAddress"
             v-t="'get2faCode'" />
           <i18n for="inner" path="redirectAdamant.outer" tag="p">
@@ -30,7 +31,8 @@
           <div v-show="show2faHotp">
             <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
               @keyup.enter="verifyHotp" @input="validateHotp" browser-autocomplete="on"
-              class="text-xs-center" maxlength="6" ref="hotpField" v-model="hotp.value" />
+              class="text-xs-center" color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6"
+              ref="hotpField" v-model="hotp.value" />
             <v-btn :disabled="!hotp.valid" @click="submitHotp" v-t="'verify'" />
           </div>
         </v-flex>

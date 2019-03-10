@@ -13,7 +13,8 @@
               <p v-html="$t('2faRequest', { address: this.account.adamantAddress.slice(-4) })"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
                 :rules="hotpRules" @input="validateHotp" @keyup.enter="verifyHotp"
-                class="text-xs-center" maxlength="6" ref="hotpField" v-model="hotp.value" />
+                class="text-xs-center" color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6"
+                ref="hotpField" v-model="hotp.value" />
               <v-btn :disabled="!hotp.valid" @click="submitHotp" color="white" v-t="'verify'" />
             </v-form>
           </v-flex>

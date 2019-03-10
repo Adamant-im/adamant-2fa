@@ -13,11 +13,13 @@
             <v-form class="auth-form">
               <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
                 @keyup.enter="verifyCredentials" browser-autocomplete="on" class="text-xs-center"
-                maxlength="25" ref="usernameField" v-model="username.value" />
+                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="25" ref="usernameField"
+                v-model="username.value" />
               <v-text-field :label="$t('password')" :name="Date.now()" :rules="passwordRules"
                 @input="validatePassword" @keyup.enter="verifyCredentials"
                 autocomplete="new-password" browser-autocomplete="on" class="text-xs-center"
-                maxlength="15" ref="passwordField" type="password" v-model="password.value" />
+                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="15" ref="passwordField"
+                type="password" v-model="password.value" />
               <v-btn @click="verifyCredentials" color="white" v-t="'login'" />
             </v-form>
           </v-flex>

@@ -37,7 +37,7 @@
   "get2faCode": "Get 2FA code",
   "language": "Language",
   "login": "Login",
-  "loginSubheader": "Login",
+  "loginSubheader": "Demonstration of ADAMANT 2FA. Secure, reliable, cheap.",
   "logout": "Logout",
   "name": "English",
   "password": "Password",
@@ -56,7 +56,7 @@
   "settings": "Settings",
   "signedUp": "You've signed up",
   "signup": "Signup",
-  "signupSubheader": "Signup",
+  "signupSubheader": "Demonstration of ADAMANT 2FA. Secure, reliable, cheap.",
   "tooLong": {
     "adamantAddress": "Wrong ADAMANT address",
     "hotp": "Wrong 2FA code",

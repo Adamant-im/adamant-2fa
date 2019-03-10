@@ -27,7 +27,8 @@
     "login": "Server is not available. Try again later",
     "signup": "Server is not available. Try again later"
   },
-  "documentTitle": "ADAMANT 2FA",
+  "documentTitle": "2FA demo — ADAMANT",
+  "headerTitle": "ADAMANT 2FA",
   "empty": "",
   "enable2fa": "Enable 2FA",
   "enter2faCode": "Enter 2FA code you've received",

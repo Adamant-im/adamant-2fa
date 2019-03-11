@@ -69,10 +69,10 @@ export default new Vuex.Store({
           })
           console.info(res)
         } else console.warn(res)
-        return res.status
+        return res
       }).catch(error => {
         console.error(error)
-        return error.response ? error.response.status : 503
+        return error.response || { status: 503 }
       })
     },
     logout ({ commit, state }) {

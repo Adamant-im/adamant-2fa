@@ -11,13 +11,16 @@
         <v-layout justify-center>
           <v-flex lg7 md8 sm9 xl6 xs10>
             <v-form class="auth-form">
-              <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
+              <v-text-field :label="$t('username')" :rules="usernameRules"
+                @blur="blured = 'usernameField'" @input="validateUsername"
                 @keyup.enter="verifyCredentials" browser-autocomplete="on" class="text-xs-center"
-                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="25" v-model="username.value" />
+                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="25" ref="usernameField"
+                v-model="username.value" />
               <v-text-field :label="$t('password')" :name="Date.now()" :rules="passwordRules"
-                @input="validatePassword" @keyup.enter="verifyCredentials"
-                autocomplete="new-password" browser-autocomplete="on" class="text-xs-center"
-                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="15" type="password"
+                @blur="blured = 'passwordField'" @input="validatePassword"
+                @keyup.enter="verifyCredentials" autocomplete="new-password"
+                browser-autocomplete="on" class="text-xs-center" color="rgba(0, 0, 0, 0.54)"
+                hide-details maxlength="15" ref="passwordField" type="password"
                 v-model="password.value" />
               <v-btn @click="verifyCredentials" color="white" v-t="'signup'" />
             </v-form>
@@ -57,6 +60,7 @@ export default {
   },
   data () {
     return {
+      blured: 'usernameField',
       password: {
         note: '',
         valid: false,
@@ -81,7 +85,10 @@ export default {
           this.$router.push({ name: 'login', params: { newUsername: this.username.value } })
           // this.password.value = null
           this.$emit('snackbar-note', 'signedUp')
-        } else this.$emit('snackbar-note', status + '.signup')
+        } else {
+          this.$emit('snackbar-note', status + '.signup')
+          this.$refs[this.blured].focus()
+        }
       })
     },
     validatePassword (value) {
@@ -109,6 +116,7 @@ export default {
         this.signupUser()
       } else {
         this.$emit('snackbar-note', this.username.note || this.password.note)
+        this.$refs[this.blured].focus()
       }
     }
   },

@@ -103,13 +103,14 @@ export default {
         if (status === 200) {
           this.hotpError.count = 2
           this.show2faHotp = true
-          this.$nextTick(() => this.$refs.hotpField.focus())
           this.$emit('snackbar-note', {
             args: { id: data.transactionId },
             path: '2faSentWithTx'
           })
+          this.$nextTick(() => this.$refs.hotpField.focus())
         } else {
           this.$emit('snackbar-note', status + '.adamantAddress')
+          this.$nextTick(() => this.$refs.adamantAddressField.focus())
           this.adamantAddress.disabled = false
         }
       })
@@ -146,6 +147,7 @@ export default {
               }
             }
             this.hotpError.count--
+            this.$nextTick(() => this.$refs.hotpField.focus())
           }
         }
       })
@@ -176,6 +178,7 @@ export default {
         this.submitAdamantAddress()
       } else {
         this.$emit('snackbar-note', this.adamantAddress.note)
+        // this.$refs.adamantAddress.focus()
       }
     },
     verifyHotp () {
@@ -184,6 +187,7 @@ export default {
         this.submitHotp()
       } else {
         this.$emit('snackbar-note', this.hotp.note)
+        // this.$refs.hotpField.focus()
       }
     }
   },

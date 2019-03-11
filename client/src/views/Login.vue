@@ -29,7 +29,7 @@
       </v-card>
       <v-layout justify-center>
         <v-flex md8 xs12>
-          <h3 class="mt-5 pt-4 text-xs-center">
+          <h3 class="mt-5 pt-4 text-xs-center" style='margin-top: 18px!important;margin-bottom: 40px;'>
             <router-link class="text-redirect" to="/signup"
               v-t="'redirectSignup'" />
           </h3>

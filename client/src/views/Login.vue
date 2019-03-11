@@ -166,6 +166,7 @@ export default {
   font-weight 100
   line-height 40px
   text-transform uppercase
+  margin 10px
 .auth-page__subtitle
   font-size 18px
   font-weight 100

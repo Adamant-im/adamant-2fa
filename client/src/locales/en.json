@@ -20,7 +20,7 @@
     "logout": "Session expired"
   },
   "422": {
-    "adamantAddress": "This ADAMANT address is not initialized",
+    "adamantAddress": "This ADAMANT address is not used. Get free tokens",
     "signup": "Username is already taken. Choose another one"
   },
   "503": {
@@ -38,7 +38,7 @@
   "get2faCode": "Get 2FA code",
   "language": "Language",
   "login": "Login",
-  "loginSubheader": "Demonstration of ADAMANT 2FA. Secure, reliable, cheap.",
+  "loginSubheader": "Demonstration of ADAMANT 2FA: secure, reliable, cheap.",
   "logout": "Logout",
   "name": "English",
   "password": "Password",
@@ -57,7 +57,7 @@
   "settings": "Settings",
   "signedUp": "You've signed up. Login now",
   "signup": "Signup",
-  "signupSubheader": "Demonstration of ADAMANT 2FA. Secure, reliable, cheap.",
+  "signupSubheader": "Demonstration of ADAMANT 2FA: secure, reliable, cheap.",
   "tooLong": {
     "adamantAddress": "Wrong ADAMANT address",
     "hotp": "Wrong 2FA code",

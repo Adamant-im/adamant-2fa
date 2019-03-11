@@ -139,10 +139,16 @@ module.exports = function(Account) {
               // Revoke prevously assigned role and wait for 2FA verification
               roleMapping.destroy(error => {
                 if (error) return next(error);
-                send2fa(res.adamantAddress, account).then(result => next(null, res));
+                send2fa(res.adamantAddress, account).then(result => {
+                  res.setAttribute('se2faTx', result.transactionId);
+                  next(null, res)
+                });
               });
             } else {
-              send2fa(res.adamantAddress, account).then(result => next(null, res));
+              send2fa(res.adamantAddress, account).then(result => {
+                res.setAttribute('se2faTx', result.transactionId);
+                next(null, res)
+              });
             }
           });
         });

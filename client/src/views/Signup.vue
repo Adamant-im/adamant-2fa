@@ -5,7 +5,7 @@
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
         <h1 class="auth-page__title" v-t="'documentTitle'" />
-        <h2 class="hidden-xs-and-down auth-page__subtitle mt-3" v-t="'signupSubheader'" />
+        <h2 class="auth-page__subtitle mt-3" v-t="'signupSubheader'" />
       </v-card>
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>
@@ -29,9 +29,8 @@
       </v-card>
       <v-layout justify-center>
         <v-flex md8 xs12>
-          <h3 class="mt-5 pt-4 text-xs-center">
-            <router-link class="text-redirect" to="/login"
-              v-t="'redirectLogin'" />
+          <h3 class="text-redirect text-xs-center">
+            <router-link to="/login" v-t="'redirectLogin'" />
           </h3>
         </v-flex>
       </v-layout>
@@ -152,6 +151,7 @@ export default {
   font-size 45px
   font-weight 100
   line-height 40px
+  margin 10px
   text-transform uppercase
 .auth-page__subtitle
   font-size 18px
@@ -160,8 +160,11 @@ export default {
   height 213px
   width 213px
 .text-redirect
-  color #4A4A4A
   font-weight 500
+  margin-bottom 40px
+  margin-top 18px
+.text-redirect a
+  color #4A4A4A
 
 @media (max-width: 767px)
   .auth-page__subtitle

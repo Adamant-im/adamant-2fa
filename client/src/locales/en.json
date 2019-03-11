@@ -5,7 +5,7 @@
   "2fa": "2FA",
   "2faCode": "Enter 2FA code",
   "2faDisabled": "2FA is disabled now",
-  "2faEnabled": "2FA enabled successfully",
+  "2faEnabled": "2FA is enabled. Re-login now",
   "2faNotValid": "| Code is invalid: 1 attempt left | Code is invalid: {n} attempts left",
   "2faRequest": "Enter 2FA code received in U…{address}",
   "2faSendFail": "Error while sending 2FA code: {reason}",
@@ -20,7 +20,7 @@
     "logout": "Session expired"
   },
   "422": {
-    "adamantAddress": "This ADAMANT address is already taken",
+    "adamantAddress": "This ADAMANT address is not initialized",
     "signup": "Username is already taken. Choose another one"
   },
   "503": {

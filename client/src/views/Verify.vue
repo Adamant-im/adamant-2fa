@@ -4,7 +4,7 @@
       <LanguageSwitcher />
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
-        <h1 class="auth-page__title" v-t="'documentTitle'" />
+        <h1 class="auth-page__title" v-t="'headerTitle'" />
       </v-card>
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>

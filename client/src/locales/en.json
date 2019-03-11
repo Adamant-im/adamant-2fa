@@ -28,7 +28,8 @@
     "logout": "Server is not available. Try again later",
     "signup": "Server is not available. Try again later"
   },
-  "documentTitle": "ADAMANT 2FA",
+  "documentTitle": "2FA demo — ADAMANT",
+  "headerTitle": "ADAMANT 2FA",
   "empty": "",
   "enable2fa": "Enable 2FA",
   "enter2faCode": "Enter 2FA code you've received",
@@ -37,7 +38,7 @@
   "get2faCode": "Get 2FA code",
   "language": "Language",
   "login": "Login",
-  "loginSubheader": "Login",
+  "loginSubheader": "Demonstration of ADAMANT 2FA. Secure, reliable, cheap.",
   "logout": "Logout",
   "name": "English",
   "password": "Password",
@@ -56,7 +57,7 @@
   "settings": "Settings",
   "signedUp": "You've signed up",
   "signup": "Signup",
-  "signupSubheader": "Signup",
+  "signupSubheader": "Demonstration of ADAMANT 2FA. Secure, reliable, cheap.",
   "tooLong": {
     "adamantAddress": "Wrong ADAMANT address",
     "hotp": "Wrong 2FA code",

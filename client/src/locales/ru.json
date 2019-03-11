@@ -28,7 +28,8 @@
     "logout": "Сервер недоступен. Попробуйте позже",
     "signup": "Сервер недоступен. Попробуйте позже"
   },
-  "documentTitle": "Демо АДАМАНТ",
+  "documentTitle": "Демонстрация 2FA — АДАМАНТ",
+  "headerTitle": "ADAMANT 2FA",
   "empty": "",
   "enable2fa": "Включить 2FA",
   "enter2faCode": "Введите полученный код",
@@ -37,7 +38,7 @@
   "get2faCode": "Получить 2FA-код",
   "language": "Язык",
   "login": "Войти",
-  "loginSubheader": "Войти",
+  "loginSubheader": "Демонстрация ADAMANT 2FA. Безопасно, надежно, дешево.",
   "logout": "Выйти",
   "name": "Русский",
   "password": "Пароль",
@@ -56,7 +57,7 @@
   "settings": "Настройки",
   "signedUp": "Аккаунт создан",
   "signup": "Создать аккаунт",
-  "signupSubheader": "Создать аккаунт",
+  "signupSubheader": "Демонстрация ADAMANT 2FA. Безопасно, надежно, дешево.",
   "tooLong": {
     "adamantAddress": "Неверный адрес АДАМАНТа",
     "hotp": "Неверный код 2FA",

@@ -5,19 +5,23 @@
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
         <h1 class="auth-page__title" v-t="'headerTitle'" />
-        <h2 class="hidden-xs-and-down auth-page__subtitle mt-3" v-t="'signupSubheader'" />
+        <h2 class="auth-page__subtitle mt-3" v-t="'signupSubheader'" />
       </v-card>
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>
           <v-flex lg7 md8 sm9 xl6 xs10>
             <v-form class="auth-form">
-              <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
+              <v-text-field :label="$t('username')" :rules="usernameRules"
+                @blur="blured = 'usernameField'" @input="validateUsername"
                 @keyup.enter="verifyCredentials" browser-autocomplete="on" class="text-xs-center"
-                maxlength="25" v-model="username.value" />
+                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="25" ref="usernameField"
+                v-model="username.value" />
               <v-text-field :label="$t('password')" :name="Date.now()" :rules="passwordRules"
-                @input="validatePassword" @keyup.enter="verifyCredentials"
-                autocomplete="new-password" browser-autocomplete="on" class="text-xs-center"
-                maxlength="15" type="password" v-model="password.value" />
+                @blur="blured = 'passwordField'" @input="validatePassword"
+                @keyup.enter="verifyCredentials" autocomplete="new-password"
+                browser-autocomplete="on" class="text-xs-center" color="rgba(0, 0, 0, 0.54)"
+                hide-details maxlength="15" ref="passwordField" type="password"
+                v-model="password.value" />
               <v-btn @click="verifyCredentials" color="white" v-t="'signup'" />
             </v-form>
           </v-flex>
@@ -25,9 +29,8 @@
       </v-card>
       <v-layout justify-center>
         <v-flex md8 xs12>
-          <h3 class="mt-5 pt-4 text-xs-center">
-            <router-link class="text-redirect" to="/login"
-              v-t="'redirectLogin'" />
+          <h3 class="text-redirect text-xs-center">
+            <router-link to="/login" v-t="'redirectLogin'" />
           </h3>
         </v-flex>
       </v-layout>
@@ -56,6 +59,7 @@ export default {
   },
   data () {
     return {
+      blured: 'usernameField',
       password: {
         note: '',
         valid: false,
@@ -80,7 +84,10 @@ export default {
           this.$router.push({ name: 'login', params: { newUsername: this.username.value } })
           // this.password.value = null
           this.$emit('snackbar-note', 'signedUp')
-        } else this.$emit('snackbar-note', status + '.signup')
+        } else {
+          this.$emit('snackbar-note', status + '.signup')
+          this.$refs[this.blured].focus()
+        }
       })
     },
     validatePassword (value) {
@@ -108,6 +115,7 @@ export default {
         this.signupUser()
       } else {
         this.$emit('snackbar-note', this.username.note || this.password.note)
+        this.$refs[this.blured].focus()
       }
     }
   },
@@ -143,6 +151,7 @@ export default {
   font-size 45px
   font-weight 100
   line-height 40px
+  margin 10px
   text-transform uppercase
 .auth-page__subtitle
   font-size 18px
@@ -151,8 +160,11 @@ export default {
   height 213px
   width 213px
 .text-redirect
-  color #4A4A4A
   font-weight 500
+  margin-bottom 40px
+  margin-top 18px
+.text-redirect a
+  color #4A4A4A
 
 @media (max-width: 767px)
   .auth-page__subtitle

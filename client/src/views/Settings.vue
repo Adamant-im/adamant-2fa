@@ -20,9 +20,10 @@
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
             :rules="adamantAddressRules" @input="validateAdamantAddress"
             @keyup.enter="verifyAdamantAddress" browser-autocomplete="on" class="text-xs-center"
-            maxlength="23" ref="adamantAddressField" v-model="adamantAddress.value" />
-          <v-btn :disabled="!adamantAddress.valid" @click="submitAdamantAddress"
-            v-t="'get2faCode'" />
+            color="rgba(0, 0, 0, 0.54)" hide-details maxlength="23" ref="adamantAddressField"
+            v-model="adamantAddress.value" />
+          <v-btn :disabled="!adamantAddress.valid || this.adamantAddress.disabled"
+            @click="submitAdamantAddress" v-t="'get2faCode'" />
           <i18n for="inner" path="redirectAdamant.outer" tag="p">
             <a class="grey--text text--darken-2" href="https://msg.adamant.im/" target="_blank"
               v-t="'redirectAdamant.inner'" />
@@ -30,7 +31,8 @@
           <div v-show="show2faHotp">
             <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
               @keyup.enter="verifyHotp" @input="validateHotp" browser-autocomplete="on"
-              class="text-xs-center" maxlength="6" ref="hotpField" v-model="hotp.value" />
+              class="text-xs-center" color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6"
+              ref="hotpField" v-model="hotp.value" />
             <v-btn :disabled="!hotp.valid" @click="submitHotp" v-t="'verify'" />
           </div>
         </v-flex>
@@ -91,25 +93,31 @@ export default {
       } else if (this.account.se2faEnabled) {
         this.disable2fa().then(status => {
           this.$emit('snackbar-note', '2faDisabled')
-          this.adamantAddress.value = ''
+          // this.adamantAddress.value = ''
+          // this.validateAdamantAddress()
         })
       }
+      this.adamantAddress.value = ''
+      this.validateAdamantAddress()
     },
     submitAdamantAddress () {
       this.adamantAddress.disabled = true
+      this.$emit('lock-screen')
       this.postAdamantAddress(this.adamantAddress.value).then(({ data, status }) => {
         if (status === 200) {
           this.hotpError.count = 2
           this.show2faHotp = true
-          this.$nextTick(() => this.$refs.hotpField.focus())
           this.$emit('snackbar-note', {
             args: { id: data.transactionId },
             path: '2faSentWithTx'
           })
+          this.$nextTick(() => this.$refs.hotpField.focus())
         } else {
           this.$emit('snackbar-note', status + '.adamantAddress')
+          this.$nextTick(() => this.$refs.adamantAddressField.focus())
           this.adamantAddress.disabled = false
         }
+        this.$emit('lock-screen', false)
       })
     },
     submitHotp () {
@@ -144,6 +152,7 @@ export default {
               }
             }
             this.hotpError.count--
+            this.$nextTick(() => this.$refs.hotpField.focus())
           }
         }
       })
@@ -174,6 +183,7 @@ export default {
         this.submitAdamantAddress()
       } else {
         this.$emit('snackbar-note', this.adamantAddress.note)
+        // this.$refs.adamantAddress.focus()
       }
     },
     verifyHotp () {
@@ -182,6 +192,7 @@ export default {
         this.submitHotp()
       } else {
         this.$emit('snackbar-note', this.hotp.note)
+        // this.$refs.hotpField.focus()
       }
     }
   },

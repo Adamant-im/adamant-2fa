@@ -5,19 +5,23 @@
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
         <h1 class="auth-page__title" v-t="'headerTitle'" />
-        <h2 class="hidden-xs-and-down auth-page__subtitle mt-3" v-t="'loginSubheader'" />
+        <h2 class="auth-page__subtitle mt-3" v-t="'loginSubheader'" />
       </v-card>
       <v-card class="mt-3 text-xs-center" color="transparent" flat>
         <v-layout justify-center>
           <v-flex lg7 md8 sm9 xl6 xs10>
             <v-form class="auth-form">
-              <v-text-field :label="$t('username')" :rules="usernameRules" @input="validateUsername"
+              <v-text-field :label="$t('username')" :rules="usernameRules"
+                @blur="blured = 'usernameField'" @input="validateUsername"
                 @keyup.enter="verifyCredentials" browser-autocomplete="on" class="text-xs-center"
-                maxlength="25" ref="usernameField" v-model="username.value" />
+                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="25" ref="usernameField"
+                v-model="username.value" />
               <v-text-field :label="$t('password')" :name="Date.now()" :rules="passwordRules"
-                @input="validatePassword" @keyup.enter="verifyCredentials"
-                autocomplete="new-password" browser-autocomplete="on" class="text-xs-center"
-                maxlength="15" ref="passwordField" type="password" v-model="password.value" />
+                @blur="blured = 'passwordField'" @input="validatePassword"
+                @keyup.enter="verifyCredentials" autocomplete="new-password"
+                browser-autocomplete="on" class="text-xs-center" color="rgba(0, 0, 0, 0.54)"
+                hide-details maxlength="15" ref="passwordField" type="password"
+                v-model="password.value" />
               <v-btn @click="verifyCredentials" color="white" v-t="'login'" />
             </v-form>
           </v-flex>
@@ -25,9 +29,8 @@
       </v-card>
       <v-layout justify-center>
         <v-flex md8 xs12>
-          <h3 class="mt-5 pt-4 text-xs-center">
-            <router-link class="text-redirect" to="/signup"
-              v-t="'redirectSignup'" />
+          <h3 class="text-redirect text-xs-center">
+            <router-link to="/signup" v-t="'redirectSignup'" />
           </h3>
         </v-flex>
       </v-layout>
@@ -56,6 +59,7 @@ export default {
   },
   data () {
     return {
+      blured: 'usernameField',
       password: {
         note: '',
         valid: false,
@@ -76,17 +80,23 @@ export default {
       this.login({
         password: this.password.value,
         username: this.username.value
-      }).then(status => {
+      }).then(({ data, status }) => {
         if (status === 200) {
           this.$i18n.locale = this.account.locale
           if (this.account.se2faEnabled) {
-            this.$emit('snackbar-note', '2faSent')
+            this.$emit('snackbar-note', {
+              args: { id: data.se2faTx },
+              path: '2faSentWithTx'
+            })
             this.$router.push('verify')
           } else {
             this.$router.push('settings')
           }
           // this.password.value = null
-        } else this.$emit('snackbar-note', status + '.login')
+        } else {
+          this.$emit('snackbar-note', status + '.login')
+          this.$refs[this.blured].focus()
+        }
         this.$emit('lock-screen', false)
       })
     },
@@ -115,6 +125,7 @@ export default {
         this.loginUser()
       } else {
         this.$emit('snackbar-note', this.username.note || this.password.note)
+        this.$refs[this.blured].focus()
       }
     }
   },
@@ -156,6 +167,7 @@ export default {
   font-size 45px
   font-weight 100
   line-height 40px
+  margin 10px
   text-transform uppercase
 .auth-page__subtitle
   font-size 18px
@@ -164,8 +176,11 @@ export default {
   height 213px
   width 213px
 .text-redirect
-  color #4A4A4A
   font-weight 500
+  margin-bottom 40px
+  margin-top 18px
+.text-redirect a
+  color #4A4A4A
 
 @media (max-width: 767px)
   .auth-page__subtitle

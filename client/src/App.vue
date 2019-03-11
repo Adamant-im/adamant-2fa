@@ -60,4 +60,7 @@ export default {
     #fefefe 0,
     #fefefe 5px
   ) !important
+>>> .v-text-field .v-input__slot::after,
+>>> .v-text-field .v-input__slot::before
+  border-color #DDD !important
 </style>

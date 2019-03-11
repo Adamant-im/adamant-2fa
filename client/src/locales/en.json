@@ -25,6 +25,7 @@
   },
   "503": {
     "login": "Server is not available. Try again later",
+    "logout": "Server is not available. Try again later",
     "signup": "Server is not available. Try again later"
   },
   "documentTitle": "2FA demo — ADAMANT",

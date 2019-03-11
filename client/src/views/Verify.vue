@@ -13,8 +13,9 @@
               <p v-html="$t('2faRequest', { address: this.account.adamantAddress.slice(-4) })"></p>
               <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
                 :rules="hotpRules" @input="validateHotp" @keyup.enter="verifyHotp"
-                class="text-xs-center" maxlength="6" ref="hotpField" v-model="hotp.value" />
-              <v-btn :disabled="!hotp.valid" @click="submitHotp" color="white" v-t="'verify'" />
+                class="text-xs-center" color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6"
+                ref="hotpField" v-model="hotp.value" />
+              <v-btn :disabled="!hotp.valid" @click="verifyHotp" color="white" v-t="'verify'" />
             </v-form>
           </v-flex>
         </v-layout>
@@ -87,6 +88,7 @@ export default {
               }
             }
             this.hotpError.count--
+            this.$nextTick(() => this.$refs.hotpField.focus())
           }
         }
       })
@@ -107,6 +109,7 @@ export default {
         this.submitHotp()
       } else {
         this.$emit('snackbar-note', this.hotp.note)
+        // this.$refs.hotpField.focus()
       }
     }
   }
@@ -137,6 +140,7 @@ export default {
   font-size 45px
   font-weight 100
   line-height 40px
+  margin 10px
   text-transform uppercase
 .auth-page__subtitle
   font-size 18px

@@ -22,7 +22,7 @@
                 browser-autocomplete="on" class="text-xs-center" color="rgba(0, 0, 0, 0.54)"
                 hide-details maxlength="15" ref="passwordField" type="password"
                 v-model="password.value" />
-              <v-btn @click="verifyCredentials" color="white" v-t="'signup'" />
+              <v-btn class="actionButton" @click="verifyCredentials" color="white" v-t="'signup'" />
             </v-form>
           </v-flex>
         </v-layout>
@@ -155,17 +155,18 @@ export default {
   text-transform uppercase
 .auth-page__subtitle
   font-size 18px
-  font-weight 100
+  font-weight 200
 .logo
   height 213px
   width 213px
 .text-redirect
-  font-weight 500
+  font-weight 300
   margin-bottom 40px
-  margin-top 18px
+  margin-top 28px
 .text-redirect a
   color #4A4A4A
-
+.actionButton
+  margin-top 25px
 @media (max-width: 767px)
   .auth-page__subtitle
     font-size 16px

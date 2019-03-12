@@ -2,7 +2,7 @@
   <v-bottom-nav :active="active" app class="app-navigation"
     v-model="value">
     <v-layout justify-center>
-      <v-flex class="app-navigation__container text-xs-center" md7 sm8 xs12>
+      <v-flex class="app-navigation__container text-xs-center" lg6 md7 sm9 xs12>
         <v-btn color="black" flat to="/settings">
           <span v-t="'settings'" />
           <v-icon>mdi-settings</v-icon>

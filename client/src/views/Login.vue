@@ -161,7 +161,8 @@ export default {
   transform translateY(-18px)
   transition font .3s ease
   -webkit-transform translateY(-18px)
-
+.v-select__slot:hover .v-icon
+  color #000
 .auth-page__title
   color #4A4A4A
   font-size 45px

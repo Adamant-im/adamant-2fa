@@ -1,6 +1,6 @@
 {
-  "name": "client",
-  "short_name": "client",
+  "name": "2FA ADAMANT Demo",
+  "short_name": "2fa-adamant-demo",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

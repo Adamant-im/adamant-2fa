@@ -1,5 +1,5 @@
 <template>
-  <v-dialog content-class="elevation-0" v-model="value">
+  <v-dialog content-class="elevation-0" persistent v-model="value">
     <v-layout align-center column>
       <v-progress-circular color="#4A4A4A" indeterminate size="150" stroke="1" />
     </v-layout>

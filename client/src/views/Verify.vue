@@ -15,7 +15,8 @@
                 :rules="hotpRules" @input="validateHotp" @keyup.enter="verifyHotp"
                 class="text-xs-center" color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6"
                 ref="hotpField" v-model="hotp.value" />
-              <v-btn :disabled="!hotp.valid" @click="verifyHotp" color="white" v-t="'verify'" />
+              <v-btn :disabled="!hotp.valid" @click="verifyHotp" class="action-button" color="white"
+                v-t="'verify'" />
             </v-form>
           </v-flex>
         </v-layout>
@@ -117,6 +118,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.action-button
+  margin-top 25px
+
 /**
  * Centering input text and label
  * 1. Override `style` attribute
@@ -144,7 +148,7 @@ export default {
   text-transform uppercase
 .auth-page__subtitle
   font-size 18px
-  font-weight 100
+  font-weight 200
 .logo
   height 213px
   width 213px

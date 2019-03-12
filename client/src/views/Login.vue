@@ -22,7 +22,7 @@
                 browser-autocomplete="on" class="text-xs-center" color="rgba(0, 0, 0, 0.54)"
                 hide-details maxlength="15" ref="passwordField" type="password"
                 v-model="password.value" />
-              <v-btn @click="verifyCredentials" color="white" v-t="'login'" />
+              <v-btn @click="verifyCredentials" class="action-button" color="white" v-t="'login'" />
             </v-form>
           </v-flex>
         </v-layout>
@@ -144,6 +144,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.action-button
+  margin-top 25px
+
 /**
  * Centering input text and label
  * 1. Override `style` attribute
@@ -171,14 +174,14 @@ export default {
   text-transform uppercase
 .auth-page__subtitle
   font-size 18px
-  font-weight 100
+  font-weight 200
 .logo
   height 213px
   width 213px
 .text-redirect
-  font-weight 500
+  font-weight 300
   margin-bottom 40px
-  margin-top 18px
+  margin-top 28px
 .text-redirect a
   color #4A4A4A
 
@@ -187,9 +190,6 @@ export default {
     font-size 16px
   .auth-page__title
     font-size 36px
-@media (max-width: 600px)
-  .auth-page__subtitle
-    display none
 @media only screen and (min-width : 480px)
   .logo
     height: 300px

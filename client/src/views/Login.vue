@@ -188,9 +188,6 @@ export default {
     font-size 16px
   .auth-page__title
     font-size 36px
-@media (max-width: 600px)
-  .auth-page__subtitle
-    display none
 @media only screen and (min-width : 480px)
   .logo
     height: 300px

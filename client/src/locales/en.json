@@ -5,7 +5,7 @@
   "2fa": "2FA",
   "2faCode": "Enter 2FA code",
   "2faDisabled": "2FA is disabled now",
-  "2faEnabled": "2FA enabled successfully",
+  "2faEnabled": "2FA is enabled. Re-login now",
   "2faNotValid": "| Code is invalid: 1 attempt left | Code is invalid: {n} attempts left",
   "2faRequest": "Enter 2FA code received in U…{address}",
   "2faSendFail": "Error while sending 2FA code: {reason}",
@@ -20,7 +20,7 @@
     "logout": "Session expired"
   },
   "422": {
-    "adamantAddress": "This ADAMANT address is already taken",
+    "adamantAddress": "This ADAMANT address is not used. Get free tokens",
     "signup": "Username is already taken. Choose another one"
   },
   "503": {
@@ -38,7 +38,7 @@
   "get2faCode": "Get 2FA code",
   "language": "Language",
   "login": "Login",
-  "loginSubheader": "Demonstration of ADAMANT 2FA. Secure, reliable, cheap.",
+  "loginSubheader": "Demonstration of ADAMANT 2FA: secure, reliable, cheap.",
   "logout": "Logout",
   "name": "English",
   "password": "Password",
@@ -55,9 +55,9 @@
   "redirectSignup": "Don't have an account? Signup",
   "security": "Security",
   "settings": "Settings",
-  "signedUp": "You've signed up",
+  "signedUp": "You've signed up. Login now",
   "signup": "Signup",
-  "signupSubheader": "Demonstration of ADAMANT 2FA. Secure, reliable, cheap.",
+  "signupSubheader": "Demonstration of ADAMANT 2FA: secure, reliable, cheap.",
   "tooLong": {
     "adamantAddress": "Wrong ADAMANT address",
     "hotp": "Wrong 2FA code",

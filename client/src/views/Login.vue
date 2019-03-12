@@ -22,7 +22,7 @@
                 browser-autocomplete="on" class="text-xs-center" color="rgba(0, 0, 0, 0.54)"
                 hide-details maxlength="15" ref="passwordField" type="password"
                 v-model="password.value" />
-              <v-btn @click="verifyCredentials" class="actionButton" color="white" v-t="'login'" />
+              <v-btn @click="verifyCredentials" class="action-button" color="white" v-t="'login'" />
             </v-form>
           </v-flex>
         </v-layout>
@@ -144,6 +144,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.action-button
+  margin-top 25px
+
 /**
  * Centering input text and label
  * 1. Override `style` attribute
@@ -181,8 +184,7 @@ export default {
   margin-top 28px
 .text-redirect a
   color #4A4A4A
-.actionButton
-  margin-top 25px
+
 @media (max-width: 767px)
   .auth-page__subtitle
     font-size 16px

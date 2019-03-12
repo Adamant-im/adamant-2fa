@@ -50,6 +50,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.v-select__slot:hover .v-icon
+  color #000
 >>> .v-select
   transform translateX(40%)
 >>> .v-select .v-icon:hover

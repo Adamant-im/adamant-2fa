@@ -22,12 +22,14 @@
             @keyup.enter="verifyAdamantAddress" browser-autocomplete="on" class="text-xs-center"
             color="rgba(0, 0, 0, 0.54)" hide-details maxlength="23" ref="adamantAddressField"
             v-model="adamantAddress.value" />
-          <v-btn :disabled="!adamantAddress.valid || this.adamantAddress.disabled"
-            @click="submitAdamantAddress" v-t="'get2faCode'" />
-          <i18n for="inner" path="redirectAdamant.outer" tag="p">
-            <a class="grey--text text--darken-2" href="https://msg.adamant.im/" target="_blank"
-              v-t="'redirectAdamant.inner'" />
-          </i18n>
+          <v-flex class="request-2fa-button-container">
+            <v-btn :disabled="!adamantAddress.valid || this.adamantAddress.disabled"
+              @click="submitAdamantAddress" v-t="'get2faCode'" class="request-2fa-button" />
+            <i18n for="inner" path="redirectAdamant.outer" tag="p" class="request-2fa-text">
+              <a class="grey--text text--darken-2" href="https://msg.adamant.im/" target="_blank"
+                v-t="'redirectAdamant.inner'" />
+            </i18n>
+          </v-flex>
           <div v-show="show2faHotp">
             <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
               @keyup.enter="verifyHotp" @input="validateHotp" browser-autocomplete="on"
@@ -205,6 +207,13 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.request-2fa-button-container
+  display flex
+  .request-2fa-button
+    margin-top 15px
+  .request-2fa-text
+    padding 12px
+    font-style italic
 .v-divider
   border-width 0
   border-top 1px rgba(0, 0, 0, .12) solid
@@ -215,5 +224,11 @@ export default {
   color rgba(0,0,0,.87)
 .v-input--checkbox
   .v-label
-    color rgba(0,0,0,.87)    
+    color rgba(0,0,0,.87)
+
+@media (max-width: 415px)
+  .request-2fa-button-container
+    display block
+    .request-2fa-text
+      padding 3px 10px
 </style>

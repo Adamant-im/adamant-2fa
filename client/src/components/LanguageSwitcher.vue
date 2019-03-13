@@ -61,5 +61,4 @@ export default {
   color #000
 >>> .v-select .v-icon
   transform translateX(-330%) rotateZ(270deg) !important
-  color rgba(0,0,0,.87) !important
 </style>

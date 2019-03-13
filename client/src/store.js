@@ -206,7 +206,7 @@ export default new Vuex.Store({
       username: null
     },
     apiUrl: process.env.NODE_ENV === 'production'
-      ? 'https://2fa-demo.adamant.im/api/Accounts/login'
+      ? 'https://2fa-demo.adamant.im/api/Accounts/'
       : 'http://localhost:3000/api/Accounts/',
     session: {
       created: null, // Created ISO timestamp string

@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-end>
-    <v-flex class='select-container'>
+    <v-flex class="select-container">
       <v-select :items="items" :label="value" background-color="transparent" flat
         item-text="language" item-value="locale" hide-details solo v-model="value">
       </v-select>

@@ -35,7 +35,7 @@
               @keyup.enter="verifyHotp" @input="validateHotp" browser-autocomplete="on"
               class="text-xs-center" color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6"
               ref="hotpField" v-model="hotp.value" />
-            <v-btn :disabled="!hotp.valid" @click="submitHotp" v-t="'verify'" />
+            <v-btn :disabled="!hotp.valid" @click="submitHotp" v-t="'verify'" class="verify-2fa-button" />
           </div>
         </v-flex>
       </v-layout>
@@ -224,6 +224,8 @@ export default {
   caret-color #4a4a4a!important
 .subheading
   color rgba(0,0,0,.87)
+.verify-2fa-button
+  margin-top 15px
 .v-input--checkbox
   .v-label
     color rgba(0,0,0,.87)

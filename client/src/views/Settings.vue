@@ -208,4 +208,12 @@ export default {
 .v-divider
   border-width 0
   border-top 1px rgba(0, 0, 0, .12) solid
+.title
+  color #4a4a4a!important
+  caret-color #4a4a4a!important
+.subheading
+  color rgba(0,0,0,.87)
+.v-input--checkbox
+  .v-label
+    color rgba(0,0,0,.87)    
 </style>

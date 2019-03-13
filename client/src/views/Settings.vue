@@ -14,7 +14,7 @@
       <v-layout align-start class="mb-5" column wrap>
         <v-flex lg7 md8 sm9 xl6 xs10>
           <v-checkbox :label="$t('enable2fa')" @change="check2fa" color="darken-1 grey"
-            v-model="se2faChecked" class="enable2fa-checkbox" />
+            v-model="se2faChecked" />
         </v-flex>
         <v-flex lg7 md8 sm9 xl6 xs10 v-show="show2fa">
           <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
@@ -226,9 +226,8 @@ export default {
   color rgba(0,0,0,.87)
 .verify-2fa-button
   margin-top 15px
-.enable2fa-checkbox
-  .v-label
-    color rgba(0,0,0,.87)
+>>> .v-input--checkbox .v-label
+  color rgba(0,0,0,.87)
 
 @media (max-width: 415px)
   .request-2fa-button-container

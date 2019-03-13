@@ -12,12 +12,12 @@
           <v-flex lg7 md8 sm9 xl6 xs10>
             <v-form class="auth-form">
               <v-text-field :label="$t('username')" :rules="usernameRules"
-                @blur="blured = 'usernameField'" @input="validateUsername"
+                @focus="focused = 'usernameField'" @input="validateUsername"
                 @keyup.enter="verifyCredentials" browser-autocomplete="on" class="text-xs-center"
                 color="rgba(0, 0, 0, 0.54)" hide-details maxlength="25" ref="usernameField"
                 v-model="username.value" />
               <v-text-field :label="$t('password')" :name="Date.now()" :rules="passwordRules"
-                @blur="blured = 'passwordField'" @input="validatePassword"
+                @focus="focused = 'passwordField'" @input="validatePassword"
                 @keyup.enter="verifyCredentials" autocomplete="new-password"
                 browser-autocomplete="on" class="text-xs-center" color="rgba(0, 0, 0, 0.54)"
                 hide-details maxlength="15" ref="passwordField" type="password"
@@ -59,7 +59,7 @@ export default {
   },
   data () {
     return {
-      blured: 'usernameField',
+      focused: 'usernameField',
       password: {
         note: '',
         valid: false,
@@ -95,7 +95,7 @@ export default {
           // this.password.value = null
         } else {
           this.$emit('snackbar-note', status + '.login')
-          this.$refs[this.blured].focus()
+          this.$refs[this.focused].focus()
         }
         this.$emit('lock-screen', false)
       })
@@ -125,7 +125,7 @@ export default {
         this.loginUser()
       } else {
         this.$emit('snackbar-note', this.username.note || this.password.note)
-        this.$refs[this.blured].focus()
+        this.$refs[this.focused].focus()
       }
     }
   },

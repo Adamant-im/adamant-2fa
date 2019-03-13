@@ -1,5 +1,5 @@
 <template>
-  <v-layout justify-center mt-5 row wrap>
+  <v-layout justify-center mt-5 row wrap class='layout-container'>
     <v-flex lg6 md7 sm9 xl5 xs11>
       <h3 class="grey--text mb-3 text--darken-3 title" v-t="'general'" />
       <v-divider />
@@ -207,6 +207,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.layout-container
+  padding 0 1.5rem
 .request-2fa-button-container
   display flex
   .request-2fa-button

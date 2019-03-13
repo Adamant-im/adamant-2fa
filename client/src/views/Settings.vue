@@ -1,11 +1,11 @@
 <template>
-  <v-layout justify-center mt-5 row wrap class="layout-container">
+  <v-layout class="root-container" justify-center mt-5 row wrap>
     <v-flex lg6 md7 sm9 xl5 xs11>
       <h3 class="grey--text mb-3 text--darken-3 title" v-t="'general'" />
       <v-divider />
       <v-layout align-center class="mb-5" row wrap>
         <v-flex xs6>
-          <v-subheader class="pa-0 subheading" v-t="'language'" />
+          <v-subheader class="pa-0" v-t="'language'" />
         </v-flex>
         <LanguageSwitcher />
       </v-layout>
@@ -22,10 +22,10 @@
             @keyup.enter="verifyAdamantAddress" browser-autocomplete="on" class="text-xs-center"
             color="rgba(0, 0, 0, 0.54)" hide-details maxlength="23" ref="adamantAddressField"
             v-model="adamantAddress.value" />
-          <v-flex class="request-2fa-button-container">
+          <v-flex class="address-container">
             <v-btn :disabled="!adamantAddress.valid || this.adamantAddress.disabled"
-              @click="submitAdamantAddress" v-t="'get2faCode'" class="request-2fa-button" />
-            <i18n for="inner" path="redirectAdamant.outer" tag="p" class="request-2fa-text">
+              @click="submitAdamantAddress" v-t="'get2faCode'" />
+            <i18n for="inner" path="redirectAdamant.outer" tag="p">
               <a class="grey--text text--darken-2" href="https://msg.adamant.im/" target="_blank"
                 v-t="'redirectAdamant.inner'" />
             </i18n>
@@ -35,7 +35,8 @@
               @keyup.enter="verifyHotp" @input="validateHotp" browser-autocomplete="on"
               class="text-xs-center" color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6"
               ref="hotpField" v-model="hotp.value" />
-            <v-btn :disabled="!hotp.valid" @click="submitHotp" v-t="'verify'" class="verify-2fa-button" />
+            <v-btn :disabled="!hotp.valid" @click="submitHotp" class="verify-button" v-t="'verify'"
+              />
           </div>
         </v-flex>
       </v-layout>
@@ -207,31 +208,31 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.layout-container
-  padding 0 1.5rem
-.request-2fa-button-container
+.address-container
   display flex
-  .request-2fa-button
+  .v-btn
     margin-top 15px
-  .request-2fa-text
+  p
     padding 12px
     font-style italic
+.root-container
+  padding 0 1.5rem
+.title
+  caret-color #4A4A4A !important
+  color #4A4A4A !important
 .v-divider
   border-width 0
   border-top 1px rgba(0, 0, 0, .12) solid
-.title
-  color #4a4a4a!important
-  caret-color #4a4a4a!important
-.subheading
-  color rgba(0,0,0,.87)
-.verify-2fa-button
+.v-subheader
+  color rgba(0, 0, 0, .87)
+.verify-button
   margin-top 15px
 >>> .v-input--checkbox .v-label
-  color rgba(0,0,0,.87)
+  color rgba(0, 0 ,0, .87)
 
 @media (max-width: 415px)
-  .request-2fa-button-container
+  .address-container
     display block
-    .request-2fa-text
+    p
       padding 3px 10px
 </style>

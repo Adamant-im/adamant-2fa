@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-end>
-    <v-flex class="select-container">
+    <v-flex>
       <v-select :items="items" :label="value" background-color="transparent" flat
         item-text="language" item-value="locale" hide-details solo v-model="value">
       </v-select>
@@ -50,15 +50,15 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.select-container
+.flex
   max-width 120px
   padding-right 1.1rem
-.v-select__slot:hover .v-icon
-  color #000
 >>> .v-select
+  color rgba(0, 0, 0, .54)
   transform translateX(40%)
->>> .v-select .v-icon:hover
-  color #000
->>> .v-select .v-icon
-  transform translateX(-330%) rotateZ(270deg) !important
+  :hover
+    color #000
+  .v-icon
+    color inherit
+    transform translateX(-330%) rotateZ(270deg) !important
 </style>

@@ -225,6 +225,7 @@ export default {
   border-top 1px rgba(0, 0, 0, .12) solid
 .v-subheader
   color rgba(0, 0, 0, .87)
+  font-size 16px
 .verify-button
   margin-top 15px
 >>> .v-input--checkbox .v-label

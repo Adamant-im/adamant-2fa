@@ -1,8 +1,7 @@
 <template>
-  <v-bottom-nav :active="active" app class="app-navigation"
-    v-model="value">
+  <v-bottom-nav :active="active" app v-model="value">
     <v-layout justify-center>
-      <v-flex class="app-navigation__container text-xs-center" lg6 md7 sm9 xs12>
+      <v-flex class="text-xs-center" lg6 md7 sm9 xs12>
         <v-btn color="black" flat to="/settings">
           <span v-t="'settings'" />
           <v-icon>mdi-settings</v-icon>
@@ -47,12 +46,23 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.app-navigation
-  background-color transparent !important
-  box-shadow none
-.app-navigation__container
-  background-color #fff !important
+.flex
+  background-color #FFF
   border-top 1px #D3D3D3 solid
-.app-navigation >>> .v-btn:not(.v-btn--active)
-  filter unset
+.v-bottom-nav
+  background-color transparent
+  box-shadow none
+  .v-btn:not(.v-btn--active)
+    filter unset
+
+@media (max-width: 384px)
+  .v-bottom-nav .v-btn
+    max-width 130px
+    padding-left 0
+    padding-right 0
+@media (max-width: 260px)
+  .v-bottom-nav .v-btn
+    max-width 90px
+    padding-left 0
+    padding-right 0
 </style>

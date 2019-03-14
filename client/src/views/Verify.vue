@@ -11,10 +11,10 @@
           <v-flex lg7 md8 sm9 xl6 xs10>
             <v-form @submit.prevent class="auth-form">
               <p v-html="$t('2faRequest', { address: this.account.adamantAddress.slice(-4) })"></p>
-              <v-text-field :disabled="hotp.disabled" :placeholder="$t('2faCode')"
-                :rules="hotpRules" @input="validateHotp" @keyup.enter="verifyHotp"
-                class="text-xs-center" color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6"
-                ref="hotpField" v-model="hotp.value" />
+              <v-text-field :disabled="hotp.disabled" :label="$t('2faCode')" :rules="hotpRules"
+                @input="validateHotp" @keyup.enter="verifyHotp" class="text-xs-center"
+                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6" ref="hotpField"
+                v-model="hotp.value" />
               <v-btn :disabled="!hotp.valid" @click="verifyHotp" class="action-button" color="white"
                 v-t="'verify'" />
             </v-form>
@@ -139,6 +139,8 @@ export default {
   transition font .3s ease
   -webkit-transform translateY(-18px)
 
+.auth-form p
+  font-size 16px
 .auth-page__title
   color #4A4A4A
   font-size 45px
@@ -152,6 +154,8 @@ export default {
 .logo
   height 213px
   width 213px
+.v-text-field
+  margin-top 20px
 
 @media (max-width: 767px)
   .auth-page__subtitle

@@ -2,16 +2,16 @@
 ## What is ADAMANT 2FA
 ADAMANT 2FA is a service to deliver one-time passwords (OTP) to ADAMANT Messenger account. 
 
-It is cheaper, more secure and reliable then SMS. More on ADAMANT 2FA advantages read at [ADAMANT's Medium](https://medium.com/adamant-im/adamant-is-working-on-a-perfect-2fa-solution-15280b8a3349).
+It is cheaper, more secure and reliable than SMS. [ADAMANT 2FA advantages](https://medium.com/adamant-im/adamant-is-working-on-a-perfect-2fa-solution-15280b8a3349).
 
-Live demo application is available at [2fa-demo.adamant.im](https://2fa-demo.adamant.im/signup). For instructions, read [Presenting ADAMANT 2FA article](https://medium.com/adamant-im/presenting-adamant-2fa-838db2322f7a).
+Live demo is available at [2fa-demo.adamant.im](https://2fa-demo.adamant.im/signup). For instructions, read [Presenting ADAMANT 2FA article](https://medium.com/adamant-im/presenting-adamant-2fa-838db2322f7a).
 
 ## How to connect
-If you own your service and need for 2FA security for users, connect ADAMANT 2FA. It is perfect for crypto exchanges, webmail services, financial services.
+If you own your service and want to add 2FA security for users, connect ADAMANT 2FA. It is perfect for crypto exchanges, webmail services, financial services.
 
-To use ADAMANT 2FA, you have to install [ADAMANT Console](https://github.com/Adamant-im/adamant-console) on your server and use a [`Send message`](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands#message) method. 2FA codes are sent from account set in Console’s configuration. Other than that, ADAMANT 2FA implementation is no different from classical approaches of sending one-time codes.
+To use ADAMANT 2FA, you have to install [ADAMANT Console](https://github.com/Adamant-im/adamant-console) on your server and use [`Send message`](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands#message) method. 2FA codes are sent from account set in Console’s configuration. Other than that, ADAMANT 2FA implementation is no different from classical approaches of sending one-time codes.
 
-This repository is only a sample of ADAMANT 2FA implementation. 
+This repository is only a example of ADAMANT 2FA implementation. 
 
 ## Prerequisites
 * [adamant-console](https://github.com/Adamant-im/adamant-console/wiki/Installation-and-configuration)

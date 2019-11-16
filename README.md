@@ -11,7 +11,7 @@ If you own your service and want to add 2FA security for users, connect ADAMANT 
 
 To use ADAMANT 2FA, you have to install [ADAMANT Console](https://github.com/Adamant-im/adamant-console) on your server and use [`Send message`](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands#message) method. 2FA codes are sent from account set in Console’s configuration. Other than that, ADAMANT 2FA implementation is no different from classical approaches of sending one-time codes.
 
-This repository is only a example of ADAMANT 2FA implementation. 
+This repository is only an example of ADAMANT 2FA implementation. 
 
 ## Prerequisites
 * [adamant-console](https://github.com/Adamant-im/adamant-console/wiki/Installation-and-configuration)

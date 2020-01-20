@@ -9,7 +9,7 @@ Live demo is available at [2fa-demo.adamant.im](https://2fa-demo.adamant.im/sign
 ## How to connect
 If you own your service and want to add 2FA security for users, connect ADAMANT 2FA. It is perfect for crypto exchanges, webmail services, financial services.
 
-To use ADAMANT 2FA, you have to install [ADAMANT Console](https://github.com/Adamant-im/adamant-console) on your server and use [`Send message`](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands#message) method. 2FA codes are sent from account set in Console’s configuration. Other than that, ADAMANT 2FA implementation is no different from classical approaches of sending one-time codes.
+To use ADAMANT 2FA, you have to install [ADAMANT Console](https://github.com/Adamant-im/adamant-console) on your server and use [`Send message`](https://github.com/Adamant-im/adamant-console/wiki/Available-Commands#message) method. 2FA codes are sent from account set in Console’s configuration. Other than that, ADAMANT 2FA implementation is no different from classical approaches of sending one-time codes. Read more: [How to connect ADAMANT 2FA to your business](https://medium.com/adamant-im/go-to-secure-2fa-on-a-blockchain-344500a5f010).
 
 This repository is only an example of ADAMANT 2FA implementation. 
 

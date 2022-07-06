@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "server/server.js",
   "engines": {
-    "node": ">=4"
+    "node": "<13.14.0"
   },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "lint": "eslint .",
     "start": "node .",
     "posttest": "npm run lint"
@@ -14,21 +15,27 @@
     "compression": "^1.0.3",
     "cors": "^2.5.2",
     "helmet": "^3.10.0",
-    "loopback": "^3.22.0",
+    "loopback": "^3.28.0",
     "loopback-boot": "^2.6.5",
-    "loopback-component-explorer": "^6.2.0",
-    "loopback-connector-postgresql": "^3.4.0",
+    "loopback-component-explorer": "6.5.1",
+    "loopback-connector-postgresql": "5.5.0",
     "serve-favicon": "^2.0.1",
     "speakeasy": "^2.0.0",
     "strong-error-handler": "^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^3.17.1",
+    "eslint": "^8.19.0",
     "eslint-config-loopback": "^8.0.0"
   },
   "repository": {
     "type": "",
     "url": ""
+  },
+  "resolutions": {
+    "node-fetch": "2.6.7",
+    "ejs": "^3.1.7",
+    "underscore": "^1.12.1",
+    "@braintree/sanitize-url": "^6.0.0"
   },
   "license": "UNLICENSED",
   "description": "adamant-2fa"

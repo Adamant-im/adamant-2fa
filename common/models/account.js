@@ -4,6 +4,7 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const g = require('loopback/lib/globalize');
 const speakeasy = require('speakeasy');
+const logger = require('../../helpers/logger');
 const MAX_PASSWORD_LENGTH = 15;
 const MIN_PASSWORD_LENGTH = 3;
 
@@ -220,7 +221,7 @@ module.exports = function(Account) {
   // Recommended solution is to override User.validatePassword method:
   // https://github.com/strongloop/loopback/pull/941
   Account.validatePassword = function(plain) {
-    var error;
+    let error;
     if (!plain || typeof plain !== 'string') {
       error = new Error(g.f('Invalid password.'));
       error.code = 'INVALID_PASSWORD';
@@ -228,7 +229,7 @@ module.exports = function(Account) {
       throw error;
     }
     // Bcrypt only supports up to 72 bytes; the rest is silently dropped.
-    var len = Buffer.byteLength(plain, 'utf8');
+    const len = Buffer.byteLength(plain, 'utf8');
     if (len > MAX_PASSWORD_LENGTH) {
       error = new Error(g.f('The password entered was too long. Max length is %d (entered %d)',
         MAX_PASSWORD_LENGTH, len));
@@ -246,10 +247,11 @@ module.exports = function(Account) {
   };
 
   function send2fa(adamantAddress, account) {
-    const counter = account.seCounter + 1
-    return new Promise(resolve => {
-      account.updateAttribute('seCounter', counter, async x => {
-        if (x) return next(x);
+    const counter = account.seCounter + 1;
+    return new Promise((resolve, reject) => {
+      account.updateAttribute('seCounter', counter, async err => {
+        if (err) return reject(err);
+
         const hotp = speakeasy.hotp({
           counter,
           // encoding: 'ascii',
@@ -257,15 +259,22 @@ module.exports = function(Account) {
         });
         const command = `adm send message ${adamantAddress} "2FA code: ${hotp}"`;
         let { error, stdout, stderr } = await exec(command);
+
         if (error) {
-          console.error('adm exec:' + error);
+          logger.error(`adm exec: ${error}`);
           return;
         }
-        console.info(command, stdout, stderr, account);
+
+        console.info(command);
+        console.info(stdout);
+        console.info(stderr);
+        console.info(account);
+
+        let result;
         try {
-          var result = JSON.parse(stdout);
+          result = JSON.parse(stdout);
         } catch (error) {
-          console.error('adm parse:' + error);
+          logger.error(`adm parse: ${error}`);
           result = {
             error: 'unprocessable entity',
             message: String(stdout).toLowerCase(),
@@ -273,6 +282,6 @@ module.exports = function(Account) {
         }
         resolve(result)
       });
-    }).catch(x => console.error(x))
+    }).catch(err => logger.error(err))
   }
 };

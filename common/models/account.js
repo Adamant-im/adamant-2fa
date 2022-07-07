@@ -22,7 +22,7 @@ module.exports = function(Account) {
         this.updateAttributes({
           se2faEnabled: true,
           seCounter: this.seCounter,
-        }, error => {
+        }, (error) => {
           if (error) return next(error);
           const Role = Account.app.models.Role;
           const RoleMapping = Account.app.models.RoleMapping;
@@ -33,7 +33,7 @@ module.exports = function(Account) {
               principalType: 'USER',
               principalId: this.id,
               roleId: role.getId(),
-            }, error => {
+            }, (error) => {
               if (error) return next(error);
               next(null, {se2faEnabled});
             });
@@ -45,7 +45,7 @@ module.exports = function(Account) {
 
   Account.prototype.disable2fa = function(next) {
     const res = {se2faEnabled: false};
-    this.updateAttributes(res, error => {
+    this.updateAttributes(res, (error) => {
       if (error) return next(error);
       next(null, res);
     });
@@ -53,7 +53,7 @@ module.exports = function(Account) {
 
   Account.prototype.updateLocale = function(locale, next) {
     const res = {locale};
-    this.updateAttributes(res, error => {
+    this.updateAttributes(res, (error) => {
       if (error) return next(error);
       next(null, res);
     });
@@ -71,10 +71,10 @@ module.exports = function(Account) {
       seSecretHex: secret.hex,
       seSecretUrl: secret.otpauth_url,
     };
-    this.updateAttributes(data, error => {
+    this.updateAttributes(data, (error) => {
       if (error) return next(error);
-      send2fa(adamantAddress, this).then(result => {
-        this.updateAttribute('adamantAddress', adamantAddress, error => {
+      send2fa(adamantAddress, this).then((result) => {
+        this.updateAttribute('adamantAddress', adamantAddress, (error) => {
           if (error) return next(error);
           next(null, {...result, ...{adamantAddress}});
         });
@@ -92,7 +92,7 @@ module.exports = function(Account) {
         token: hotp,
       });
       if (se2faVerified) {
-        this.updateAttribute('seCounter', this.seCounter, error => {
+        this.updateAttribute('seCounter', this.seCounter, (error) => {
           if (error) return next(error);
           const Role = Account.app.models.Role;
           const RoleMapping = Account.app.models.RoleMapping;
@@ -103,7 +103,7 @@ module.exports = function(Account) {
               principalType: 'USER',
               principalId: this.id,
               roleId: role.getId(),
-            }, error => {
+            }, (error) => {
               if (error) return next(error);
               next(null, {se2faVerified});
             });
@@ -138,17 +138,17 @@ module.exports = function(Account) {
             if (error) return next(error);
             if (roleMapping) {
               // Revoke prevously assigned role and wait for 2FA verification
-              roleMapping.destroy(error => {
+              roleMapping.destroy((error) => {
                 if (error) return next(error);
-                send2fa(res.adamantAddress, account).then(result => {
-                  res.setAttribute('se2faTx', result.transactionId);
-                  next(null, res)
+                send2fa(res.adamantAddress, account).then((result) => {
+                  res.setAttribute('se2faTx', (result).transactionId);
+                  next(null, res);
                 });
               });
             } else {
-              send2fa(res.adamantAddress, account).then(result => {
+              send2fa(res.adamantAddress, account).then((result) => {
                 res.setAttribute('se2faTx', result.transactionId);
-                next(null, res)
+                next(null, res);
               });
             }
           });
@@ -161,7 +161,7 @@ module.exports = function(Account) {
             principalType: 'USER',
             principalId: account.id,
             roleId: role.getId(),
-          }, error => {
+          }, (error) => {
             if (error) return next(error);
             next(null, res);
           });
@@ -232,14 +232,14 @@ module.exports = function(Account) {
     const len = Buffer.byteLength(plain, 'utf8');
     if (len > MAX_PASSWORD_LENGTH) {
       error = new Error(g.f('The password entered was too long. Max length is %d (entered %d)',
-        MAX_PASSWORD_LENGTH, len));
+          MAX_PASSWORD_LENGTH, len));
       error.code = 'PASSWORD_TOO_LONG';
       error.statusCode = 422;
       throw error;
     }
     if (len < MIN_PASSWORD_LENGTH) {
       error = new Error(g.f('The password entered was too short. Min length is %d (entered %d)',
-        MIN_PASSWORD_LENGTH, len));
+          MIN_PASSWORD_LENGTH, len));
       error.code = 'PASSWORD_TOO_SHORT';
       error.statusCode = 422;
       throw error;
@@ -249,7 +249,7 @@ module.exports = function(Account) {
   function send2fa(adamantAddress, account) {
     const counter = account.seCounter + 1;
     return new Promise((resolve, reject) => {
-      account.updateAttribute('seCounter', counter, async err => {
+      account.updateAttribute('seCounter', counter, async (err) => {
         if (err) return reject(err);
 
         const hotp = speakeasy.hotp({
@@ -258,7 +258,7 @@ module.exports = function(Account) {
           secret: account.seSecretAscii,
         });
         const command = `adm send message ${adamantAddress} "2FA code: ${hotp}"`;
-        let { error, stdout, stderr } = await exec(command);
+        const {error, stdout, stderr} = await exec(command);
 
         if (error) {
           logger.error(`adm exec: ${error}`);
@@ -280,8 +280,8 @@ module.exports = function(Account) {
             message: String(stdout).toLowerCase(),
           };
         }
-        resolve(result)
+        resolve(result);
       });
-    }).catch(err => logger.error(err))
+    }).catch((err) => logger.error(err));
   }
 };

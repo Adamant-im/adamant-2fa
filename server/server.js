@@ -3,7 +3,7 @@
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 
-let logger = require('../helpers/logger');
+const logger = require('../helpers/logger');
 
 const app = module.exports = loopback();
 
@@ -26,6 +26,5 @@ boot(app, __dirname, function(err) {
   if (err) throw err;
 
   // start the server if `$ node server.js`
-  if (require.main === module)
-    app.start();
+  if (require.main === module) app.start();
 });

@@ -7,6 +7,7 @@
 <script>
 export default {
   computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
     note () {
       if (this.options) {
         if (typeof this.options.note === 'string') {

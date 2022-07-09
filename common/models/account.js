@@ -259,17 +259,14 @@ module.exports = function(Account) {
         });
         const command = `adm send message ${adamantAddress} "2FA code: ${hotp}"`;
         const {error, stdout, stderr} = await exec(command);
-
         if (error) {
           logger.error(`adm exec: ${error}`);
           return;
         }
-
-        console.info(command);
-        console.info(stdout);
-        console.info(stderr);
-        console.info(account);
-
+        logger.info(command);
+        logger.info(stdout);
+        logger.info(stderr);
+        logger.info(account);
         let result;
         try {
           result = JSON.parse(stdout);

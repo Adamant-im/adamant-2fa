@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "main": "server/server.js",
   "engines": {
-    "node": "<13.14.0"
+    "node": ">=16.15.0"
   },
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "lint": "eslint .",
     "start": "node .",
     "posttest": "npm run lint",
-    "test": "jest helpers"
+    "test": "jest helpers common/models server"
   },
   "dependencies": {
     "compression": "^1.0.3",
@@ -35,7 +34,7 @@
     "type": "",
     "url": ""
   },
-  "resolutions": {
+  "overrides": {
     "node-fetch": "2.6.7",
     "ejs": "^3.1.7",
     "underscore": "^1.12.1",

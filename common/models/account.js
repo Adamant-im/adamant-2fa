@@ -1,10 +1,10 @@
 'use strict';
 
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
 const g = require('loopback/lib/globalize');
 const speakeasy = require('speakeasy');
 const logger = require('../../helpers/logger');
+const config = require('config');
+const adamantApi = require('adamant-console');
 const MAX_PASSWORD_LENGTH = 15;
 const MIN_PASSWORD_LENGTH = 3;
 
@@ -251,33 +251,22 @@ module.exports = function(Account) {
     return new Promise((resolve, reject) => {
       account.updateAttribute('seCounter', counter, async (err) => {
         if (err) return reject(err);
-
         const hotp = speakeasy.hotp({
           counter,
           // encoding: 'ascii',
           secret: account.seSecretAscii,
         });
-        const command = `adm send message ${adamantAddress} "2FA code: ${hotp}"`;
-        const {error, stdout, stderr} = await exec(command);
-        if (error) {
-          logger.error(`adm exec: ${error}`);
-          return;
-        }
-        logger.info(command);
-        logger.info(stdout);
-        logger.info(stderr);
-        logger.info(account);
-        let result;
-        try {
-          result = JSON.parse(stdout);
-        } catch (error) {
-          logger.error(`adm parse: ${error}`);
-          result = {
-            error: 'unprocessable entity',
-            message: String(stdout).toLowerCase(),
-          };
-        }
-        resolve(result);
+        const passphrase = config.get('passphrase');
+        adamantApi.sendMessage(
+            adamantAddress,
+            `2FA code: ${hotp}`,
+            passphrase,
+        ).then((res) => {
+          logger.log(res);
+          resolve(res);
+        }).catch((err) => {
+          logger.error(err);
+        });
       });
     }).catch((err) => logger.error(err));
   }

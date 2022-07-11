@@ -12,7 +12,9 @@
     "test": "jest helpers common/models server"
   },
   "dependencies": {
+    "adamant-console": "file:../../../Downloads/adamant-console",
     "compression": "^1.0.3",
+    "config": "^3.3.7",
     "cors": "^2.5.2",
     "eslint-plugin-jest": "^26.5.3",
     "helmet": "^3.10.0",

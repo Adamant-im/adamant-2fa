@@ -266,6 +266,7 @@ module.exports = function(Account) {
           resolve(res);
         }).catch((err) => {
           logger.error(err);
+          resolve(err);
         });
       });
     }).catch((err) => logger.error(err));

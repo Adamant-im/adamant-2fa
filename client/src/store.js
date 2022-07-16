@@ -174,8 +174,8 @@ export default new Vuex.Store({
   mutations: {
     clearSession: state => {
       // Shallow iteration
-      for (let k in state.session) {
-        if (state.session.hasOwnProperty(k)) {
+      for (const k in state.session) {
+        if (Object.prototype.hasOwnProperty.call(state.session, k)) {
           state.session[k] = null
         }
       }

@@ -1,9 +1,17 @@
 <template>
   <v-layout justify-end>
     <v-flex>
-      <v-select :items="items" :label="value" background-color="transparent" flat
-        item-text="language" item-value="locale" hide-details solo v-model="value">
-      </v-select>
+      <v-select
+        v-model="value"
+        :items="items"
+        :label="value"
+        background-color="transparent"
+        flat
+        item-text="language"
+        item-value="locale"
+        hide-details
+        solo
+      />
     </v-flex>
   </v-layout>
 </template>

@@ -1,7 +1,10 @@
 <template>
   <v-app class="application--linear-gradient">
     <v-content>
-      <router-view @lock-screen="lockScreen" @snackbar-note="showSnackbarNote" />
+      <router-view
+        @lock-screen="lockScreen"
+        @snackbar-note="showSnackbarNote"
+      />
     </v-content>
     <NavigationMenu @snackbar-note="showSnackbarNote" />
     <ScreenLocker :show="screenLocker" />

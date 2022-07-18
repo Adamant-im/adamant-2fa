@@ -262,7 +262,7 @@ module.exports = function(Account) {
             `2FA code: ${hotp}`,
             passphrase,
         ).then((res) => {
-          logger.log(res);
+          logger.log(JSON.stringify(res));
           resolve(res);
         }).catch((err) => {
           logger.error(err);

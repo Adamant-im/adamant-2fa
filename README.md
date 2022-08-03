@@ -43,13 +43,13 @@ postgres=# SHOW hba_file;
     $ cd server && node create-lb-tables.js
     $ cd ../
 
-### Set up configuration
+### Set up passPhrase in configuration
 The bot will use ```config.json```, if available, or ```config.default.json``` otherwise.
 
     cp config.default.json config.json
     nano config.json
 
-Parameters: see comments in ```config.json```.
+Enter your passphrase into passPhrase field
 
 ## Development
 ### Serve

@@ -28,14 +28,13 @@ This repository is only an example of ADAMANT 2FA implementation.
     postgres=# CREATE USER "adamant-2fa" WITH PASSWORD 'password';
     postgres=# CREATE DATABASE "adamant-2fa" WITH OWNER "adamant-2fa";
 
-####Get hba_file path
-````
-postgres=# SHOW hba_file;
+### Get hba_file path
+    postgres=# SHOW hba_file;
               hba_file
--------------------------------------
- /usr/local/var/postgres/pg_hba.conf
-(1 row)
-````
+    -------------------------------------
+    /usr/local/var/postgres/pg_hba.conf
+    (1 row)
+### Update hba_file and restart postgresql
     $ sudo nano /usr/local/var/postgres/pg_hba.conf
         local   adamant-2fa  adamant-2fa        md5
     $ sudo service postgresql restart

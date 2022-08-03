@@ -1,0 +1,6 @@
+{
+  /** The bot's secret passphrase. Create separate ADM account for the bot.
+      Bot's ADM address will correspond this passPhrase.
+    **/
+    "passPhrase": "distance expect praise frequent.."
+}

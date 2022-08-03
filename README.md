@@ -42,6 +42,15 @@ postgres=# SHOW hba_file;
 ### Create tables for Loopback models
     $ cd server && node create-lb-tables.js
     $ cd ../
+
+### Set up configuration
+The bot will use ```config.json```, if available, or ```config.default.json``` otherwise.
+
+    cp config.default.json config.json
+    nano config.json
+
+Parameters: see comments in ```config.json```.
+
 ## Development
 ### Serve
     $ node .

@@ -1,7 +1,7 @@
 {
   /** The bot will use this ADM passPhrase to send 2FA codes.
-      Create it at https://msg.adamant.im. Make sure you've received free ADM tokens.
-      ADM address will correspond this passPhrase.
-    **/
-    "passPhrase": "distance expect praise frequent.."
+    Create it at https://msg.adamant.im. Make sure you've received free ADM tokens.
+    ADM address will correspond this passPhrase.
+  **/
+  "passPhrase": "distance expect praise frequent.."
 }

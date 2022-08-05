@@ -20,3 +20,4 @@ npm-debug.log
 logs
 .vscode
 config.json
+config.2fa.json

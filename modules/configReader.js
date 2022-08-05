@@ -16,7 +16,7 @@ try {
   if (isDev || process.env.JEST_WORKER_ID) {
     config = JSON.parse(jsonminify(fs.readFileSync('./config.test', 'utf-8')));
   } else {
-    const configFile = fs.existsSync('./config.json') ? './config.json' : './config.default.json';
+    const configFile = fs.existsSync('./config.2fa.json') ? './config.2fa.json' : './config.default.json';
     config = JSON.parse(jsonminify(fs.readFileSync(configFile, 'utf-8')));
   }
 

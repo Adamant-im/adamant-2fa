@@ -60,13 +60,13 @@ cd ../
 Set up ADAMANT `passPhrase` to send 2fa codes from:
 
 ```
-cp config.default.json config.2fa.json
-nano config.2fa.json
+cp config.default.json config.json
+nano config.json
 ```
 
-Enter your ADM passphrase into `passPhrase` field. Make sure this account has ADM to send messages with 2fa codes.
+The 2FA app uses `config.json` file. Enter your ADM passphrase into `passPhrase` field. Make sure this account has ADM to send messages with 2fa codes. [How to create ADM account and get free tokens](https://medium.com/adamant-im/how-to-start-with-a-blockchain-messenger-54d1eb9704e6).
 
-The 2FA app will use `config.2fa.json`, if available, or `config.default.json` otherwise.
+Note: If the app doesn't send 2FA codes, console shows `{"success":false,"errorMessage":"Wrong 'passPhrase' parameter"}`. Make sure you've created `config.json` in the root directory (where `package.json` located), and you've set `passPhrase` and `network` parameters.
 
 ## Start
 

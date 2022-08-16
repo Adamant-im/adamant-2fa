@@ -3,7 +3,6 @@
 const g = require('loopback/lib/globalize');
 const speakeasy = require('speakeasy');
 const logger = require('../../helpers/logger');
-const config = require('../../modules/configReader');
 const adamantApi = require('adamant-console');
 const MAX_PASSWORD_LENGTH = 15;
 const MIN_PASSWORD_LENGTH = 3;
@@ -259,8 +258,6 @@ module.exports = function(Account) {
         adamantApi.sendMessage(
             adamantAddress,
             `2FA code: ${hotp}`,
-            undefined,
-            config.passPhrase,
         ).then((res) => {
           logger.log(JSON.stringify(res));
           resolve(res);

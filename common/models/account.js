@@ -259,6 +259,7 @@ module.exports = function(Account) {
         adamantApi.sendMessage(
             adamantAddress,
             `2FA code: ${hotp}`,
+            undefined,
             config.passPhrase,
         ).then((res) => {
           logger.log(JSON.stringify(res));

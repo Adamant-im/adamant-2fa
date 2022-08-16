@@ -136,7 +136,7 @@ module.exports = function(Account) {
           }, (error, roleMapping) => {
             if (error) return next(error);
             if (roleMapping) {
-              // Revoke prevously assigned role and wait for 2FA verification
+              // Revoke previously assigned role and wait for 2FA verification
               roleMapping.destroy((error) => {
                 if (error) return next(error);
                 send2fa(res.adamantAddress, account).then((result) => {
@@ -255,14 +255,21 @@ module.exports = function(Account) {
           // encoding: 'ascii',
           secret: account.seSecretAscii,
         });
+
+        const message = `2FA code: ${hotp}`;
         adamantApi.sendMessage(
             adamantAddress,
-            `2FA code: ${hotp}`,
+            message,
         ).then((res) => {
-          logger.log(JSON.stringify(res));
-          resolve(res);
+          if (res?.success) {
+            logger.log(`2FA message '${message}' sent to ${adamantAddress}: ${JSON.stringify(res)}`);
+            resolve(res);
+          } else {
+            logger.error(`Failed to send ADM message '${message}' to ${adamantAddress}. ${res?.errorMessage}.`);
+            reject(res?.errorMessage);
+          }
         }).catch((err) => {
-          logger.error(err);
+          logger.error(`Error while sending ADM message '${message}' to ${adamantAddress}. ${err}.`);
           resolve(err);
         });
       });

@@ -1,6 +1,6 @@
 {
   /** 
-    The bot will use this ADM passPhrase to send 2FA codes.
+    The app will use this ADM passPhrase to send 2FA codes.
     Create it at https://msg.adamant.im. Make sure you've received free ADM tokens.
     ADM address will correspond this passPhrase.
   **/
@@ -9,7 +9,7 @@
   /** Choose 'mainnet' or 'testnet' **/
   "network": "mainnet",
 
-  /** Additionall, you can specify what ADM nodes to use **/
+  /** Additionally, you can specify what ADM nodes to use **/
   "networks": {
     "testnet": {
       "nodes": [

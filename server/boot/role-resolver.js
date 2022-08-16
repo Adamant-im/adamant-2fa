@@ -40,7 +40,7 @@ module.exports = function(app) {
           }, (error, roleMapping) => {
             if (error) return next(error);
             if (roleMapping) {
-              // Revoke prevously assigned role
+              // Revoke previously assigned role
               roleMapping.destroy((error) => {
                 if (error) return next(error);
                 next(null, false);

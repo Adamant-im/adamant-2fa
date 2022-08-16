@@ -12,10 +12,10 @@ app.start = function() {
   return app.listen(function() {
     app.emit('started');
     const baseUrl = app.get('url').replace(/\/$/, '');
-    logger.info(`Web server listening at: ${baseUrl}`);
+    logger.info(`Web server is listening at ${baseUrl}`);
     if (app.get('loopback-component-explorer')) {
       const explorerPath = app.get('loopback-component-explorer').mountPath;
-      logger.info(`Browse your REST API at ${baseUrl}${explorerPath}`);
+      logger.info(`Browse app REST API at ${baseUrl}${explorerPath}`);
     }
   });
 };

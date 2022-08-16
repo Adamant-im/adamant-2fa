@@ -8,7 +8,7 @@ const infoStr = fs.createWriteStream(`./logs/${date()}.log`, {
   flags: 'a',
 });
 
-infoStr.write(`\n\n[The bot started] _________________${fullTime()}_________________\n`);
+infoStr.write(`\n\n[The app started] _________________${fullTime()}_________________\n`);
 
 const logger = {
   errorLevel: 'log',

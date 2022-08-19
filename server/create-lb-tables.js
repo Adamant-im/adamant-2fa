@@ -8,7 +8,7 @@
 const server = require('./server');
 const logger = require('../helpers/logger');
 
-const ds = server.dataSources.postgresql10;
+const ds = server.dataSources.postgresql;
 const lbTables = ['Account', 'User', 'AccessToken', 'ACL', 'RoleMapping', 'Role'];
 ds.automigrate(lbTables, function(error) {
   if (error) throw error;

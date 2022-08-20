@@ -79,9 +79,9 @@ module.exports = function(Account) {
             next(null, {...result, ...{adamantAddress}});
           });
         } else {
-          const error = {};
+          const error = new Error(g.f('Unable to send 2fa'));
           error.statusCode = result?.error ? 422 : 500;
-          error.message = 'Failed to send 2fa';
+          error.code = 'SEND_2FA_ERROR';
           next(error);
         }
       });
@@ -151,9 +151,9 @@ module.exports = function(Account) {
                     res.setAttribute('se2faTx', (result).transactionId);
                     next(null, res);
                   } else {
-                    const error = {};
+                    const error = new Error(g.f('Unable to send 2fa'));
                     error.statusCode = result?.error ? 422 : 500;
-                    error.message = 'Failed to send 2fa';
+                    error.code = 'SEND_2FA_ERROR';
                     next(error);
                   }
                 });
@@ -164,9 +164,9 @@ module.exports = function(Account) {
                   res.setAttribute('se2faTx', result.transactionId);
                   next(null, res);
                 } else {
-                  const error = {};
+                  const error = new Error(g.f('Unable to send 2fa'));
                   error.statusCode = result?.error ? 422 : 500;
-                  error.message = 'Failed to send 2fa';
+                  error.code = 'SEND_2FA_ERROR';
                   next(error);
                 }
               });

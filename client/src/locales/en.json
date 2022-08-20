@@ -23,6 +23,9 @@
     "adamantAddress": "This ADAMANT address is not used. Get free tokens",
     "signup": "Username is already taken. Choose another one"
   },
+  "500": {
+    "login": "Error occured on server. View logs"
+  },
   "503": {
     "login": "Server is not available. Try again later",
     "logout": "Server is not available. Try again later",

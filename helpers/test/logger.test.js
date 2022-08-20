@@ -83,7 +83,7 @@ describe('logger: info', () => {
 
     logger.info('info');
   });
- 
+
   test('Should log warn level', (done) => {
     logger.initLogger(logLevel, {
       log(...objs) {

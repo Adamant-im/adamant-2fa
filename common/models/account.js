@@ -73,10 +73,14 @@ module.exports = function(Account) {
     this.updateAttributes(data, (error) => {
       if (error) return next(error);
       send2fa(adamantAddress, this).then((result) => {
-        this.updateAttribute('adamantAddress', adamantAddress, (error) => {
-          if (error) return next(error);
-          next(null, {...result, ...{adamantAddress}});
-        });
+        if (result.success) {
+          this.updateAttribute('adamantAddress', adamantAddress, (error) => {
+            if (error) return next(error);
+            next(null, {...result, ...{adamantAddress}});
+          });
+        } else {
+          next('Error occured while sending 2fa code.');
+        }
       });
     });
   };
@@ -140,14 +144,22 @@ module.exports = function(Account) {
               roleMapping.destroy((error) => {
                 if (error) return next(error);
                 send2fa(res.adamantAddress, account).then((result) => {
-                  res.setAttribute('se2faTx', (result).transactionId);
-                  next(null, res);
+                  if (result?.success) {
+                    res.setAttribute('se2faTx', (result).transactionId);
+                    next(null, res);
+                  } else {
+                    next('Error occured while sending 2fa code.');
+                  }
                 });
               });
             } else {
               send2fa(res.adamantAddress, account).then((result) => {
-                res.setAttribute('se2faTx', result.transactionId);
-                next(null, res);
+                if (result?.success) {
+                  res.setAttribute('se2faTx', result.transactionId);
+                  next(null, res);
+                } else {
+                  next('Error occured while sending 2fa code.');
+                }
               });
             }
           });
@@ -266,7 +278,7 @@ module.exports = function(Account) {
             resolve(res);
           } else {
             logger.error(`Failed to send ADM message '${message}' to ${adamantAddress}. ${res?.errorMessage}.`);
-            reject(res?.errorMessage);
+            resolve(res);
           }
         }).catch((err) => {
           logger.error(`Error while sending ADM message '${message}' to ${adamantAddress}. ${err}.`);

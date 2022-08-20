@@ -21,7 +21,8 @@
   },
   "422": {
     "adamantAddress": "This ADAMANT address is not used. Get free tokens",
-    "signup": "Username is already taken. Choose another one"
+    "signup": "Username is already taken. Choose another one",
+    "login": "This ADAMANT address is not used. Get free tokens"
   },
   "500": {
     "login": "Error occured on server. View logs"

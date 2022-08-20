@@ -79,7 +79,10 @@ module.exports = function(Account) {
             next(null, {...result, ...{adamantAddress}});
           });
         } else {
-          next('Error occured while sending 2fa code.');
+          const error = {};
+          error.statusCode = result?.error ? 422 : 500;
+          error.message = 'Failed to send 2fa';
+          next(error);
         }
       });
     });
@@ -148,7 +151,10 @@ module.exports = function(Account) {
                     res.setAttribute('se2faTx', (result).transactionId);
                     next(null, res);
                   } else {
-                    next('Error occured while sending 2fa code.');
+                    const error = {};
+                    error.statusCode = result?.error ? 422 : 500;
+                    error.message = 'Failed to send 2fa';
+                    next(error);
                   }
                 });
               });
@@ -158,7 +164,10 @@ module.exports = function(Account) {
                   res.setAttribute('se2faTx', result.transactionId);
                   next(null, res);
                 } else {
-                  next('Error occured while sending 2fa code.');
+                  const error = {};
+                  error.statusCode = result?.error ? 422 : 500;
+                  error.message = 'Failed to send 2fa';
+                  next(error);
                 }
               });
             }
@@ -277,7 +286,7 @@ module.exports = function(Account) {
             logger.log(`2FA message '${message}' sent to ${adamantAddress}: ${JSON.stringify(res)}`);
             resolve(res);
           } else {
-            logger.error(`Failed to send ADM message '${message}' to ${adamantAddress}. ${res?.errorMessage}.`);
+            logger.error(`Failed to send ADM message '${message}' to ${adamantAddress}. ${res?.errorMessage ?? res?.error}.`);
             resolve(res);
           }
         }).catch((err) => {

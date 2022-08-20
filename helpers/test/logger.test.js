@@ -1,12 +1,14 @@
 const logger = require('../logger');
+const constants = require('./constants');
 
 describe('logger: log', () => {
   const logLevel = 'log';
 
   test('Should log log level', (done) => {
     logger.initLogger(logLevel, {
-      log(str) {
-        expect(str).toBe('log');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.LOG_FORMAT_REGEX.source + /(log)/.source)));
 
         done();
       },
@@ -17,8 +19,9 @@ describe('logger: log', () => {
 
   test('Should log info level', (done) => {
     logger.initLogger(logLevel, {
-      info(str) {
-        expect(str).toBe('info');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.INFO_FORMAT_REGEX.source + /(info)/.source)));
 
         done();
       },
@@ -29,8 +32,9 @@ describe('logger: log', () => {
 
   test('Should log warn level', (done) => {
     logger.initLogger(logLevel, {
-      warn(str) {
-        expect(str).toBe('warn');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.WARN_FORMAT_REGEX.source + /(warn)/.source)));
 
         done();
       },
@@ -41,8 +45,9 @@ describe('logger: log', () => {
 
   test('Should log error level', (done) => {
     logger.initLogger(logLevel, {
-      error(str) {
-        expect(str).toBe('error');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.ERROR_FORMAT_REGEX.source + /(error)/.source)));
 
         done();
       },
@@ -68,8 +73,9 @@ describe('logger: info', () => {
 
   test('Should log info level', (done) => {
     logger.initLogger(logLevel, {
-      info(str) {
-        expect(str).toBe('info');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.INFO_FORMAT_REGEX.source + /(info)/.source)));
 
         done();
       },
@@ -77,11 +83,12 @@ describe('logger: info', () => {
 
     logger.info('info');
   });
-
+ 
   test('Should log warn level', (done) => {
     logger.initLogger(logLevel, {
-      warn(str) {
-        expect(str).toBe('warn');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.WARN_FORMAT_REGEX.source + /(warn)/.source)));
 
         done();
       },
@@ -92,8 +99,9 @@ describe('logger: info', () => {
 
   test('Should log error level', (done) => {
     logger.initLogger(logLevel, {
-      error(str) {
-        expect(str).toBe('error');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.ERROR_FORMAT_REGEX.source + /(error)/.source)));
 
         done();
       },
@@ -119,7 +127,7 @@ describe('logger: warn', () => {
 
   test('Should not log info level', (done) => {
     logger.initLogger(logLevel, {
-      info() {
+      log() {
         done('Info level has been called');
       },
     });
@@ -130,8 +138,9 @@ describe('logger: warn', () => {
 
   test('Should log warn level', (done) => {
     logger.initLogger(logLevel, {
-      warn(str) {
-        expect(str).toBe('warn');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.WARN_FORMAT_REGEX.source + /(warn)/.source)));
 
         done();
       },
@@ -142,8 +151,9 @@ describe('logger: warn', () => {
 
   test('Should log error level', (done) => {
     logger.initLogger(logLevel, {
-      error(str) {
-        expect(str).toBe('error');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.ERROR_FORMAT_REGEX.source + /(error)/.source)));
 
         done();
       },
@@ -169,7 +179,7 @@ describe('logger: error', () => {
 
   test('Should not log info level', (done) => {
     logger.initLogger(logLevel, {
-      info() {
+      log() {
         done('Info level has been called');
       },
     });
@@ -180,7 +190,7 @@ describe('logger: error', () => {
 
   test('Should not log warn level', (done) => {
     logger.initLogger(logLevel, {
-      warn() {
+      log() {
         done('Warn level has been called');
       },
     });
@@ -191,8 +201,9 @@ describe('logger: error', () => {
 
   test('Should log error level', (done) => {
     logger.initLogger(logLevel, {
-      error(str) {
-        expect(str).toBe('error');
+      log(...objs) {
+        const str = objs.join('');
+        expect(str).toEqual(expect.stringMatching(new RegExp(constants.ERROR_FORMAT_REGEX.source + /(error)/.source)));
 
         done();
       },

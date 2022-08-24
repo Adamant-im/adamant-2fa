@@ -27,7 +27,7 @@
     "lint": "eslint .",
     "start": "node .",
     "posttest": "npm run lint",
-    "test": "jest helpers common/models server"
+    "test": "jest helpers common/models --forceExit"
   },
   "dependencies": {
     "adamant-console": "^2.1.0",
@@ -45,6 +45,7 @@
     "strong-error-handler": "^4.0.0"
   },
   "devDependencies": {
+    "axios": "^0.27.2",
     "eslint": "^8.22.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-loopback": "^13.1.0",

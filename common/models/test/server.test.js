@@ -4,24 +4,25 @@ const axios = require('axios');
 
 const port = 3000;
 const host = 'localhost';
-
-const app = loopback();
-app.start = function() {
-  app.dataSource('db', {connector: 'memory'});
-  const AccountSchema = require('../account.json');
-  const Account = app.registry.createModel(AccountSchema);
-  require('../account')(Account);
-  app.model(Account, {dataSource: 'db'});
-  app.use('/api', loopback.rest());
-  return app.listen({host: host, port: port});
-};
-
-boot(app, __dirname, function(err) {
-  if (err) throw err;
-  app.start();
-});
-
 const baseUrl = `http://${host}:${port}/api/Accounts`;
+
+beforeAll(() => {
+  const app = loopback();
+  app.start = function() {
+    app.dataSource('db', {connector: 'memory'});
+    const AccountSchema = require('../account.json');
+    const Account = app.registry.createModel(AccountSchema);
+    require('../account')(Account);
+    app.model(Account, {dataSource: 'db'});
+    app.use('/api', loopback.rest());
+    return app.listen({host: host, port: port});
+  };
+
+  boot(app, __dirname, function(err) {
+    if (err) throw err;
+    app.start();
+  });
+});
 
 describe('Sign up:', () => {
   beforeAll(async () => {

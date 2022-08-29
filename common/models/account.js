@@ -79,9 +79,18 @@ module.exports = function(Account) {
             next(null, {...result, ...{adamantAddress}});
           });
         } else {
-          const error = new Error(g.f('Unable to send 2fa'));
-          error.statusCode = result?.error ? 422 : 500;
-          error.code = 'SEND_2FA_ERROR';
+          const error = new Error(g.f('Unable to send 2FA code'));
+          error.statusCode = 900;
+          error.code = result?.errorCode;
+          /**
+           * { error.
+           *    code: "WRONG_PASSPHRASE"
+           *    message: "Unable to send 2FA code"
+           *    name: "Error"
+           *    stack: "Error: Unable to send 2FA code\n    at /Users/..account.js:85:25.."
+           *    statusCode: 500
+           * }
+           */
           next(error);
         }
       });
@@ -151,9 +160,9 @@ module.exports = function(Account) {
                     res.setAttribute('se2faTx', (result).transactionId);
                     next(null, res);
                   } else {
-                    const error = new Error(g.f('Unable to send 2fa'));
-                    error.statusCode = result?.error ? 422 : 500;
-                    error.code = 'SEND_2FA_ERROR';
+                    const error = new Error(g.f('Unable to send 2FA code'));
+                    error.statusCode = 900;
+                    error.code = result?.errorCode;
                     next(error);
                   }
                 });
@@ -164,9 +173,9 @@ module.exports = function(Account) {
                   res.setAttribute('se2faTx', result.transactionId);
                   next(null, res);
                 } else {
-                  const error = new Error(g.f('Unable to send 2fa'));
-                  error.statusCode = result?.error ? 422 : 500;
-                  error.code = 'SEND_2FA_ERROR';
+                  const error = new Error(g.f('Unable to send 2FA code'));
+                  error.statusCode = 900;
+                  error.code = result?.errorCode;
                   next(error);
                 }
               });
@@ -286,7 +295,17 @@ module.exports = function(Account) {
             logger.log(`2FA message '${message}' sent to ${adamantAddress}: ${JSON.stringify(res)}`);
             resolve(res);
           } else {
-            logger.error(`Failed to send ADM message '${message}' to ${adamantAddress}. ${res?.errorMessage ?? res?.error}.`);
+            res = res || {};
+            logger.error(`Failed to send ADM message '${message}' to ${adamantAddress}. ${res?.errorMessage}.`);
+            if (res?.errorMessage?.includes('Mnemonic')) {
+              res.errorCode = 'WRONG_PASSPHRASE';
+            } else if (res?.errorMessage?.includes('not have enough ADM')) {
+              res.errorCode = 'NOT_ENOUGH_ADM';
+            } else if (res?.errorMessage?.includes('uninitialized')) {
+              res.errorCode = 'RECIPIENT_UNINITIALIZED';
+            } else {
+              res.errorCode = 'NOT_SENT_GENERAL';
+            }
             resolve(res);
           }
         }).catch((err) => {

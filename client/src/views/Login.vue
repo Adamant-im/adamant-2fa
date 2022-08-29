@@ -159,7 +159,11 @@ export default {
           }
           // this.password.value = null
         } else {
-          this.$emit('snackbar-note', status + '.login')
+          if (status === 900) {
+            this.$emit('snackbar-note', `sentMessageErrors.${data?.error?.code}`)
+          } else {
+            this.$emit('snackbar-note', status + '.login')
+          }
           this.$refs[this.focused].focus()
         }
         this.$emit('lock-screen', false)

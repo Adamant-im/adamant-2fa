@@ -198,7 +198,11 @@ export default {
           })
           this.$nextTick(() => this.$refs.hotpField.focus())
         } else {
-          this.$emit('snackbar-note', status + '.adamantAddress')
+          if (status === 900) {
+            this.$emit('snackbar-note', `sentMessageErrors.${data?.error?.code}`)
+          } else {
+            this.$emit('snackbar-note', status + '.adamantAddress')
+          }
           this.$nextTick(() => this.$refs.adamantAddressField.focus())
           this.adamantAddress.disabled = false
         }

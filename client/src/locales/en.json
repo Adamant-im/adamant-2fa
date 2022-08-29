@@ -20,17 +20,22 @@
     "logout": "Session expired"
   },
   "422": {
-    "adamantAddress": "This ADAMANT address is not used. Get free tokens",
-    "signup": "Username is already taken. Choose another one",
-    "login": "This ADAMANT address is not used. Get free tokens"
+    "signup": "Username is already taken. Choose another one"
   },
   "500": {
-    "login": "Error occured on server. View logs"
+    "login": "Error occurred on server. View logs"
   },
   "503": {
     "login": "Server is not available. Try again later",
     "logout": "Server is not available. Try again later",
     "signup": "Server is not available. Try again later"
+  },
+  "sentMessageErrors": {
+    "WRONG_PASSPHRASE": "Error: Wrong passPhrase in the config file",
+    "NOT_ENOUGH_ADM": "Error: Account in the config has no ADM. Get free tokens",
+    "RECIPIENT_UNINITIALIZED": "Error: This ADAMANT address is not used. Get free tokens",
+    "NOT_SENT_GENERAL": "Error: Unable to send 2FA code",
+    "NOT_SENT_NETWORK": "Error: No Internet connection"
   },
   "documentTitle": "2FA demo — ADAMANT",
   "headerTitle": "ADAMANT 2FA",

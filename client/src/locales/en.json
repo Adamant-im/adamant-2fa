@@ -8,8 +8,6 @@
   "2faEnabled": "2FA is enabled. Re-login now",
   "2faNotValid": "| Code is invalid: 1 attempt left | Code is invalid: {n} attempts left",
   "2faRequest": "Enter 2FA code received in U…{address}",
-  "2faSendFail": "Error while sending 2FA code: {reason}",
-  "2faSent": "2FA code sent",
   "2faSentWithTx": "2FA code sent with Tx ID: {id}",
   "400": {
     "login": "Enter username",
@@ -47,7 +45,7 @@
   "get2faCode": "Get 2FA code",
   "language": "Language",
   "login": "Login",
-  "loginSubheader": "Demonstration of ADAMANT 2FA: secure, reliable, cheap.",
+  "loginSubheader": "One-time passwords decentralized",
   "logout": "Logout",
   "name": "English",
   "password": "Password",
@@ -66,7 +64,7 @@
   "settings": "Settings",
   "signedUp": "You've signed up. Login now",
   "signup": "Signup",
-  "signupSubheader": "Demonstration of ADAMANT 2FA: secure, reliable, cheap.",
+  "signupSubheader": "One-time passwords decentralized",
   "tooLong": {
     "adamantAddress": "Wrong ADAMANT address",
     "hotp": "Wrong 2FA code",

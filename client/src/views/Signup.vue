@@ -1,37 +1,101 @@
 <template>
-  <v-layout class="auth-page" fill-height justify-center row>
-    <v-flex lg6 md7 sm9 xl5 xs11>
+  <v-layout
+    class="auth-page"
+    fill-height
+    justify-center
+    row
+  >
+    <v-flex
+      lg6
+      md7
+      sm9
+      xl5
+      xs11
+    >
       <LanguageSwitcher />
-      <v-card class="mt-3 text-xs-center" color="transparent" flat>
-        <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
-        <h1 class="auth-page__title" v-t="'headerTitle'" />
-        <h2 class="auth-page__subtitle mt-3" v-t="'signupSubheader'" />
+      <v-card
+        class="mt-3 text-xs-center"
+        color="transparent"
+        flat
+      >
+        <img
+          class="logo"
+          src="/img/adamant-logo-transparent-512x512.png"
+        >
+        <h1
+          v-t="'headerTitle'"
+          class="auth-page__title"
+        />
+        <h2
+          v-t="'signupSubheader'"
+          class="auth-page__subtitle mt-3"
+        />
       </v-card>
-      <v-card class="mt-3 text-xs-center" color="transparent" flat>
+      <v-card
+        class="mt-3 text-xs-center"
+        color="transparent"
+        flat
+      >
         <v-layout justify-center>
-          <v-flex lg7 md8 sm9 xl6 xs10>
+          <v-flex
+            lg7
+            md8
+            sm9
+            xl6
+            xs10
+          >
             <v-form class="auth-form">
-              <v-text-field :label="$t('username')" :rules="usernameRules"
-                @focus="focused = 'usernameField'" @input="validateUsername"
-                @keyup.enter="verifyCredentials" browser-autocomplete="on" class="text-xs-center"
-                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="25" ref="usernameField"
-                v-model="username.value" />
-              <v-text-field :label="$t('password')" :name="Date.now()" :rules="passwordRules"
-                @focus="focused = 'passwordField'" @input="validatePassword"
-                @keyup.enter="verifyCredentials" autocomplete="new-password"
-                browser-autocomplete="on" class="text-xs-center" color="rgba(0, 0, 0, 0.54)"
-                hide-details maxlength="15" ref="passwordField" type="password"
-                v-model="password.value" />
-              <v-btn @click="verifyCredentials" class="action-button" color="white" v-t="'signup'"
-                />
+              <v-text-field
+                ref="usernameField"
+                v-model="username.value"
+                :label="$t('username')"
+                :rules="usernameRules"
+                browser-autocomplete="on"
+                class="text-xs-center"
+                color="rgba(0, 0, 0, 0.54)"
+                hide-details
+                maxlength="25"
+                @focus="focused = 'usernameField'"
+                @input="validateUsername"
+                @keyup.enter="verifyCredentials"
+              />
+              <v-text-field
+                ref="passwordField"
+                v-model="password.value"
+                :label="$t('password')"
+                :name="Date.now()"
+                :rules="passwordRules"
+                autocomplete="new-password"
+                browser-autocomplete="on"
+                class="text-xs-center"
+                color="rgba(0, 0, 0, 0.54)"
+                hide-details
+                maxlength="15"
+                type="password"
+                @focus="focused = 'passwordField'"
+                @input="validatePassword"
+                @keyup.enter="verifyCredentials"
+              />
+              <v-btn
+                v-t="'signup'"
+                class="action-button"
+                color="white"
+                @click="verifyCredentials"
+              />
             </v-form>
           </v-flex>
         </v-layout>
       </v-card>
       <v-layout justify-center>
-        <v-flex md8 xs12>
+        <v-flex
+          md8
+          xs12
+        >
           <h3 class="text-redirect text-xs-center">
-            <router-link to="/login" v-t="'redirectLogin'" />
+            <router-link
+              v-t="'redirectLogin'"
+              to="/login"
+            />
           </h3>
         </v-flex>
       </v-layout>

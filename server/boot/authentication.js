@@ -6,6 +6,6 @@ module.exports = function enableAuthentication(server) {
   // Enable authentication
   server.enableAuth({
     // Let LoopBack take care of attaching any built-in models required by the access control
-    datasource: 'postgresql10',
+    datasource: 'postgresql',
   });
 };

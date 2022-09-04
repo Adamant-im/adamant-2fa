@@ -3,7 +3,7 @@
     "strong-error-handler": {
       "params": {
         "debug": true,
-        "log": true
+        "log": false
       }
     }
   }

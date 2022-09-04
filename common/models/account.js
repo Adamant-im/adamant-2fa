@@ -1,9 +1,9 @@
 'use strict';
 
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
 const g = require('loopback/lib/globalize');
 const speakeasy = require('speakeasy');
+const logger = require('../../helpers/logger');
+const adamantApi = require('adamant-console');
 const MAX_PASSWORD_LENGTH = 15;
 const MIN_PASSWORD_LENGTH = 3;
 
@@ -21,7 +21,7 @@ module.exports = function(Account) {
         this.updateAttributes({
           se2faEnabled: true,
           seCounter: this.seCounter,
-        }, error => {
+        }, (error) => {
           if (error) return next(error);
           const Role = Account.app.models.Role;
           const RoleMapping = Account.app.models.RoleMapping;
@@ -32,7 +32,7 @@ module.exports = function(Account) {
               principalType: 'USER',
               principalId: this.id,
               roleId: role.getId(),
-            }, error => {
+            }, (error) => {
               if (error) return next(error);
               next(null, {se2faEnabled});
             });
@@ -44,7 +44,7 @@ module.exports = function(Account) {
 
   Account.prototype.disable2fa = function(next) {
     const res = {se2faEnabled: false};
-    this.updateAttributes(res, error => {
+    this.updateAttributes(res, (error) => {
       if (error) return next(error);
       next(null, res);
     });
@@ -52,7 +52,7 @@ module.exports = function(Account) {
 
   Account.prototype.updateLocale = function(locale, next) {
     const res = {locale};
-    this.updateAttributes(res, error => {
+    this.updateAttributes(res, (error) => {
       if (error) return next(error);
       next(null, res);
     });
@@ -70,13 +70,29 @@ module.exports = function(Account) {
       seSecretHex: secret.hex,
       seSecretUrl: secret.otpauth_url,
     };
-    this.updateAttributes(data, error => {
+    this.updateAttributes(data, (error) => {
       if (error) return next(error);
-      send2fa(adamantAddress, this).then(result => {
-        this.updateAttribute('adamantAddress', adamantAddress, error => {
-          if (error) return next(error);
-          next(null, {...result, ...{adamantAddress}});
-        });
+      send2fa(adamantAddress, this).then((result) => {
+        if (result.success) {
+          this.updateAttribute('adamantAddress', adamantAddress, (error) => {
+            if (error) return next(error);
+            next(null, {...result, ...{adamantAddress}});
+          });
+        } else {
+          const error = new Error(g.f('Unable to send 2FA code'));
+          error.statusCode = 900;
+          error.code = result?.errorCode;
+          /**
+           * { error.
+           *    code: "WRONG_PASSPHRASE"
+           *    message: "Unable to send 2FA code"
+           *    name: "Error"
+           *    stack: "Error: Unable to send 2FA code\n    at /Users/..account.js:85:25.."
+           *    statusCode: 500
+           * }
+           */
+          next(error);
+        }
       });
     });
   };
@@ -91,7 +107,7 @@ module.exports = function(Account) {
         token: hotp,
       });
       if (se2faVerified) {
-        this.updateAttribute('seCounter', this.seCounter, error => {
+        this.updateAttribute('seCounter', this.seCounter, (error) => {
           if (error) return next(error);
           const Role = Account.app.models.Role;
           const RoleMapping = Account.app.models.RoleMapping;
@@ -102,7 +118,7 @@ module.exports = function(Account) {
               principalType: 'USER',
               principalId: this.id,
               roleId: role.getId(),
-            }, error => {
+            }, (error) => {
               if (error) return next(error);
               next(null, {se2faVerified});
             });
@@ -136,18 +152,32 @@ module.exports = function(Account) {
           }, (error, roleMapping) => {
             if (error) return next(error);
             if (roleMapping) {
-              // Revoke prevously assigned role and wait for 2FA verification
-              roleMapping.destroy(error => {
+              // Revoke previously assigned role and wait for 2FA verification
+              roleMapping.destroy((error) => {
                 if (error) return next(error);
-                send2fa(res.adamantAddress, account).then(result => {
-                  res.setAttribute('se2faTx', result.transactionId);
-                  next(null, res)
+                send2fa(res.adamantAddress, account).then((result) => {
+                  if (result?.success) {
+                    res.setAttribute('se2faTx', (result).transactionId);
+                    next(null, res);
+                  } else {
+                    const error = new Error(g.f('Unable to send 2FA code'));
+                    error.statusCode = 900;
+                    error.code = result?.errorCode;
+                    next(error);
+                  }
                 });
               });
             } else {
-              send2fa(res.adamantAddress, account).then(result => {
-                res.setAttribute('se2faTx', result.transactionId);
-                next(null, res)
+              send2fa(res.adamantAddress, account).then((result) => {
+                if (result?.success) {
+                  res.setAttribute('se2faTx', result.transactionId);
+                  next(null, res);
+                } else {
+                  const error = new Error(g.f('Unable to send 2FA code'));
+                  error.statusCode = 900;
+                  error.code = result?.errorCode;
+                  next(error);
+                }
               });
             }
           });
@@ -160,7 +190,7 @@ module.exports = function(Account) {
             principalType: 'USER',
             principalId: account.id,
             roleId: role.getId(),
-          }, error => {
+          }, (error) => {
             if (error) return next(error);
             next(null, res);
           });
@@ -220,7 +250,7 @@ module.exports = function(Account) {
   // Recommended solution is to override User.validatePassword method:
   // https://github.com/strongloop/loopback/pull/941
   Account.validatePassword = function(plain) {
-    var error;
+    let error;
     if (!plain || typeof plain !== 'string') {
       error = new Error(g.f('Invalid password.'));
       error.code = 'INVALID_PASSWORD';
@@ -228,17 +258,17 @@ module.exports = function(Account) {
       throw error;
     }
     // Bcrypt only supports up to 72 bytes; the rest is silently dropped.
-    var len = Buffer.byteLength(plain, 'utf8');
+    const len = Buffer.byteLength(plain, 'utf8');
     if (len > MAX_PASSWORD_LENGTH) {
       error = new Error(g.f('The password entered was too long. Max length is %d (entered %d)',
-        MAX_PASSWORD_LENGTH, len));
+          MAX_PASSWORD_LENGTH, len));
       error.code = 'PASSWORD_TOO_LONG';
       error.statusCode = 422;
       throw error;
     }
     if (len < MIN_PASSWORD_LENGTH) {
       error = new Error(g.f('The password entered was too short. Min length is %d (entered %d)',
-        MIN_PASSWORD_LENGTH, len));
+          MIN_PASSWORD_LENGTH, len));
       error.code = 'PASSWORD_TOO_SHORT';
       error.statusCode = 422;
       throw error;
@@ -246,33 +276,43 @@ module.exports = function(Account) {
   };
 
   function send2fa(adamantAddress, account) {
-    const counter = account.seCounter + 1
-    return new Promise(resolve => {
-      account.updateAttribute('seCounter', counter, async x => {
-        if (x) return next(x);
+    const counter = account.seCounter + 1;
+    return new Promise((resolve, reject) => {
+      account.updateAttribute('seCounter', counter, async (err) => {
+        if (err) return reject(err);
         const hotp = speakeasy.hotp({
           counter,
           // encoding: 'ascii',
           secret: account.seSecretAscii,
         });
-        const command = `adm send message ${adamantAddress} "2FA code: ${hotp}"`;
-        let { error, stdout, stderr } = await exec(command);
-        if (error) {
-          console.error('adm exec:' + error);
-          return;
-        }
-        console.info(command, stdout, stderr, account);
-        try {
-          var result = JSON.parse(stdout);
-        } catch (error) {
-          console.error('adm parse:' + error);
-          result = {
-            error: 'unprocessable entity',
-            message: String(stdout).toLowerCase(),
-          };
-        }
-        resolve(result)
+
+        const message = `2FA code: ${hotp}`;
+        adamantApi.sendMessage(
+            adamantAddress,
+            message,
+        ).then((res) => {
+          if (res?.success) {
+            logger.log(`2FA message '${message}' sent to ${adamantAddress}: ${JSON.stringify(res)}`);
+            resolve(res);
+          } else {
+            res = res || {};
+            logger.error(`Failed to send ADM message '${message}' to ${adamantAddress}. ${res?.errorMessage}.`);
+            if (res?.errorMessage?.includes('Mnemonic')) {
+              res.errorCode = 'WRONG_PASSPHRASE';
+            } else if (res?.errorMessage?.includes('not have enough ADM')) {
+              res.errorCode = 'NOT_ENOUGH_ADM';
+            } else if (res?.errorMessage?.includes('uninitialized')) {
+              res.errorCode = 'RECIPIENT_UNINITIALIZED';
+            } else {
+              res.errorCode = 'NOT_SENT_GENERAL';
+            }
+            resolve(res);
+          }
+        }).catch((err) => {
+          logger.error(`Error while sending ADM message '${message}' to ${adamantAddress}. ${err}.`);
+          resolve(err);
+        });
       });
-    }).catch(x => console.error(x))
+    }).catch((err) => logger.error(err));
   }
 };

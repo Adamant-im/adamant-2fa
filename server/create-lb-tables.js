@@ -6,17 +6,20 @@
 'use strict';
 
 const server = require('./server');
-const ds = server.dataSources.postgresql10;
+const logger = require('../helpers/logger');
+
+const ds = server.dataSources.postgresql;
 const lbTables = ['Account', 'User', 'AccessToken', 'ACL', 'RoleMapping', 'Role'];
 ds.automigrate(lbTables, function(error) {
   if (error) throw error;
-  console.log('Loopback tables [' + lbTables + '] created in', ds.adapter.name);
+  logger.info(`Loopback tables [${lbTables}] created in ${ds.adapter.name}`);
   server.models.Role.create({
     description: 'Indicates that user authorized to access his account',
     name: 'authorized',
   }, function(error, role) {
     if (error) throw error;
-    console.log('Created role:', role);
+    logger.info(`Created role: ${JSON.stringify(role)}`);
     ds.disconnect();
   });
+  logger.info('Finished');
 });

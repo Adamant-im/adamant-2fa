@@ -17,11 +17,11 @@ export default new Vuex.Store({
           commit('updateAccount', {
             se2faEnabled: res.data.se2faEnabled
           })
-          console.info(res)
-        } else console.warn(res)
+          console.info('2FA auth disabled:', res)
+        } else console.warn('Failed to disable 2FA auth:', res)
         return res.status
       }).catch(error => {
-        console.error(error)
+        console.error('Error while disabling 2FA auth:', error)
         return error.response.status
       })
     },
@@ -41,11 +41,11 @@ export default new Vuex.Store({
             // If 2FA enabled, verification already passed and vice versa
             se2faVerified: res.data.se2faEnabled
           })
-          console.info(res)
-        } else console.warn(res)
+          console.info('2FA auth enabled:', res)
+        } else console.warn('Failed to enable 2FA auth:', res)
         return res.status
       }).catch(error => {
-        console.error(error)
+        console.error('Error while enabling 2FA auth:', error)
         return error.response
       })
     },
@@ -67,11 +67,11 @@ export default new Vuex.Store({
             se2faEnabled: res.data.se2faEnabled,
             username: res.data.username
           })
-          console.info(res)
-        } else console.warn(res)
+          console.info('Login successful:', res)
+        } else console.warn('Login failed:', res)
         return res
       }).catch(error => {
-        console.error(error)
+        console.error('Error occurred while Login:', error)
         return error.response || { status: 503 }
       })
     },
@@ -81,11 +81,11 @@ export default new Vuex.Store({
       ).then(res => {
         if (res.status === 204) {
           commit('clearSession')
-          console.info(res)
-        } else console.warn(res)
+          console.info('Logout successful:', res)
+        } else console.warn('Logout failed:', res)
         return res.status
       }).catch(error => {
-        console.error(error)
+        console.error('Error occurred while Logout:', error)
         // Clear expired session even if backend is not available
         commit('clearSession')
         return error.response ? error.response.status : 503
@@ -102,11 +102,11 @@ export default new Vuex.Store({
           commit('updateAccount', {
             adamantAddress: res.data.adamantAddress
           })
-          console.info(res)
-        } else console.warn(res)
+          console.info('ADAMANT address submitted:', res)
+        } else console.warn('Failed to submit ADAMANT address:', res)
         return res
       }).catch(error => {
-        console.error(error)
+        console.error('Error occurred while submitting ADAMANT address:', error)
         return error.response
       })
     },
@@ -122,22 +122,22 @@ export default new Vuex.Store({
           commit('updateAccount', {
             locale: res.data.locale
           })
-          console.info(res)
-        } else console.warn(res)
+          console.info('Locale submitted:', res)
+        } else console.warn('Failed to submit locale:', res)
         return res.status
       }).catch(error => {
-        console.error(error)
+        console.error('Error occurred while submitting locale:', error)
         return error.response.status
       })
     },
     signup ({ state }, params) {
       return Vue.axios.post(state.apiUrl, params).then(res => {
         if (res.status === 200) {
-          console.info(res)
-        } else console.warn(res)
+          console.info('Signup successful:', res)
+        } else console.warn('Signup failed:', res)
         return res.status
       }).catch(error => {
-        console.error(error)
+        console.error('Error occurred while Signup:', error)
         return error.response ? error.response.status : 503
       })
     },
@@ -153,11 +153,11 @@ export default new Vuex.Store({
           commit('updateSession', {
             se2faVerified: res.data.se2faVerified
           })
-          console.info(res)
-        } else console.warn(res)
+          console.info('2FA code verified:', res)
+        } else console.warn('Failed to verify 2FA code:', res)
         return res.status
       }).catch(error => {
-        console.error(error)
+        console.error('Error occurred while verifying 2FA code:', error)
         return error.response
       })
     }
@@ -174,8 +174,8 @@ export default new Vuex.Store({
   mutations: {
     clearSession: state => {
       // Shallow iteration
-      for (let k in state.session) {
-        if (state.session.hasOwnProperty(k)) {
+      for (const k in state.session) {
+        if (Object.prototype.hasOwnProperty.call(state.session, k)) {
           state.session[k] = null
         }
       }

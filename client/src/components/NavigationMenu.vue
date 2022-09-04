@@ -1,12 +1,29 @@
 <template>
-  <v-bottom-nav :active="active" app v-model="value">
+  <v-bottom-nav
+    v-model="value"
+    :active="active"
+    app
+  >
     <v-layout justify-center>
-      <v-flex class="text-xs-center" lg6 md7 sm9 xs12>
-        <v-btn color="black" flat to="/settings">
+      <v-flex
+        class="text-xs-center"
+        lg6
+        md7
+        sm9
+        xs12
+      >
+        <v-btn
+          color="black"
+          flat
+          to="/settings"
+        >
           <span v-t="'settings'" />
-          <v-icon>mdi-settings</v-icon>
+          <v-icon>mdi-cog</v-icon>
         </v-btn>
-        <v-btn @click="logoutUser" flat>
+        <v-btn
+          flat
+          @click="logoutUser"
+        >
           <span v-t="'logout'" />
           <v-icon>mdi-logout-variant</v-icon>
         </v-btn>

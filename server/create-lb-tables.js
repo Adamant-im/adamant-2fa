@@ -19,7 +19,9 @@ ds.automigrate(lbTables, function(error) {
   }, function(error, role) {
     if (error) throw error;
     logger.info(`Created role: ${JSON.stringify(role)}`);
+
     ds.disconnect();
+    logger.info('Finished');
+    process.exit();
   });
-  logger.info('Finished');
 });

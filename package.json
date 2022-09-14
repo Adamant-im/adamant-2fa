@@ -37,7 +37,7 @@
     "helmet": "^5.1.1",
     "jsonminify": "^0.4.2",
     "loopback": "^3.28.0",
-    "loopback-boot": "^3.3.1",
+    "loopback-boot": "^2.6.5",
     "loopback-component-explorer": "6.5.1",
     "loopback-connector-postgresql": "5.5.1",
     "serve-favicon": "^2.5.0",

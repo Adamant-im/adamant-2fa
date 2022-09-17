@@ -205,9 +205,7 @@ export default new Vuex.Store({
       se2faEnabled: null,
       username: null
     },
-    apiUrl: process.env.NODE_ENV === 'production'
-      ? 'https://2fa-demo.adamant.im/api/Accounts/'
-      : 'http://localhost:3000/api/Accounts/',
+    apiUrl: getApiUrl(),
     session: {
       created: null, // Created ISO timestamp string
       id: null, // Access token
@@ -219,3 +217,13 @@ export default new Vuex.Store({
   },
   strict: process.env.NODE_ENV !== 'production'
 })
+
+function getApiUrl () {
+  if (process.env.NODE_ENV === 'production') {
+    return window.location.host.includes('onion')
+      ? `http://${window.location.host}/api/Accounts/`
+      : `https://${window.location.host}/api/Accounts/`
+  } else {
+    return 'http://localhost:3000/api/Accounts/'
+  }
+}

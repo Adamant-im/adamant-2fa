@@ -66,7 +66,9 @@ nano config.json
 
 The 2FA app uses `config.json` file. Enter your ADM passphrase into `passPhrase` field. Make sure this account has ADM to send messages with 2fa codes. [How to create ADM account and get free tokens](https://medium.com/adamant-im/how-to-start-with-a-blockchain-messenger-54d1eb9704e6).
 
-Note: If the app doesn't send 2FA codes, console shows `{"success":false,"errorMessage":"Wrong 'passPhrase' parameter"}`. Make sure you've created `config.json` in the root directory (where `package.json` located), and you've set `passPhrase` and `network` parameters.
+Note: 2FA demo uses [adamant-console](https://github.com/Adamant-im/adamant-console/) to send 2fa codes. If you have this tool installed separately, make sure it's default config doesn't exist, or set to `mainnet` and correct `passPhrase`.
+
+Note: If the app doesn't send 2FA codes, debug console shows `{"success":false,"errorMessage":"Wrong 'passPhrase' parameter"}`. Make sure you've created `config.json` in the root directory (where `package.json` located), and you've set `passPhrase` and `network` parameters.
 
 ## Start
 

@@ -219,12 +219,11 @@ export default new Vuex.Store({
 })
 
 function getApiUrl () {
-  return 'http://localhost:3000/api/Accounts/'
-  // if (process.env.NODE_ENV === 'production') {
-  //   return window.location.host.includes('onion')
-  //     ? `http://${window.location.host}/api/Accounts/`
-  //     : `https://${window.location.host}/api/Accounts/`
-  // } else {
-  //   return 'http://localhost:3000/api/Accounts/'
-  // }
+  if (process.env.NODE_ENV === 'production') {
+    return window.location.host.includes('onion')
+      ? `http://${window.location.host}/api/Accounts/`
+      : `https://${window.location.host}/api/Accounts/`
+  } else {
+    return 'http://localhost:3000/api/Accounts/'
+  }
 }

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.1.96",
+    "@vue/babel-preset-app": "^5.0.8",
     "axios": "^1.2.1",
     "connect-history-api-fallback": "^2.0.0",
     "express": "^4.18.2",
@@ -26,6 +27,7 @@
     "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.5",
     "@babel/eslint-parser": "^7.19.1",
     "@kazupon/vue-i18n-loader": "^0.3.0",
     "@vue/cli-plugin-babel": "^5.0.8",
@@ -34,15 +36,20 @@
     "@vue/cli-plugin-pwa": "^5.0.8",
     "@vue/cli-plugin-unit-jest": "5.0.8",
     "@vue/cli-service": "^5.0.8",
-    "@vue/eslint-config-standard": "^7.0.0",
+    "@vue/eslint-config-standard": "^8.0.1",
     "@vue/test-utils": "^2.2.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^29.3.1",
+    "babel-plugin-polyfill-corejs2": "^0.3.3",
+    "babel-plugin-polyfill-corejs3": "^0.6.0",
+    "babel-plugin-polyfill-regenerator": "^0.4.1",
+    "chromedriver": "*",
     "eslint": "8.29.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.6.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.8.0",
+    "jest": "^27.1.0",
     "lint-staged": "^13.1.0",
     "node-sass": "^7.0.1",
     "sass-loader": "^13.2.0",
@@ -54,6 +61,11 @@
     "vue-template-compiler": "^2.7.14",
     "vuetify-loader": "^1.9.2",
     "webpack": "^5.75.0"
+  },
+  "resolutions": {
+    "loader-utils": "^2.0.4",
+    "minimatch": "^3.0.5",
+    "decode-uri-component": "^0.2.1"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

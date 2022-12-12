@@ -83,8 +83,7 @@ cd client && yarn serve
 
 ```
 cd client && yarn build
-npm i -g serve
-serve dist
+yarn serve-build
 ```
 
 ## How to connect ADAMANT 2FA to your service

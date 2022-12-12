@@ -9,7 +9,7 @@ app.use(history())
 app.use(express.static(path.join(__dirname, '/dist')))
 
 app.get('*', (request, response) => {
-  response.sendFile(path.resolve(__dirname, 'index.html'))
+  response.sendFile(path.resolve(path.join(__dirname, '/dist'), 'index.html'))
 })
 
 app.listen(port)

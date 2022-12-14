@@ -50,7 +50,7 @@ sudo nano /usr/local/var/postgres/pg_hba.conf
 sudo service postgresql restart
 ```
 
-Create tables for Loopback models
+Create tables for Loopback models:
 
 ``` bash
 cd server && node create-lb-tables.js

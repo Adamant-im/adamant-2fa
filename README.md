@@ -50,7 +50,7 @@ sudo nano /usr/local/var/postgres/pg_hba.conf
 sudo service postgresql restart
 ```
 
-Create tables for Loopback models
+Create tables for Loopback models:
 
 ``` bash
 cd server && node create-lb-tables.js
@@ -83,8 +83,7 @@ cd client && yarn serve
 
 ```
 cd client && yarn build
-npm i -g serve
-serve dist
+yarn serve-build
 ```
 
 ## How to connect ADAMANT 2FA to your service

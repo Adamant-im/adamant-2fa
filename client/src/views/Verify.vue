@@ -20,7 +20,7 @@
       >
         <img
           class="logo"
-          src="/img/adamant-logo-transparent-512x512.png"
+          src="/img/icons/android-chrome-512x512.png"
         >
         <h1
           v-t="'headerTitle'"
@@ -186,6 +186,11 @@ export default {
   transform translateY(-18px)
   transition font .3s ease
   -webkit-transform translateY(-18px)
+.text-field-password
+  margin 10px auto 0 auto
+  max-width 80%
+.action-button
+  margin-top 35px
 
 .auth-form p
   font-size 16px
@@ -202,6 +207,7 @@ export default {
 .logo
   height 213px
   width 213px
+  filter sepia(0.3)
 .v-text-field
   margin-top 20px
 

@@ -56,13 +56,11 @@ export default {
 
 <style lang="stylus" scoped>
 .application--linear-gradient
-  background repeating-linear-gradient(
-    140deg,
-    #f6f6f6,
-    #f6f6f6 1px,
-    #fefefe 0,
-    #fefefe 5px
-  ) !important
+  background-image: url('/public/img/adamant-logo-transparent-512x512.png');
+  background-repeat: no-repeat;
+  background-blend-mode: lighten;
+  background-position: center;
+  background-size: cover;
 >>> .v-text-field .v-input__slot::after,
 >>> .v-text-field .v-input__slot::before
   border-color #DDD !important

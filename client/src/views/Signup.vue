@@ -20,7 +20,7 @@
       >
         <img
           class="logo"
-          src="/img/adamant-logo-transparent-512x512.png"
+          src="/img/icons/android-chrome-512x512.png"
         >
         <h1
           v-t="'headerTitle'"
@@ -67,7 +67,7 @@
                 :rules="passwordRules"
                 autocomplete="new-password"
                 browser-autocomplete="on"
-                class="text-xs-center"
+                class="text-xs-center text-field-password"
                 color="rgba(0, 0, 0, 0.54)"
                 hide-details
                 maxlength="15"
@@ -213,6 +213,11 @@ export default {
   transform translateY(-18px)
   transition font .3s ease
   -webkit-transform translateY(-18px)
+.text-field-password
+  margin 10px auto 0 auto
+  max-width 80%
+.action-button
+  margin-top 35px
 
 .auth-page__title
   color #4A4A4A
@@ -227,6 +232,7 @@ export default {
 .logo
   height 213px
   width 213px
+  filter sepia(0.3)
 .text-redirect
   font-weight 300
   margin-bottom 40px

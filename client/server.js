@@ -29,7 +29,7 @@ app.use(
       return parseInt(res.statusCode) < 400
     },
     stream: split().on('data', (data) => {
-      logger.error(data)
+      logger.error(`Request failed: ${data}`)
     })
   })
 )
@@ -40,7 +40,7 @@ app.use(
       return parseInt(res.statusCode) >= 400
     },
     stream: split().on('data', (data) => {
-      logger.info(data)
+      logger.log(`Request successful: ${data}`)
     })
   })
 )
@@ -54,4 +54,4 @@ app.get('*', (request, response) => {
 })
 
 app.listen(port)
-logger.log(`Server started on port ${port}`)
+logger.info(`Client app started on port ${port}`)

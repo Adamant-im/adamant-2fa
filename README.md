@@ -86,6 +86,15 @@ cd client && yarn build
 yarn serve-build
 ```
 
+### Launch as process manager process
+
+We recommend to use a process manager to start the program, f. e. [`pm2`](https://pm2.keymetrics.io/):
+
+```
+pm2 start ./server/server.js --name 2fa-demo-server
+pm2 start ./client/server.js --name 2fa-demo-client
+```
+
 ## How to connect ADAMANT 2FA to your service
 
 If you own a service (as email, exchange, financial interface, etc.) and want to add 2FA security for users, connect ADAMANT 2FA. To use ADAMANT 2FA, clone this project and modify client and server parts. Read more: [How to connect ADAMANT 2FA to your business](https://medium.com/adamant-im/go-to-secure-2fa-on-a-blockchain-344500a5f010).

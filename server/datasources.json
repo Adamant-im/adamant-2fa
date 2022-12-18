@@ -3,13 +3,13 @@
     "name": "db",
     "connector": "memory"
   },
-  "postgresql10": {
+  "postgresql": {
     "host": "127.0.0.1",
     "port": 5432,
-    "url": "",
+    "url": "postgres://adamant-2fa:password@localhost/adamant-2fa",
     "database": "adamant-2fa",
     "password": "password",
-    "name": "postgresql10",
+    "name": "postgresql",
     "debug": true,
     "user": "adamant-2fa",
     "connector": "postgresql"

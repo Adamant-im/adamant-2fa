@@ -1,3 +1,4 @@
+
 {
   "initial:before": {
     "loopback#favicon": {}
@@ -48,7 +49,5 @@
     "loopback#urlNotFound": {}
   },
   "final:after": {
-    "./middleware/error-handler.js": {},
-    "strong-error-handler": {}
   }
 }

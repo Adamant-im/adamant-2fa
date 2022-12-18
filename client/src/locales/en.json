@@ -8,8 +8,6 @@
   "2faEnabled": "2FA is enabled. Re-login now",
   "2faNotValid": "| Code is invalid: 1 attempt left | Code is invalid: {n} attempts left",
   "2faRequest": "Enter 2FA code received in U…{address}",
-  "2faSendFail": "Error while sending 2FA code: {reason}",
-  "2faSent": "2FA code sent",
   "2faSentWithTx": "2FA code sent with Tx ID: {id}",
   "400": {
     "login": "Enter username",
@@ -20,13 +18,22 @@
     "logout": "Session expired"
   },
   "422": {
-    "adamantAddress": "This ADAMANT address is not used. Get free tokens",
     "signup": "Username is already taken. Choose another one"
+  },
+  "500": {
+    "login": "Error occurred on server. View logs"
   },
   "503": {
     "login": "Server is not available. Try again later",
     "logout": "Server is not available. Try again later",
     "signup": "Server is not available. Try again later"
+  },
+  "sentMessageErrors": {
+    "WRONG_PASSPHRASE": "Error: Wrong passPhrase in the config file",
+    "NOT_ENOUGH_ADM": "Error: Account in the config has no ADM. Get free tokens",
+    "RECIPIENT_UNINITIALIZED": "Error: This ADAMANT address is not used. Get free tokens",
+    "NOT_SENT_GENERAL": "Error: Unable to send 2FA code",
+    "NOT_SENT_NETWORK": "Error: No Internet connection"
   },
   "documentTitle": "2FA demo — ADAMANT",
   "headerTitle": "ADAMANT 2FA",
@@ -38,7 +45,7 @@
   "get2faCode": "Get 2FA code",
   "language": "Language",
   "login": "Login",
-  "loginSubheader": "Demonstration of ADAMANT 2FA: secure, reliable, cheap.",
+  "loginSubheader": "One-time passwords decentralized",
   "logout": "Logout",
   "name": "English",
   "password": "Password",
@@ -57,7 +64,7 @@
   "settings": "Settings",
   "signedUp": "You've signed up. Login now",
   "signup": "Signup",
-  "signupSubheader": "Demonstration of ADAMANT 2FA: secure, reliable, cheap.",
+  "signupSubheader": "One-time passwords decentralized",
   "tooLong": {
     "adamantAddress": "Wrong ADAMANT address",
     "hotp": "Wrong 2FA code",

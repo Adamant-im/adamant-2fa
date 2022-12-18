@@ -14,10 +14,10 @@
     ]
   },
   "User": {
-    "dataSource": "postgresql10"
+    "dataSource": "postgresql"
   },
   "AccessToken": {
-    "dataSource": "postgresql10",
+    "dataSource": "postgresql",
     "public": false,
     "relations": {
       "account": {
@@ -28,22 +28,22 @@
     }
   },
   "ACL": {
-    "dataSource": "postgresql10",
+    "dataSource": "postgresql",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "postgresql10",
+    "dataSource": "postgresql",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "postgresql10",
+    "dataSource": "postgresql",
     "public": false
   },
   "Account": {
-    "dataSource": "postgresql10",
+    "dataSource": "postgresql",
     "public": true
   }
 }

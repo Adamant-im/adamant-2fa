@@ -1,12 +1,24 @@
 <template>
-  <v-snackbar :timeout="timeout" bottom v-model="value">
+  <v-snackbar
+    v-model="value"
+    :timeout="timeout"
+    bottom
+  >
     {{ note }}
   </v-snackbar>
 </template>
 
 <script>
 export default {
+  props: ['options'],
+  data () {
+    return {
+      timeout: 3e3,
+      value: false
+    }
+  },
   computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
     note () {
       if (this.options) {
         if (typeof this.options.note === 'string') {
@@ -24,13 +36,6 @@ export default {
       }
     }
   },
-  data () {
-    return {
-      timeout: 3e3,
-      value: false
-    }
-  },
-  props: ['options'],
   watch: {
     options () {
       if (this.options) {

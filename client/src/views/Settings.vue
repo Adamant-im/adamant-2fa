@@ -1,42 +1,124 @@
 <template>
-  <v-layout class="root-container" justify-center mt-5 row wrap>
-    <v-flex lg6 md7 sm9 xl5 xs11>
-      <h3 class="grey--text mb-3 text--darken-3 title" v-t="'general'" />
+  <v-layout
+    class="root-container"
+    justify-center
+    mt-5
+    row
+    wrap
+  >
+    <v-flex
+      lg6
+      md7
+      sm9
+      xl5
+      xs11
+    >
+      <h3
+        v-t="'general'"
+        class="grey--text mb-3 text--darken-3 title"
+      />
       <v-divider />
-      <v-layout align-center class="mb-5" row wrap>
+      <v-layout
+        align-center
+        class="mb-5"
+        row
+        wrap
+      >
         <v-flex xs6>
-          <v-subheader class="pa-0" v-t="'language'" />
+          <v-subheader
+            v-t="'language'"
+            class="pa-0"
+          />
         </v-flex>
         <LanguageSwitcher />
       </v-layout>
-      <h3 class="grey--text mb-3 text--darken-3 title" v-t="'security'" />
+      <h3
+        v-t="'security'"
+        class="grey--text mb-3 text--darken-3 title"
+      />
       <v-divider />
-      <v-layout align-start class="mb-5" column wrap>
-        <v-flex lg7 md8 sm9 xl6 xs10>
-          <v-checkbox :label="$t('enable2fa')" @change="check2fa" color="darken-1 grey"
-            v-model="se2faChecked" />
+      <v-layout
+        align-start
+        class="mb-5"
+        column
+        wrap
+      >
+        <v-flex
+          lg7
+          md8
+          sm9
+          xl6
+          xs10
+        >
+          <v-checkbox
+            v-model="se2faChecked"
+            :label="$t('enable2fa')"
+            color="darken-1 grey"
+            @change="check2fa"
+          />
         </v-flex>
-        <v-flex lg7 md8 sm9 xl6 xs10 v-show="show2fa">
-          <v-text-field :disabled="adamantAddress.disabled" :label="$t('enterAdamantAddress')"
-            :rules="adamantAddressRules" @input="validateAdamantAddress"
-            @keyup.enter="verifyAdamantAddress" browser-autocomplete="on" class="text-xs-center"
-            color="rgba(0, 0, 0, 0.54)" hide-details maxlength="23" ref="adamantAddressField"
-            v-model="adamantAddress.value" />
+        <v-flex
+          v-show="show2fa"
+          lg7
+          md8
+          sm9
+          xl6
+          xs10
+        >
+          <v-text-field
+            ref="adamantAddressField"
+            v-model="adamantAddress.value"
+            :disabled="adamantAddress.disabled"
+            :label="$t('enterAdamantAddress')"
+            :rules="adamantAddressRules"
+            browser-autocomplete="on"
+            class="text-xs-center"
+            color="rgba(0, 0, 0, 0.54)"
+            hide-details
+            maxlength="23"
+            @input="validateAdamantAddress"
+            @keyup.enter="verifyAdamantAddress"
+          />
           <v-flex class="address-container">
-            <v-btn :disabled="!adamantAddress.valid || this.adamantAddress.disabled"
-              @click="submitAdamantAddress" v-t="'get2faCode'" />
-            <i18n for="inner" path="redirectAdamant.outer" tag="p">
-              <a class="grey--text text--darken-2" href="https://msg.adamant.im/" target="_blank"
-                v-t="'redirectAdamant.inner'" />
+            <v-btn
+              v-t="'get2faCode'"
+              :disabled="!adamantAddress.valid || adamantAddress.disabled"
+              @click="submitAdamantAddress"
+            />
+            <i18n
+              for="inner"
+              path="redirectAdamant.outer"
+              tag="p"
+            >
+              <a
+                v-t="'redirectAdamant.inner'"
+                class="grey--text text--darken-2"
+                href="https://msg.adamant.im/"
+                target="_blank"
+              />
             </i18n>
           </v-flex>
           <div v-show="show2faHotp">
-            <v-text-field :disabled="hotp.disabled" :label="$t('enter2faCode')" :rules="hotpRules"
-              @keyup.enter="verifyHotp" @input="validateHotp" browser-autocomplete="on"
-              class="text-xs-center" color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6"
-              ref="hotpField" v-model="hotp.value" />
-            <v-btn :disabled="!hotp.valid" @click="submitHotp" class="verify-button" v-t="'verify'"
-              />
+            <v-text-field
+              ref="hotpField"
+              v-model="hotp.value"
+              :disabled="hotp.disabled"
+              :label="$t('enter2faCode')"
+              :rules="hotpRules"
+              browser-autocomplete="on"
+              class="text-xs-center"
+              color="rgba(0, 0, 0, 0.54)"
+              hide-details
+              maxlength="6"
+              @keyup.enter="verifyHotp"
+              @input="validateHotp"
+            />
+            <v-btn
+              v-t="'verify'"
+              :disabled="!hotp.valid"
+              class="verify-button"
+              @click="submitHotp"
+            />
           </div>
         </v-flex>
       </v-layout>
@@ -116,7 +198,11 @@ export default {
           })
           this.$nextTick(() => this.$refs.hotpField.focus())
         } else {
-          this.$emit('snackbar-note', status + '.adamantAddress')
+          if (status === 900) {
+            this.$emit('snackbar-note', `sentMessageErrors.${data?.error?.code}`)
+          } else {
+            this.$emit('snackbar-note', status + '.adamantAddress')
+          }
           this.$nextTick(() => this.$refs.adamantAddressField.focus())
           this.adamantAddress.disabled = false
         }

@@ -1,22 +1,70 @@
 <template>
-  <v-layout class="auth-page" fill-height justify-center row>
-    <v-flex lg6 md7 sm9 xl5 xs11>
+  <v-layout
+    class="auth-page"
+    fill-height
+    justify-center
+    row
+  >
+    <v-flex
+      lg6
+      md7
+      sm9
+      xl5
+      xs11
+    >
       <LanguageSwitcher />
-      <v-card class="mt-3 text-xs-center" color="transparent" flat>
-        <img class="logo" src="/img/adamant-logo-transparent-512x512.png" />
-        <h1 class="auth-page__title" v-t="'headerTitle'" />
+      <v-card
+        class="mt-3 text-xs-center"
+        color="transparent"
+        flat
+      >
+        <img
+          class="logo"
+          src="/img/icons/android-chrome-512x512.png"
+        >
+        <h1
+          v-t="'headerTitle'"
+          class="auth-page__title"
+        />
       </v-card>
-      <v-card class="mt-3 text-xs-center" color="transparent" flat>
+      <v-card
+        class="mt-3 text-xs-center"
+        color="transparent"
+        flat
+      >
         <v-layout justify-center>
-          <v-flex lg7 md8 sm9 xl6 xs10>
-            <v-form @submit.prevent class="auth-form">
-              <p v-html="$t('2faRequest', { address: this.account.adamantAddress.slice(-4) })"></p>
-              <v-text-field :disabled="hotp.disabled" :label="$t('2faCode')" :rules="hotpRules"
-                @input="validateHotp" @keyup.enter="verifyHotp" class="text-xs-center"
-                color="rgba(0, 0, 0, 0.54)" hide-details maxlength="6" ref="hotpField"
-                v-model="hotp.value" />
-              <v-btn :disabled="!hotp.valid" @click="verifyHotp" class="action-button" color="white"
-                v-t="'verify'" />
+          <v-flex
+            lg7
+            md8
+            sm9
+            xl6
+            xs10
+          >
+            <v-form
+              class="auth-form"
+              @submit.prevent
+            >
+              <p v-html="$t('2faRequest', { address: account.adamantAddress.slice(-4) })" />
+              <v-text-field
+                ref="hotpField"
+                v-model="hotp.value"
+                :disabled="hotp.disabled"
+                :label="$t('2faCode')"
+                :rules="hotpRules"
+                class="text-xs-center"
+                color="rgba(0, 0, 0, 0.54)"
+                hide-details
+                maxlength="6"
+                @input="validateHotp"
+                @keyup.enter="verifyHotp"
+              />
+              <v-btn
+                v-t="'verify'"
+                :disabled="!hotp.valid"
+                class="action-button"
+                color="white"
+                @click="verifyHotp"
+              />
             </v-form>
           </v-flex>
         </v-layout>
@@ -138,6 +186,11 @@ export default {
   transform translateY(-18px)
   transition font .3s ease
   -webkit-transform translateY(-18px)
+.text-field-password
+  margin 10px auto 0 auto
+  max-width 80%
+.action-button
+  margin-top 35px
 
 .auth-form p
   font-size 16px
@@ -154,6 +207,7 @@ export default {
 .logo
   height 213px
   width 213px
+  filter sepia(0.3)
 .v-text-field
   margin-top 20px
 

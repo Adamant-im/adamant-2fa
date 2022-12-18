@@ -1,20 +1,32 @@
 <template>
-  <v-dialog content-class="elevation-0" persistent v-model="value">
-    <v-layout align-center column>
-      <v-progress-circular color="#4A4A4A" indeterminate size="150" stroke="1" />
+  <v-dialog
+    v-model="value"
+    content-class="elevation-0"
+    persistent
+  >
+    <v-layout
+      align-center
+      column
+    >
+      <v-progress-circular
+        color="#4A4A4A"
+        indeterminate
+        size="150"
+        stroke="1"
+      />
     </v-layout>
   </v-dialog>
 </template>
 
 <script>
 export default {
+  props: {
+    show: { default: false, type: Boolean }
+  },
   data () {
     return {
       value: false
     }
-  },
-  props: {
-    show: { default: false, type: Boolean }
   },
   watch: {
     show () {

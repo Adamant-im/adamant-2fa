@@ -64,7 +64,7 @@
     "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.7.14",
     "vuetify-loader": "^1.9.2",
-    "webpack": "^5.75.0"
+    "webpack": "^5.76.0"
   },
   "resolutions": {
     "loader-utils": "^2.0.4",
